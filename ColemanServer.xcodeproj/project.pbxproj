@@ -56,6 +56,7 @@
 		6EE811BB1736069700433687 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9D5F1D1733707000FD292E /* CoreData.framework */; };
 		6EE811BE1736080000433687 /* BlogModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811BC173607FE00433687 /* BlogModel.xcdatamodeld */; };
 		6EE811C61736269B00433687 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811C51736269B00433687 /* BlogEntry.m */; };
+		6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811CC17370F2600433687 /* NSString+Counter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -154,6 +155,8 @@
 		6EE811BD1736080000433687 /* BlogModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BlogModel.xcdatamodel; sourceTree = "<group>"; };
 		6EE811C41736269B00433687 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
 		6EE811C51736269B00433687 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
+		6EE811CB17370F2600433687 /* NSString+Counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Counter.h"; sourceTree = "<group>"; };
+		6EE811CC17370F2600433687 /* NSString+Counter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Counter.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +313,7 @@
 		6E6939381734317B00C5DFF5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6EE811CA17370EE200433687 /* Categories */,
 				6EE811BF1736245E00433687 /* Blog Entry */,
 				6EE811C01736246800433687 /* Log Entry */,
 			);
@@ -407,12 +411,9 @@
 		6E9D603F173385EC00FD292E /* Stores */ = {
 			isa = PBXGroup;
 			children = (
-				6E9D60401733873F00FD292E /* LogStore.h */,
-				6E9D60411733873F00FD292E /* LogStore.m */,
-				6E6938FF1734176200C5DFF5 /* ServerStore.h */,
-				6E6939001734176200C5DFF5 /* ServerStore.m */,
-				6EE811B81735BAC900433687 /* BlogStore.h */,
-				6EE811B91735BACA00433687 /* BlogStore.m */,
+				6EE811C71736ABA000433687 /* Logs */,
+				6EE811C81736ABA900433687 /* HTTP Server */,
+				6EE811C91736ABB500433687 /* Blog */,
 			);
 			name = Stores;
 			sourceTree = "<group>";
@@ -440,6 +441,42 @@
 				6E693936173430EF00C5DFF5 /* Log.m */,
 			);
 			name = "Log Entry";
+			sourceTree = "<group>";
+		};
+		6EE811C71736ABA000433687 /* Logs */ = {
+			isa = PBXGroup;
+			children = (
+				6E9D60401733873F00FD292E /* LogStore.h */,
+				6E9D60411733873F00FD292E /* LogStore.m */,
+			);
+			name = Logs;
+			sourceTree = "<group>";
+		};
+		6EE811C81736ABA900433687 /* HTTP Server */ = {
+			isa = PBXGroup;
+			children = (
+				6E6938FF1734176200C5DFF5 /* ServerStore.h */,
+				6E6939001734176200C5DFF5 /* ServerStore.m */,
+			);
+			name = "HTTP Server";
+			sourceTree = "<group>";
+		};
+		6EE811C91736ABB500433687 /* Blog */ = {
+			isa = PBXGroup;
+			children = (
+				6EE811B81735BAC900433687 /* BlogStore.h */,
+				6EE811B91735BACA00433687 /* BlogStore.m */,
+			);
+			name = Blog;
+			sourceTree = "<group>";
+		};
+		6EE811CA17370EE200433687 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				6EE811CB17370F2600433687 /* NSString+Counter.h */,
+				6EE811CC17370F2600433687 /* NSString+Counter.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -550,6 +587,7 @@
 				6EE811BA1735BACA00433687 /* BlogStore.m in Sources */,
 				6EE811BE1736080000433687 /* BlogModel.xcdatamodeld in Sources */,
 				6EE811C61736269B00433687 /* BlogEntry.m in Sources */,
+				6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

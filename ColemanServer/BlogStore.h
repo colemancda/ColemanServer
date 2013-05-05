@@ -7,12 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+@class BlogEntry;
 
 @interface BlogStore : NSObject
 {
     NSMutableArray *_blogEntries;
     NSManagedObjectContext *_context;
     NSManagedObjectModel *_model;
+    
+    NSSortDescriptor *_sortDescriptor;
 }
 
 + (BlogStore *)sharedStore;
@@ -24,5 +27,9 @@
 -(void)loadAllItems;
 
 @property (readonly) NSArray *allEntries;
+
+-(BlogEntry *)createEntry;
+
+-(void)removeEntry:(BlogEntry *)blogEntry;
 
 @end

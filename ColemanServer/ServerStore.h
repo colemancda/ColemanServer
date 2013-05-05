@@ -13,6 +13,7 @@
 {
     RoutingHTTPServer *_server;
     
+    NSDate *_dateServerStarted;
 }
 
 + (ServerStore *)sharedStore;
@@ -22,6 +23,8 @@
 @property (readonly) NSUInteger numberOfConnections;
 
 @property (readonly) BOOL isRunning;
+
+@property (readonly) NSTimeInterval serverUpTime;
 
 -(BOOL)startServerWithPort:(NSUInteger)port;
 

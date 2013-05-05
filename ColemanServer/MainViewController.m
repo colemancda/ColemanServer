@@ -9,6 +9,7 @@
 #import "MainViewController.h"
 #import "LogStore.h"
 #import "ServerStore.h"
+#import "NSString+Counter.h"
 
 @interface MainViewController ()
 
@@ -54,6 +55,12 @@
                                                         selector:@selector(updateUI)
                                                         userInfo:nil
                                                          repeats:YES];
+    
+    _refreshUptimeTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                           target:self
+                                                         selector:@selector(updateServerUptimeUI)
+                                                         userInfo:nil
+                                                          repeats:YES];
 }
 
 -(void)dealloc
@@ -96,13 +103,38 @@
         // update text field
         [self.portField setEnabled:NO];
         self.portField.integerValue = [ServerStore sharedStore].port;
-        
+                
     }
     else {
         
         [self.portField setEnabled:YES];
         self.startStopButton.state = NSOffState;
         
+    }
+    
+    // update seconds run
+    [self updateServerUptimeUI];
+    
+}
+
+-(void)updateServerUptimeUI
+{
+    if ([ServerStore sharedStore].isRunning) {
+        
+        NSTimeInterval secondsUptime = [ServerStore sharedStore].serverUpTime;
+        
+        NSString *uptimeString = [NSString counterStringFromSeconds:secondsUptime];
+        
+        // update uptime UI
+        self.uptimeLabel.stringValue = uptimeString;
+        
+    }
+    else {
+        
+        // update uptime
+        NSString *uptimeString = [NSString stringWithFormat:@"Server is off"];
+        
+        self.uptimeLabel.stringValue = uptimeString;
     }
     
 }

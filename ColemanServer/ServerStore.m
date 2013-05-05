@@ -10,11 +10,12 @@
 #import "HTTPServer.h"
 #import "RoutingHTTPServer.h"
 #import "LogStore.h"
+#import "BlogStore.h"
+#import "BlogEntry.h"
 
-static NSString *kAPINumberOfEntries = @"/blog/numberOfPosts";
+static NSString *kAPINumberOfEntriesURL = @"/blog/numberOfEntries";
 
-static NSString *kAPIEntryForIndex = @"/blog/post/:index";
-
+static NSString *kAPIEntryAtIndexURL = @"/blog/entry/:index";
 
 @implementation ServerStore
 
@@ -53,19 +54,32 @@ static NSString *kAPIEntryForIndex = @"/blog/post/:index";
         
         // setup response code
         
-        [_server handleMethod:kGETMethod withPath:kAPINumberOfEntries block:^(RouteRequest *request, RouteResponse *response) {
+        [_server handleMethod:kGETMethod withPath:kAPINumberOfEntriesURL block:^(RouteRequest *request, RouteResponse *response) {
             
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{@"numberOfPosts": @100} options:NSJSONWritingPrettyPrinted error:nil];
+            // get the data from the store
+            
+            NSUInteger count = [BlogStore sharedStore].allEntries.count;
+            
+            NSDictionary *jsonObject = @{@"numberOfEntries": [NSNumber numberWithInteger:count]};
+            
+            NSError *jsonSerializationError;
+            
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                               options:NSJSONWritingPrettyPrinted
+                                                                 error:&jsonSerializationError];
+            if (!jsonData) {
+                
+                // error in json serialization...
+                
+                // log
+                [[LogStore sharedStore] addError:[NSString stringWithFormat:@"Could not serialize JSON object. %@", jsonSerializationError.localizedDescription]];
+                
+                // respond
+                response.statusCode = 404;
+                
+            }
             
             [response respondWithData:jsonData];
-            
-        }];
-        
-        [_server handleMethod:kGETMethod withPath:kAPIEntryForIndex block:^(RouteRequest *request, RouteResponse *response) {
-            
-            NSString *index = [request.params objectForKey:@"index"];
-            
-            [response respondWithString:index];
             
         }];
                 
@@ -95,6 +109,9 @@ static NSString *kAPIEntryForIndex = @"/blog/post/:index";
     
     // sucess!
     else {
+        
+        // set the start date
+        _dateServerStarted = [NSDate date];
         
         // log
         NSString *logEntry = [NSString stringWithFormat:@"The server started successfully on port %d", _server.listeningPort];
@@ -129,6 +146,11 @@ static NSString *kAPIEntryForIndex = @"/blog/post/:index";
 -(BOOL)isRunning
 {
     return _server.isRunning;
+}
+
+-(NSTimeInterval)serverUpTime
+{
+    return [[NSDate date] timeIntervalSinceDate:_dateServerStarted];
 }
 
 @end

@@ -7,6 +7,6 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BlogEntry" positionX="-2151" positionY="-1962" width="198" height="103"/>
+        <element name="BlogEntry" positionX="-2394" positionY="-2268" width="198" height="103"/>
     </elements>
 </model>

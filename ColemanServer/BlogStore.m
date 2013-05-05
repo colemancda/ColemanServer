@@ -9,6 +9,7 @@
 #import "BlogStore.h"
 #import <CoreData/CoreData.h>
 #import "LogStore.h"
+#import "BlogEntry.h"
 
 @implementation BlogStore
 
@@ -33,13 +34,17 @@
         
         NSLog(@"Initializing Blog Store");
         
+        // create sort descriptor
+        _sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date"
+                                                        ascending:YES];
+        
         // read in all the Core Data files
         _model = [NSManagedObjectModel mergedModelFromBundles:nil];
         
         NSPersistentStoreCoordinator *persistanceStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
         
         // where to save SQLite file
-        NSURL *persistanceURL = [NSURL URLWithString:self.archivePath];
+        NSURL *persistanceURL = [NSURL fileURLWithPath:self.archivePath];
         
         NSError *error;
         
@@ -65,7 +70,7 @@
     return self;
 }
 
-#pragma mark - Properties
+#pragma mark
 
 -(NSString *)archivePath
 {
@@ -79,8 +84,6 @@
 {
     return (NSArray *)_blogEntries.copy;
 }
-
-#pragma mark
 
 -(BOOL)save
 {
@@ -120,10 +123,7 @@
         
         request.entity = entity;
         
-        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"date"
-                                                               ascending:YES];
-        
-        request.sortDescriptors = @[sort];
+        request.sortDescriptors = @[_sortDescriptor];
         
         NSError *fetchError;
         
@@ -146,5 +146,27 @@
     
 }
 
+-(BlogEntry *)createEntry
+{
+    // create new item in context
+    BlogEntry *entry = [NSEntityDescription insertNewObjectForEntityForName:@"BlogEntity" inManagedObjectContext:_context];
+    
+    // add to array (or else we wont have a pointer to it)
+    [_blogEntries addObject:entry];
+    
+    // return
+    return entry;
+    
+}
+
+-(void)removeEntry:(BlogEntry *)blogEntry
+{
+    // delete from core data context
+    [_context deleteObject:blogEntry];
+    
+    // delete from array
+    [_blogEntries removeObjectIdenticalTo:blogEntry];
+    
+}
 
 @end
