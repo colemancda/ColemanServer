@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'ColemanServer' target in the 'ColemanServer' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

@@ -1,0 +1,150 @@
+//
+//  BlogStore.m
+//  ColemanServer
+//
+//  Created by Alsey Coleman Miller on 5/4/13.
+//  Copyright (c) 2013 ColemanCDA. All rights reserved.
+//
+
+#import "BlogStore.h"
+#import <CoreData/CoreData.h>
+#import "LogStore.h"
+
+@implementation BlogStore
+
++ (BlogStore *)sharedStore
+{
+    static BlogStore *sharedStore = nil;
+    if (!sharedStore) {
+        sharedStore = [[super allocWithZone:nil] init];
+    }
+    return sharedStore;
+}
+
++ (id)allocWithZone:(NSZone *)zone
+{
+    return [self sharedStore];
+}
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        
+        NSLog(@"Initializing Blog Store");
+        
+        // read in all the Core Data files
+        _model = [NSManagedObjectModel mergedModelFromBundles:nil];
+        
+        NSPersistentStoreCoordinator *persistanceStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
+        
+        // where to save SQLite file
+        NSURL *persistanceURL = [NSURL URLWithString:self.archivePath];
+        
+        NSError *error;
+        
+        NSPersistentStore *persistanceStore = [persistanceStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:persistanceURL options:nil error:&error];
+        
+        if (!persistanceStore) {
+            
+            [NSException raise:@"Opening Blog persistance failed"
+                        format:@"%@", error.localizedDescription];
+        }
+        
+        // create the context
+        _context = [[NSManagedObjectContext alloc] init];
+        _context.persistentStoreCoordinator = persistanceStoreCoordinator;
+        
+        // we dont support undo
+        _context.undoManager = nil;
+        
+        // load all items
+        [self loadAllItems];
+        
+    }
+    return self;
+}
+
+#pragma mark - Properties
+
+-(NSString *)archivePath
+{
+    NSArray *appSupportDirectories = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+    NSString *appSupportDirectoryPath = [appSupportDirectories objectAtIndex:0];
+    
+    return [appSupportDirectoryPath stringByAppendingPathComponent:@"blogEntries.data"];
+}
+
+-(NSArray *)allEntries
+{
+    return (NSArray *)_blogEntries.copy;
+}
+
+#pragma mark
+
+-(BOOL)save
+{
+    [[LogStore sharedStore] addEntry:@"Saving blog entries"];
+    
+    NSError *error;
+    
+    BOOL success = [_context save:&error];
+    
+    if (!success) {
+        
+        NSString *errorMessage = [NSString stringWithFormat:@"Could not save blog entries. %@", error.localizedDescription];
+        
+        [[LogStore sharedStore] addError:errorMessage];
+        
+    }
+    else {
+        
+        [[LogStore sharedStore] addEntry:@"Successfully saved blog entries"];
+        
+    }
+    
+    return success;
+}
+
+-(void)loadAllItems
+{
+    // will only work once
+    if (_blogEntries) {
+        
+        // Log
+        [[LogStore sharedStore] addEntry:@"Fetching all blog entries"];
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity = [_model.entitiesByName objectForKey:@"BNRItem"];
+        
+        request.entity = entity;
+        
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"date"
+                                                               ascending:YES];
+        
+        request.sortDescriptors = @[sort];
+        
+        NSError *fetchError;
+        
+        NSArray *result = [_context executeFetchRequest:request
+                                                  error:&fetchError];
+        if (!result) {
+            
+            [NSException raise:@"Fetch failed"
+                        format:@"%@", fetchError.localizedDescription];
+            
+        }
+        
+        // save
+        _blogEntries = [[NSMutableArray alloc] initWithArray:result];
+        
+        // log
+        [[LogStore sharedStore] addEntry:@"Successfully loaded all blog entries"];
+        
+    }
+    
+}
+
+
+@end
