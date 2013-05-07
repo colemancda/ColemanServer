@@ -67,7 +67,11 @@
         [self loadAllItems];
         
         // TEMP
-        [self createEntry];
+        BlogEntry *entry = [self createEntry];
+        
+        entry.title = @"Cool title";
+        
+        entry.content = @"Ipsum Lorem";
         
     }
     return self;
@@ -76,11 +80,27 @@
 #pragma mark
 
 -(NSString *)archivePath
-{
+{    
     NSArray *appSupportDirectories = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString *appSupportDirectoryPath = [appSupportDirectories objectAtIndex:0];
     
-    return [appSupportDirectoryPath stringByAppendingPathComponent:@"blogEntries.data"];
+    NSString *folderName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
+    
+    NSString *folderPath = [appSupportDirectoryPath stringByAppendingPathComponent:folderName];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:folderPath])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:folderPath
+                                  withIntermediateDirectories:NO
+                                                   attributes:nil
+                                                        error:nil];
+    }
+    
+    NSString *fileName = @"blogEntries.data";
+    
+    NSString *filePath = [folderPath stringByAppendingPathComponent:fileName];
+    
+    return filePath;
 }
 
 -(NSArray *)allEntries

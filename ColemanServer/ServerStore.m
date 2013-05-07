@@ -54,6 +54,7 @@ static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
         
         // setup response code
         
+        // numberOfEntries...
         [_server handleMethod:kGETMethod withPath:kAPINumberOfEntriesURL block:^(RouteRequest *request, RouteResponse *response) {
             
             // get the data from the store
@@ -71,11 +72,12 @@ static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
                 
                 // error in json serialization...
                 
-                // log
-                [[LogStore sharedStore] addError:[NSString stringWithFormat:@"Could not serialize JSON object. %@", jsonSerializationError.localizedDescription]];
+                NSString *errorString = [NSString stringWithFormat:@"Could not serialize JSON object. %@", jsonSerializationError.localizedDescription];
                 
-                // respond
-                response.statusCode = 404;
+                // log
+                [[LogStore sharedStore] addError:errorString];
+                
+                [response respondWithString:@"Error"];
                 
             }
             
@@ -83,6 +85,7 @@ static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
             
         }];
         
+        // entryAtNumber: ...
         [_server handleMethod:kGETMethod withPath:kAPIEntryAtNumberURL block:^(RouteRequest *request, RouteResponse *response) {
             
             NSUInteger count = [BlogStore sharedStore].allEntries.count;
@@ -108,19 +111,46 @@ static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
             
             BlogEntry *blogEntry = [[BlogStore sharedStore].allEntries objectAtIndex:number - 1];
             
+            // create strings
+            
+            NSString *dateString = [NSString stringWithFormat:@"%@", blogEntry.date];
+            
+            NSString *titleString;
+            
+            if (blogEntry.title) {
+                
+                titleString = [NSString stringWithFormat:@"%@", blogEntry.title];
+                
+            }
+            else {
+                titleString = @"";
+            }
+            
+            NSString *contentString;
+            
+            if (blogEntry.content) {
+                
+                contentString = [NSString stringWithFormat:@"%@", blogEntry.content];
+                
+            }
+            else {
+                contentString = @"";
+            }
+            
+            
             // create json object
             
-            NSDictionary *jsonObject = @{@"date": [NSString stringWithFormat:@"%@", blogEntry],
-                                         @"title": blogEntry.title,
-                                         @"content" : blogEntry.content};
+            NSDictionary *jsonObject = @{@"date": dateString,
+                                         @"title": titleString,
+                                         @"content" : contentString};
             
             NSError *jsonSerializationError;
             
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
             
-            if (!jsonSerializationError) {
+            if (!jsonData) {
                 
-                NSString *errorString = [NSString stringWithFormat:@"Could not serialize Blog Entry into JSON object. %@", jsonSerializationError.localizedDescription];
+                NSString *errorString = [NSString stringWithFormat:@"Could not serialize Blog Entry into JSON object. %@", jsonSerializationError];
                 
                 [[LogStore sharedStore] addError:errorString];
                 
@@ -133,7 +163,6 @@ static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
                 [response respondWithData:jsonData];
                 
             }
-            
             
         }];
                 
