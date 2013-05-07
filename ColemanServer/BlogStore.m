@@ -66,6 +66,9 @@
         // load all items
         [self loadAllItems];
         
+        // TEMP
+        [self createEntry];
+        
     }
     return self;
 }
@@ -112,14 +115,14 @@
 -(void)loadAllItems
 {
     // will only work once
-    if (_blogEntries) {
+    if (!_blogEntries) {
         
         // Log
         [[LogStore sharedStore] addEntry:@"Fetching all blog entries"];
         
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         
-        NSEntityDescription *entity = [_model.entitiesByName objectForKey:@"BNRItem"];
+        NSEntityDescription *entity = [_model.entitiesByName objectForKey:@"BlogEntry"];
         
         request.entity = entity;
         
@@ -149,7 +152,7 @@
 -(BlogEntry *)createEntry
 {
     // create new item in context
-    BlogEntry *entry = [NSEntityDescription insertNewObjectForEntityForName:@"BlogEntity" inManagedObjectContext:_context];
+    BlogEntry *entry = [NSEntityDescription insertNewObjectForEntityForName:@"BlogEntry" inManagedObjectContext:_context];
     
     // add to array (or else we wont have a pointer to it)
     [_blogEntries addObject:entry];

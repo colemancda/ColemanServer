@@ -15,7 +15,7 @@
 
 static NSString *kAPINumberOfEntriesURL = @"/blog/numberOfEntries";
 
-static NSString *kAPIEntryAtIndexURL = @"/blog/entry/:index";
+static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
 
 @implementation ServerStore
 
@@ -80,6 +80,60 @@ static NSString *kAPIEntryAtIndexURL = @"/blog/entry/:index";
             }
             
             [response respondWithData:jsonData];
+            
+        }];
+        
+        [_server handleMethod:kGETMethod withPath:kAPIEntryAtNumberURL block:^(RouteRequest *request, RouteResponse *response) {
+            
+            NSUInteger count = [BlogStore sharedStore].allEntries.count;
+            
+            // no objects in array
+            if (!count) {
+                
+                [response respondWithString:@"No entries exist on the server"];
+                return;
+                
+            }
+            
+            // get the index
+            NSString *indexString = [request.params objectForKey:@"number"];
+            
+            NSInteger number = indexString.integerValue;
+            
+            if (!number || number > count) {
+                
+                [response respondWithString:@"No entries for that value"];
+                return;
+            }
+            
+            BlogEntry *blogEntry = [[BlogStore sharedStore].allEntries objectAtIndex:number - 1];
+            
+            // create json object
+            
+            NSDictionary *jsonObject = @{@"date": [NSString stringWithFormat:@"%@", blogEntry],
+                                         @"title": blogEntry.title,
+                                         @"content" : blogEntry.content};
+            
+            NSError *jsonSerializationError;
+            
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
+            
+            if (!jsonSerializationError) {
+                
+                NSString *errorString = [NSString stringWithFormat:@"Could not serialize Blog Entry into JSON object. %@", jsonSerializationError.localizedDescription];
+                
+                [[LogStore sharedStore] addError:errorString];
+                
+                [response respondWithString:@"Error fetching Blog Entry"];
+                
+            }
+            
+            else {
+                
+                [response respondWithData:jsonData];
+                
+            }
+            
             
         }];
                 

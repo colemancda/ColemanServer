@@ -22,6 +22,10 @@
     
     // set the current date
     self.date = [NSDate date];
+    
+    self.title = @"";
+    
+    self.content = @"";
 }
 
 @end
