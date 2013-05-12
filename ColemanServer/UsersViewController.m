@@ -7,6 +7,7 @@
 //
 
 #import "UsersViewController.h"
+#import "UserStore.h"
 
 @interface UsersViewController ()
 
@@ -31,6 +32,11 @@
     }
     
     return self;
+}
+
+-(UserStore *)userStore
+{
+    return [UserStore sharedStore];
 }
 
 @end

@@ -7,7 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class UserStore;
 
 @interface UsersViewController : NSViewController
+
+@property UserStore *userStore;
 
 @end

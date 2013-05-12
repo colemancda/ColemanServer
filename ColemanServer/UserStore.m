@@ -72,6 +72,35 @@
     return self;
 }
 
+#pragma mark - KVO
+
+-(void)observeValueForKeyPath:(NSString *)keyPath
+                     ofObject:(id)object
+                       change:(NSDictionary *)change
+                      context:(void *)context
+{
+    
+    if ([keyPath isEqualToString:@"self.password"] && object == self.admin) {
+        
+        // update user defaults
+        [[NSUserDefaults standardUserDefaults] setObject:self.admin.password
+                                                  forKey:@"adminPassword"];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [[LogStore sharedStore] addEntry:@"Admin's password changed"];
+        
+    }
+    
+}
+
+-(void)dealloc
+{
+    // remove KVO observer
+    [self.admin removeObserver:self
+                    forKeyPath:@"self.password"];
+}
+
 #pragma mark 
 
 -(NSArray *)allUsers
@@ -131,6 +160,29 @@
         }
         
         _users = [[NSMutableArray alloc] initWithArray:result];
+        
+        NSLog(@"Creating Admin user...");
+        
+        // create admin user
+        _admin = [[User alloc] initWithEntity:entity
+               insertIntoManagedObjectContext:nil];
+        
+        // set the default password and username
+        _admin.username = [[NSUserDefaults standardUserDefaults] stringForKey:@"adminUsername"];
+        _admin.password = [[NSUserDefaults standardUserDefaults] stringForKey:@"adminPassword"];
+        
+        // give admin permissions
+        _admin.permissions = [NSNumber numberWithInteger:Admin];
+        
+        // KVO Admin's password
+        [self.admin addObserver:self
+                     forKeyPath:@"self.password"
+                        options:NSKeyValueObservingOptionOld
+                        context:nil];
+        
+        // add to array
+        [_users insertObject:_admin
+                     atIndex:0];
         
         [[LogStore sharedStore] addEntry:@"Successfully loaded all Users"];
         

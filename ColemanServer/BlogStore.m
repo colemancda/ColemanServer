@@ -70,14 +70,6 @@
         // load all items
         [self loadAllItems];
         
-        BlogEntry *entry = [self createEntry];
-        
-        entry.title = @"Cool title";
-        
-        entry.content = @"Ipsum Lorem";
-        
-        [self createEntry];
-        
     }
     return self;
 }
