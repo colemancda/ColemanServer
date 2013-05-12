@@ -13,12 +13,15 @@
 #import "BlogStore.h"
 #import "BlogEntry.h"
 #import "NSString+Counter.h"
+#import "User.h"
+#import "UserStore.h"
+#import "Token.h"
 
 static NSString *kAPINumberOfEntriesURL = @"/blog/numberOfEntries";
 
 static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
 
-static NSString *kAPILoginURL = @"/blog/login/:user/:password";
+static NSString *kAPILoginURL = @"/blog/login/:username/:password";
 
 
 @implementation ServerStore
@@ -156,7 +159,7 @@ static NSString *kAPILoginURL = @"/blog/login/:user/:password";
             
             if (!jsonData) {
                 
-                NSString *errorString = [NSString stringWithFormat:@"Could not serialize Blog Entry into JSON object. %@", jsonSerializationError];
+                NSString *errorString = [NSString stringWithFormat:@"Could not serialize Blog Entry into JSON data. %@", jsonSerializationError];
                 
                 [[LogStore sharedStore] addError:errorString];
                 
@@ -172,10 +175,84 @@ static NSString *kAPILoginURL = @"/blog/login/:user/:password";
             
         }];
         
+        // login...
         [_server handleMethod:kGETMethod withPath:kAPILoginURL block:^(RouteRequest *request, RouteResponse *response) {
             
-            // verify the username
+            // find a user with that username
+            NSString *inputUsername = request.params[@"username"];
+            inputUsername = inputUsername.lowercaseString;
             
+            User *matchingUser;
+            for (User *user in [UserStore sharedStore].allUsers) {
+                
+                // get a lowercase username
+                NSString *username = user.username.lowercaseString;
+                
+                if ([username isEqualToString:inputUsername]) {
+                    
+                    matchingUser = user;
+                    
+                    break;
+                    
+                }
+                
+            }
+            
+            // no user exists for that username
+            if (!matchingUser) {
+                NSString *errorResponse = @"No user exists for that username";
+                
+                [response respondWithString:errorResponse];
+                
+                return;
+            }
+            
+            // compare password
+            NSString *inputPassword = request.params[@"password"];
+            
+            // if the password is incorrect
+            if (![matchingUser.password isEqualToString:inputPassword]) {
+                
+                [response respondWithString:@"Wrong password"];
+                
+                return;
+            }
+            
+            // create json object to return
+            else {
+                
+                // create token
+                Token *token = [matchingUser createToken];
+                
+                // create json object
+                NSDictionary *jsonObject = @{@"token": token.stringValue};
+                
+                NSError *jsonSerializationError;
+                
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                                   options:NSJSONWritingPrettyPrinted
+                                                                     error:&jsonSerializationError];
+                if (!jsonData) {
+                    
+                    // log
+                    NSString *logError = [NSString stringWithFormat:@"Could not serialize token into JSON data. %@", jsonSerializationError.localizedDescription];
+                    
+                    [[LogStore sharedStore] addError:logError];
+                    
+                    // respond with error
+                    [response respondWithString:@"Error fetching token. Internal server error."];
+                    
+                    return;
+                }
+                
+                // success!
+                else {
+                    
+                    [response respondWithData:jsonData];
+                    return;
+                }
+                
+            }
             
             
         }];
