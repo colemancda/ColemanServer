@@ -12,10 +12,14 @@
 #import "LogStore.h"
 #import "BlogStore.h"
 #import "BlogEntry.h"
+#import "NSString+Counter.h"
 
 static NSString *kAPINumberOfEntriesURL = @"/blog/numberOfEntries";
 
 static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
+
+static NSString *kAPILoginURL = @"/blog/login/:user/:password";
+
 
 @implementation ServerStore
 
@@ -165,6 +169,14 @@ static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
             }
             
         }];
+        
+        [_server handleMethod:kGETMethod withPath:kAPILoginURL block:^(RouteRequest *request, RouteResponse *response) {
+            
+            // verify the username
+            
+            
+            
+        }];
                 
     }
     return self;
@@ -208,10 +220,15 @@ static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
 
 -(void)stopServer
 {
-    
     [_server stop];
     
-    [[LogStore sharedStore] addEntry:@"Stopped server"];
+    NSInteger numberOfConnections = self.numberOfConnections;
+    
+    NSString *uptime = [NSString counterStringFromSeconds:self.serverUpTime];
+    
+    NSString *stopServerLogEntry = [NSString stringWithFormat:@"Stopped server with %ld connections and %@ uptime", numberOfConnections, uptime];
+    
+    [[LogStore sharedStore] addEntry:stopServerLogEntry];
 }
 
 #pragma mark - Properties

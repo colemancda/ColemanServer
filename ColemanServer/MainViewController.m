@@ -89,7 +89,7 @@
     self.logTextView.string = [LogStore sharedStore].log;
     
     // scroll to bottom of log
-    [self.logTextView scrollToEndOfDocument:self];
+    // [self.logTextView scrollToEndOfDocument:self];
     
     // update the number of connections
     self.numberOfConnectionsLabel.integerValue = [ServerStore sharedStore].numberOfConnections;

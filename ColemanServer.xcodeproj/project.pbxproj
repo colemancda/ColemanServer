@@ -52,6 +52,16 @@
 		6E9D603A1733829700FD292E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9D60381733829700FD292E /* MainViewController.m */; };
 		6E9D603B1733829700FD292E /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E9D60391733829700FD292E /* MainViewController.xib */; };
 		6E9D60421733873F00FD292E /* LogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9D60411733873F00FD292E /* LogStore.m */; };
+		6EB726E1173C0B8800093237 /* UserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726E0173C0B8800093237 /* UserStore.m */; };
+		6EB726F2173D665E00093237 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F1173D665E00093237 /* Token.m */; };
+		6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F4173D67CB00093237 /* NSString+RandomString.m */; };
+		6EB72709173E972700093237 /* UserModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72707173E972700093237 /* UserModel.xcdatamodeld */; };
+		6EB72711173F156C00093237 /* SaveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7270F173F156C00093237 /* SaveViewController.m */; };
+		6EB72712173F156C00093237 /* SaveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EB72710173F156C00093237 /* SaveViewController.xib */; };
+		6EB72718173F180600093237 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72717173F180500093237 /* User.m */; };
+		6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7271A173F1D2200093237 /* UsersViewController.m */; };
+		6EB7271D173F1D2300093237 /* UsersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EB7271B173F1D2300093237 /* UsersViewController.xib */; };
+		6EB72723173F223D00093237 /* ToolBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72722173F223D00093237 /* ToolBarController.m */; };
 		6EE811BA1735BACA00433687 /* BlogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811B91735BACA00433687 /* BlogStore.m */; };
 		6EE811BB1736069700433687 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9D5F1D1733707000FD292E /* CoreData.framework */; };
 		6EE811BE1736080000433687 /* BlogModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811BC173607FE00433687 /* BlogModel.xcdatamodeld */; };
@@ -150,6 +160,23 @@
 		6E9D60391733829700FD292E /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
 		6E9D60401733873F00FD292E /* LogStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogStore.h; sourceTree = "<group>"; };
 		6E9D60411733873F00FD292E /* LogStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogStore.m; sourceTree = "<group>"; };
+		6EB726DF173C0B8800093237 /* UserStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserStore.h; sourceTree = "<group>"; };
+		6EB726E0173C0B8800093237 /* UserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserStore.m; sourceTree = "<group>"; };
+		6EB726F0173D665E00093237 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
+		6EB726F1173D665E00093237 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
+		6EB726F3173D67CB00093237 /* NSString+RandomString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RandomString.h"; sourceTree = "<group>"; };
+		6EB726F4173D67CB00093237 /* NSString+RandomString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RandomString.m"; sourceTree = "<group>"; };
+		6EB72708173E972700093237 /* UserModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserModel.xcdatamodel; sourceTree = "<group>"; };
+		6EB7270E173F156C00093237 /* SaveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveViewController.h; sourceTree = "<group>"; };
+		6EB7270F173F156C00093237 /* SaveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveViewController.m; sourceTree = "<group>"; };
+		6EB72710173F156C00093237 /* SaveViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SaveViewController.xib; sourceTree = "<group>"; };
+		6EB72716173F180400093237 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		6EB72717173F180500093237 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		6EB72719173F1D2200093237 /* UsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsersViewController.h; sourceTree = "<group>"; };
+		6EB7271A173F1D2200093237 /* UsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsersViewController.m; sourceTree = "<group>"; };
+		6EB7271B173F1D2300093237 /* UsersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UsersViewController.xib; sourceTree = "<group>"; };
+		6EB72721173F223D00093237 /* ToolBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBarController.h; sourceTree = "<group>"; };
+		6EB72722173F223D00093237 /* ToolBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBarController.m; sourceTree = "<group>"; };
 		6EE811B81735BAC900433687 /* BlogStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogStore.h; sourceTree = "<group>"; };
 		6EE811B91735BACA00433687 /* BlogStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogStore.m; sourceTree = "<group>"; };
 		6EE811BD1736080000433687 /* BlogModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BlogModel.xcdatamodel; sourceTree = "<group>"; };
@@ -313,6 +340,8 @@
 		6E6939381734317B00C5DFF5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6EB726EF173D664F00093237 /* Token */,
+				6EB726E3173C0BFA00093237 /* User */,
 				6EE811CA17370EE200433687 /* Categories */,
 				6EE811BF1736245E00433687 /* Blog Entry */,
 				6EE811C01736246800433687 /* Log Entry */,
@@ -364,6 +393,7 @@
 				6E9D5F2C1733707000FD292E /* AppDelegate.m */,
 				6E9D5F2E1733707100FD292E /* MainMenu.xib */,
 				6EE811BC173607FE00433687 /* BlogModel.xcdatamodeld */,
+				6EB72707173E972700093237 /* UserModel.xcdatamodeld */,
 				6EE811B41734DC2000433687 /* Views */,
 				6E6939381734317B00C5DFF5 /* Models */,
 				6E9D603F173385EC00FD292E /* Stores */,
@@ -393,6 +423,9 @@
 		6E9D60361733821400FD292E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				6EB72720173F21D300093237 /* Toolbar */,
+				6EB7271E173F1D2800093237 /* Users */,
+				6EB7270D173F154500093237 /* Save */,
 				6E9D603C1733829C00FD292E /* Main */,
 			);
 			name = Controllers;
@@ -414,8 +447,76 @@
 				6EE811C71736ABA000433687 /* Logs */,
 				6EE811C81736ABA900433687 /* HTTP Server */,
 				6EE811C91736ABB500433687 /* Blog */,
+				6EB726E2173C0B8D00093237 /* Users */,
 			);
 			name = Stores;
+			sourceTree = "<group>";
+		};
+		6EB726E2173C0B8D00093237 /* Users */ = {
+			isa = PBXGroup;
+			children = (
+				6EB726DF173C0B8800093237 /* UserStore.h */,
+				6EB726E0173C0B8800093237 /* UserStore.m */,
+			);
+			name = Users;
+			sourceTree = "<group>";
+		};
+		6EB726E3173C0BFA00093237 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				6EB72716173F180400093237 /* User.h */,
+				6EB72717173F180500093237 /* User.m */,
+			);
+			name = User;
+			sourceTree = "<group>";
+		};
+		6EB726EF173D664F00093237 /* Token */ = {
+			isa = PBXGroup;
+			children = (
+				6EB726F0173D665E00093237 /* Token.h */,
+				6EB726F1173D665E00093237 /* Token.m */,
+			);
+			name = Token;
+			sourceTree = "<group>";
+		};
+		6EB7270D173F154500093237 /* Save */ = {
+			isa = PBXGroup;
+			children = (
+				6EB7270E173F156C00093237 /* SaveViewController.h */,
+				6EB7270F173F156C00093237 /* SaveViewController.m */,
+				6EB72710173F156C00093237 /* SaveViewController.xib */,
+			);
+			name = Save;
+			sourceTree = "<group>";
+		};
+		6EB7271E173F1D2800093237 /* Users */ = {
+			isa = PBXGroup;
+			children = (
+				6EB72719173F1D2200093237 /* UsersViewController.h */,
+				6EB7271A173F1D2200093237 /* UsersViewController.m */,
+				6EB7271B173F1D2300093237 /* UsersViewController.xib */,
+			);
+			name = Users;
+			sourceTree = "<group>";
+		};
+		6EB7271F173F1FBA00093237 /* NSString */ = {
+			isa = PBXGroup;
+			children = (
+				6EE811CB17370F2600433687 /* NSString+Counter.h */,
+				6EE811CC17370F2600433687 /* NSString+Counter.m */,
+				6EB726F3173D67CB00093237 /* NSString+RandomString.h */,
+				6EB726F4173D67CB00093237 /* NSString+RandomString.m */,
+			);
+			name = NSString;
+			sourceTree = "<group>";
+		};
+		6EB72720173F21D300093237 /* Toolbar */ = {
+			isa = PBXGroup;
+			children = (
+				6EB72721173F223D00093237 /* ToolBarController.h */,
+				6EB72722173F223D00093237 /* ToolBarController.m */,
+			);
+			name = Toolbar;
 			sourceTree = "<group>";
 		};
 		6EE811B41734DC2000433687 /* Views */ = {
@@ -473,8 +574,7 @@
 		6EE811CA17370EE200433687 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				6EE811CB17370F2600433687 /* NSString+Counter.h */,
-				6EE811CC17370F2600433687 /* NSString+Counter.m */,
+				6EB7271F173F1FBA00093237 /* NSString */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -537,6 +637,8 @@
 				6E9D603B1733829700FD292E /* MainViewController.xib in Resources */,
 				6E69392C17342A0500C5DFF5 /* About.txt in Resources */,
 				6E69393417342A0500C5DFF5 /* README.txt in Resources */,
+				6EB72712173F156C00093237 /* SaveViewController.xib in Resources */,
+				6EB7271D173F1D2300093237 /* UsersViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,6 +690,14 @@
 				6EE811BE1736080000433687 /* BlogModel.xcdatamodeld in Sources */,
 				6EE811C61736269B00433687 /* BlogEntry.m in Sources */,
 				6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */,
+				6EB726E1173C0B8800093237 /* UserStore.m in Sources */,
+				6EB726F2173D665E00093237 /* Token.m in Sources */,
+				6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */,
+				6EB72709173E972700093237 /* UserModel.xcdatamodeld in Sources */,
+				6EB72711173F156C00093237 /* SaveViewController.m in Sources */,
+				6EB72718173F180600093237 /* User.m in Sources */,
+				6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */,
+				6EB72723173F223D00093237 /* ToolBarController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,6 +856,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		6EB72707173E972700093237 /* UserModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				6EB72708173E972700093237 /* UserModel.xcdatamodel */,
+			);
+			currentVersion = 6EB72708173E972700093237 /* UserModel.xcdatamodel */;
+			path = UserModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		6EE811BC173607FE00433687 /* BlogModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

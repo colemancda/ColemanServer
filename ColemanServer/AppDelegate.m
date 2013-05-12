@@ -11,6 +11,8 @@
 #import "LogStore.h"
 #import "ServerStore.h"
 #import "MainViewController.h"
+#import "BlogStore.h"
+#import "UserStore.h"
 
 static NSString *kRootVCKeyPath = @"rootViewController";
 
@@ -31,6 +33,12 @@ const NSInteger kErrorCodeServerLaunch = 101;
     
     // get the default port
     NSNumber *defaultPort = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"DefaultPort"];
+    
+    // initialize the blog store
+    [BlogStore sharedStore];
+    
+    // initialize the user store
+    [UserStore sharedStore];
     
     // start server
     [[ServerStore sharedStore] startServerWithPort:defaultPort.unsignedIntegerValue];
@@ -77,6 +85,21 @@ const NSInteger kErrorCodeServerLaunch = 101;
     [self.window makeKeyAndOrderFront:self];
     
     return YES;
+}
+
+-(void)applicationWillTerminate:(NSNotification *)notification
+{
+    // stop server
+    [[ServerStore sharedStore] stopServer];
+    
+    [[LogStore sharedStore] addEntry:@"Stopped server"];
+    
+    // try to save blog entries
+    [[BlogStore sharedStore] save];
+    
+    // try to save users
+    [[UserStore sharedStore] save];
+    
 }
 
 @end

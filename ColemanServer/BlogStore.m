@@ -32,14 +32,18 @@
     self = [super init];
     if (self) {
         
-        NSLog(@"Initializing Blog Store");
+        NSLog(@"Initializing Blog Store...");
         
         // create sort descriptor
         _sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date"
                                                         ascending:YES];
         
+        // get the model file
+        NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"BlogModel"
+                                                  withExtension:@"momd"];
+        
         // read in all the Core Data files
-        _model = [NSManagedObjectModel mergedModelFromBundles:nil];
+        _model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
         
         NSPersistentStoreCoordinator *persistanceStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
         
@@ -66,12 +70,13 @@
         // load all items
         [self loadAllItems];
         
-        // TEMP
         BlogEntry *entry = [self createEntry];
         
         entry.title = @"Cool title";
         
         entry.content = @"Ipsum Lorem";
+        
+        [self createEntry];
         
     }
     return self;
@@ -110,7 +115,7 @@
 
 -(BOOL)save
 {
-    [[LogStore sharedStore] addEntry:@"Saving blog entries"];
+    [[LogStore sharedStore] addEntry:@"Saving blog entries..."];
     
     NSError *error;
     
@@ -138,7 +143,7 @@
     if (!_blogEntries) {
         
         // Log
-        [[LogStore sharedStore] addEntry:@"Fetching all blog entries"];
+        NSLog(@"Fetching all blog entries...");
         
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         
