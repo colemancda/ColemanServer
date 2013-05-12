@@ -33,6 +33,15 @@
         
         NSLog(@"Initializing User Store...");
         
+        // set the default token duration
+        self.tokenDuration = [[NSUserDefaults standardUserDefaults] floatForKey:@"tokenDuration"];
+        
+        // KVO token duration
+        [self addObserver:self
+               forKeyPath:@"self.tokenDuration"
+                  options:NSKeyValueObservingOptionOld
+                  context:nil];
+        
         // load model file
         NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"UserModel"
                                                   withExtension:@"momd"];
@@ -89,6 +98,20 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         [[LogStore sharedStore] addEntry:@"Admin's password changed"];
+        
+    }
+    
+    if ([keyPath isEqualToString:@"self.tokenDuration"]) {
+        
+        // update user defaults
+        [[NSUserDefaults standardUserDefaults] setDouble:self.tokenDuration
+                                                  forKey:@"tokenDuration"];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSString *entry = [NSString stringWithFormat:@"Changed token duration to %ld", (long)self.tokenDuration];
+        
+        [[LogStore sharedStore] addEntry:entry];
         
     }
     
