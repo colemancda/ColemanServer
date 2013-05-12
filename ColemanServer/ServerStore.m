@@ -42,6 +42,8 @@ static NSString *kAPILoginURL = @"/blog/login/:user/:password";
     self = [super init];
     if (self) {
         
+        NSLog(@"Initializing Server...");
+        
         _server = [[RoutingHTTPServer alloc] init];
         
         // Set a default Server header in the form of YourApp/1.0
@@ -187,7 +189,7 @@ static NSString *kAPILoginURL = @"/blog/login/:user/:password";
 -(BOOL)startServerWithPort:(NSUInteger)port
 {
     // log
-    [[LogStore sharedStore] addEntry:[NSString stringWithFormat:@"Starting the HTTP server on port %ld", (unsigned long)port]];
+    NSLog(@"Starting the HTTP server on port %ld...", (unsigned long)port);
     
     _server.port = port;
     
@@ -208,10 +210,25 @@ static NSString *kAPILoginURL = @"/blog/login/:user/:password";
         // set the start date
         _dateServerStarted = [NSDate date];
         
+        // the port that was actually set (may be different if you set the port to 0)
+        NSUInteger successfulPort = _server.listeningPort;
+        
         // log
-        NSString *logEntry = [NSString stringWithFormat:@"The server started successfully on port %d", _server.listeningPort];
+        NSString *logEntry = [NSString stringWithFormat:@"The server started successfully on port %ld", (unsigned long)successfulPort];
         
         [[LogStore sharedStore] addEntry:logEntry];
+                
+        // add port to user preferences
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithUnsignedInteger:successfulPort]
+                                                  forKey:@"port"];
+        
+        BOOL success = [[NSUserDefaults standardUserDefaults] synchronize];
+        if (!success) {
+            NSLog(@"Could not successfully set the new default port");
+        }
+        else {
+            NSLog(@"Successfully set the new default port to %ld", (unsigned long)successfulPort);
+        }
         
     }
     

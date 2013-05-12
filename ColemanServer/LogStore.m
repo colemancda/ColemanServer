@@ -33,7 +33,7 @@
         // initialize variable
         _logEntries = [[NSMutableArray alloc] init];
         
-        // set the defualt date format
+        // set the default date format
         self.dateStyle = NSDateFormatterMediumStyle;
         self.timeStyle = NSDateFormatterLongStyle;
         
@@ -103,6 +103,54 @@
     
     // KVO Post change
     [self didChangeValueForKey:@"log"];
+}
+
+#pragma mark
+
+-(NSString *)defaultArchivePath
+{
+    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [documentsPaths objectAtIndex:0];
+    
+    NSString *folderName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
+    
+    NSString *folderPath = [documentsPath stringByAppendingPathComponent:folderName];
+    
+    NSString *logsFolderPath = [folderPath stringByAppendingPathComponent:@"logs"];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:logsFolderPath])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:logsFolderPath
+                                  withIntermediateDirectories:YES
+                                                   attributes:nil
+                                                        error:nil];
+    }
+    
+    // get a string for the current date
+    
+    NSString *fileName = [NSString stringWithFormat:@"log %@.txt", [NSDate date]];
+        
+    NSString *filePath = [logsFolderPath stringByAppendingPathComponent:fileName];
+    
+    return filePath;
+}
+
+-(BOOL)saveToURL:(NSURL *)url
+{
+    NSError *error;
+    
+    BOOL success = [self.log writeToURL:url
+                             atomically:YES
+                               encoding:NSUTF8StringEncoding
+                                  error:&error];
+    if (!success) {
+        NSLog(@"Could not save log to %@", url.absoluteString);
+    }
+    else {
+        NSLog(@"Successfully saved log to %@", url.absoluteString);
+    }
+    
+    return success;
 }
 
 @end

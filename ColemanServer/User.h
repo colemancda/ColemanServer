@@ -10,6 +10,13 @@
 #import <CoreData/CoreData.h>
 @class Token;
 
+typedef NS_ENUM(NSInteger, UserPermissionLevel) {
+    
+    Admin = 100,
+    Viewer = 0
+    
+};
+
 @interface User : NSManagedObject
 {
     NSMutableArray *_tokens;

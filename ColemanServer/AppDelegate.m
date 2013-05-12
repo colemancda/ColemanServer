@@ -20,7 +20,22 @@ NSString *const kErrorDomain = @"com.ColemanCDA.ColemanServer.ErrorDomain";
 
 const NSInteger kErrorCodeServerLaunch = 101;
 
+
+
 @implementation AppDelegate
+
++(void)initialize
+{
+    // create defaults
+    NSDictionary *defaults = @{@"port": @8080,
+                               @"adminUsername" : @"admin",
+                               @"adminPassword" : @"admin",
+                               @"tokenDuration" : @100000};
+    
+    // register Defaults
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+    
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -32,7 +47,7 @@ const NSInteger kErrorCodeServerLaunch = 101;
     // try to start the server...
     
     // get the default port
-    NSNumber *defaultPort = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"DefaultPort"];
+    NSNumber *defaultPort = [[NSUserDefaults standardUserDefaults] objectForKey:@"port"];
     
     // initialize the blog store
     [BlogStore sharedStore];
@@ -99,6 +114,9 @@ const NSInteger kErrorCodeServerLaunch = 101;
     
     // try to save users
     [[UserStore sharedStore] save];
+    
+    // try to save the log
+    [[LogStore sharedStore] saveToURL:[NSURL fileURLWithPath:[LogStore sharedStore].defaultArchivePath]];
     
 }
 

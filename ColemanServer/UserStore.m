@@ -132,7 +132,7 @@
         
         _users = [[NSMutableArray alloc] initWithArray:result];
         
-        [[LogStore sharedStore] addEntry:@"Succesfully loaded all Users"];
+        [[LogStore sharedStore] addEntry:@"Successfully loaded all Users"];
         
     }
 }

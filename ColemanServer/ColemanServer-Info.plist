@@ -28,8 +28,6 @@
 	<string>Copyright © 2013 ColemanCDA. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
-	<key>DefaultPort</key>
-	<integer>8080</integer>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

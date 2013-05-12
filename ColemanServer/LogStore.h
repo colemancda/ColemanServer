@@ -25,4 +25,8 @@
 
 -(void)addError:(NSString *)string;
 
+@property (readonly) NSString *defaultArchivePath;
+
+-(BOOL)saveToURL:(NSURL *)url;
+
 @end

@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "HTTPServer.h"
 
 extern NSString *const kErrorDomain;
 
