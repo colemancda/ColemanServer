@@ -16,6 +16,9 @@
     NSManagedObjectModel *_model;
     
     NSSortDescriptor *_sortDescriptor;
+    
+    // admin non-save context
+    NSManagedObjectContext *_adminContext;
 }
 
 + (UserStore *)sharedStore;

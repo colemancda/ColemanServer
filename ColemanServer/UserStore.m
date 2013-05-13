@@ -188,8 +188,9 @@
         NSLog(@"Creating Admin user...");
         
         // create admin user
+        _adminContext = [[NSManagedObjectContext alloc] init];
         _admin = [[User alloc] initWithEntity:entity
-               insertIntoManagedObjectContext:nil];
+               insertIntoManagedObjectContext:_adminContext];
         
         // set the default password and username
         _admin.username = [[NSUserDefaults standardUserDefaults] stringForKey:@"adminUsername"];
