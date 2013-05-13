@@ -11,6 +11,6 @@
 
 @interface UsersViewController : NSViewController
 
-@property UserStore *userStore;
+@property (readonly) UserStore *userStore;
 
 @end
