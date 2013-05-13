@@ -24,20 +24,25 @@
 
 @property NSTimeInterval tokenDuration;
 
+@property NSInteger tokenCharacterLength;
+
 @property (readonly) User *admin;
 
 @property (readonly) NSString *archivePath;
 
 @property (readonly) NSArray *allUsers;
 
-#pragma mark
+#pragma mark - Loading and Saving
 
 -(void)loadAllUsers;
 
 -(BOOL)save;
 
+#pragma mark - Manipulation of Users
+
 -(User *)createUser;
 
 -(void)removeUser:(User *)user;
+
 
 @end

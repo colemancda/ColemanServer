@@ -23,6 +23,8 @@ static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
 
 static NSString *kAPILoginURL = @"/blog/login/:username/:password";
 
+static NSString *kAPIAddEntryURL = @"/blog/createEntry/:token";
+
 
 @implementation ServerStore
 
@@ -178,24 +180,23 @@ static NSString *kAPILoginURL = @"/blog/login/:username/:password";
         // login...
         [_server handleMethod:kGETMethod withPath:kAPILoginURL block:^(RouteRequest *request, RouteResponse *response) {
             
-            // find a user with that username
-            NSString *inputUsername = request.params[@"username"];
-            inputUsername = inputUsername.lowercaseString;
+            // find user with that username
             
+            NSString *username = [request.params objectForKey:@"username"];
+            
+            // lowercase the given username
+            username = username.lowercaseString;
+            
+            // search for a user with that username
             User *matchingUser;
             for (User *user in [UserStore sharedStore].allUsers) {
                 
-                // get a lowercase username
-                NSString *username = user.username.lowercaseString;
-                
-                if ([username isEqualToString:inputUsername]) {
+                if ([user.username isEqualToString:username]) {
                     
                     matchingUser = user;
                     
                     break;
-                    
                 }
-                
             }
             
             // no user exists for that username
@@ -208,10 +209,11 @@ static NSString *kAPILoginURL = @"/blog/login/:username/:password";
             }
             
             // compare password
-            NSString *inputPassword = request.params[@"password"];
+            NSString *password = request.params[@"password"];
             
             // if the password is incorrect
-            if (![matchingUser.password isEqualToString:inputPassword]) {
+            if (![matchingUser.password isEqualToString:password])
+            {
                 
                 [response respondWithString:@"Wrong password"];
                 
@@ -254,6 +256,83 @@ static NSString *kAPILoginURL = @"/blog/login/:username/:password";
                 
             }
             
+            
+        }];
+        
+        // add blog entry...
+        [_server handleMethod:kGETMethod withPath:kAPIAddEntryURL block:^(RouteRequest *request, RouteResponse *response) {
+            
+            NSString *tokenStringValue = [request.params objectForKey:@"token"];
+            
+            // find the user that token belongs to
+            User *matchingUser;
+            for (User *user in [UserStore sharedStore].allUsers) {
+                
+                for (Token *token in user.tokens) {
+                    
+                    if ([token.stringValue isEqualToString:tokenStringValue]) {
+                        
+                        matchingUser = user;
+                        
+                        break;
+                        
+                    }
+                }
+                
+                if (matchingUser) {
+                    break;
+                }
+            }
+            
+            // if the token was not found
+            if (!matchingUser) {
+                NSString *errorResponse = @"invalid token";
+                
+                [response respondWithString:errorResponse];
+                
+                return;
+            }
+            
+            // if the user does not have access
+            if (matchingUser.permissions.integerValue != Admin) {
+                
+                NSString *errorResponse = @"This user does not have access to this";
+                
+                [response respondWithString:errorResponse];
+                
+                return;
+            }
+            
+            // create new entry
+            BlogEntry *entry = [[BlogStore sharedStore] createEntry];
+            
+            NSInteger entryIndex = [[BlogStore sharedStore].allEntries indexOfObject:entry];
+            
+            NSNumber *entryNumber = [NSNumber numberWithInteger:entryIndex + 1];
+            
+            // create JSON Data to send
+            NSDictionary *jsonObject = @{@"number": entryNumber};
+            
+            NSError *jsonError;
+            
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:&jsonError];
+            
+            if (!jsonData) {
+                
+                NSString *errorEntry = [NSString stringWithFormat:@"Could not serialize token into JSON data. %@", jsonError.localizedDescription];
+                
+                [[LogStore sharedStore] addError:errorEntry];
+                
+                [response respondWithString:@"Internal server error"];
+                
+                return;
+            }
+            
+            // success
+            
+            [response respondWithData:jsonData];
+            
+            return;
             
         }];
                 

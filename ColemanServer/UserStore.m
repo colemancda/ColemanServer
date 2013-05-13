@@ -9,6 +9,7 @@
 #import "UserStore.h"
 #import "User.h"
 #import "LogStore.h"
+#import "AppDelegate.h"
 
 @implementation UserStore
 
@@ -128,7 +129,7 @@
 
 -(NSArray *)allUsers
 {
-    return (NSArray *)_users.copy;
+    return _users;
 }
 
 -(NSString *)archivePath

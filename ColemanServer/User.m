@@ -35,7 +35,7 @@
 
 -(NSArray *)tokens
 {
-    return (NSArray *)_tokens.copy;
+    return (NSArray *)_tokens;
 }
 
 #pragma mark

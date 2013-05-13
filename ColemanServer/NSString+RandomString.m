@@ -51,19 +51,7 @@
         [uid appendFormat:@"%c", (char) randomNum];
     }
     
-    // Generate a UID that selects any kind of character, including a lot of punctuation. It's a bit easier to do it this way.
-    int amountOfAnyCharacters = charLowerEnd - charNumStart; // A new range of characters.
-    NSMutableString *multiCharUid = [NSMutableString stringWithCapacity:length];
-    for (int i = 0; i < length; i++) {
-        // Generate a random number within our new character range.
-        int randomNum = arc4random() % amountOfAnyCharacters;
-        // Add the lowest value number to line this up with our range of characters.
-        randomNum += charNumStart;
-        // append the chosen character.
-        [multiCharUid appendFormat:@"%c", (char) randomNum];
-    }
-    
-    return (NSString *)multiCharUid.copy;
+    return (NSString *)uid;
 }
 
 @end

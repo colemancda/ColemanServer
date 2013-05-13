@@ -102,7 +102,7 @@
 
 -(NSArray *)allEntries
 {
-    return (NSArray *)_blogEntries.copy;
+    return (NSArray *)_blogEntries;
 }
 
 -(BOOL)save
