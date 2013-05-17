@@ -25,9 +25,9 @@
 
 #pragma mark - Properties
 
-@property NSTimeInterval tokenDuration;
+@property NSNumber *tokenDuration;
 
-@property NSInteger tokenCharacterLength;
+@property NSNumber *tokenCharacterLength;
 
 @property (readonly) User *admin;
 

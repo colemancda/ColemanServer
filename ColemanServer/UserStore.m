@@ -35,11 +35,19 @@
         NSLog(@"Initializing User Store...");
         
         // set the default token duration
-        self.tokenDuration = [[NSUserDefaults standardUserDefaults] floatForKey:@"tokenDuration"];
+        self.tokenDuration = [[NSUserDefaults standardUserDefaults] objectForKey:@"tokenDuration"];
         
         // KVO token duration
         [self addObserver:self
                forKeyPath:@"self.tokenDuration"
+                  options:NSKeyValueObservingOptionOld
+                  context:nil];
+        
+        // set the default token character length
+        self.tokenCharacterLength = [[NSUserDefaults standardUserDefaults] objectForKey:@"tokenLength"];
+        
+        // KVO Token Character length
+        [self addObserver:self forKeyPath:@"self.tokenCharacterLength"
                   options:NSKeyValueObservingOptionOld
                   context:nil];
         
@@ -105,12 +113,26 @@
     if ([keyPath isEqualToString:@"self.tokenDuration"]) {
         
         // update user defaults
-        [[NSUserDefaults standardUserDefaults] setDouble:self.tokenDuration
+        [[NSUserDefaults standardUserDefaults] setObject:self.tokenDuration
                                                   forKey:@"tokenDuration"];
         
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        NSString *entry = [NSString stringWithFormat:@"Changed token duration to %ld", (long)self.tokenDuration];
+        NSString *entry = [NSString stringWithFormat:@"Changed token duration to %@", self.tokenDuration];
+        
+        [[LogStore sharedStore] addEntry:entry];
+        
+    }
+    
+    if ([keyPath isEqualToString:@"self.tokenCharacterLength"]) {
+        
+        // update user defaults
+        [[NSUserDefaults standardUserDefaults] setObject:self.tokenCharacterLength
+                                                  forKey:@"tokenLength"];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSString *entry = [NSString stringWithFormat:@"Changed token character length to %@", self.tokenCharacterLength];
         
         [[LogStore sharedStore] addEntry:entry];
         
@@ -123,6 +145,12 @@
     // remove KVO observer
     [self.admin removeObserver:self
                     forKeyPath:@"self.password"];
+    
+    [self removeObserver:self
+              forKeyPath:@"self.tokenDuration"];
+    
+    [self removeObserver:self
+              forKeyPath:@"self.tokenCharacterLength"];
 }
 
 #pragma mark 

@@ -1298,7 +1298,7 @@
 			<object class="NSWindowTemplate" id="972006081">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{335, 390}, {610, 435}}</string>
+				<string key="NSWindowRect">{{335, 390}, {598, 547}}</string>
 				<int key="NSWTFlags">1954021376</int>
 				<string key="NSWindowTitle">ColemanServer</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -1455,7 +1455,7 @@
 							</object>
 						</object>
 					</dictionary>
-					<array class="NSMutableArray" key="NSToolbarIBAllowedItems">
+					<array key="NSToolbarIBAllowedItems">
 						<reference ref="511242460"/>
 						<reference ref="775929951"/>
 						<reference ref="136516602"/>
@@ -1473,7 +1473,7 @@
 					<array key="NSToolbarIBSelectableItems" id="0"/>
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
-				<string key="NSWindowContentMinSize">{446, 353}</string>
+				<string key="NSWindowContentMinSize">{600, 550}</string>
 				<object class="NSView" key="NSWindowView" id="439893737">
 					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -1485,13 +1485,14 @@
 								<object class="NSView" id="1046938690">
 									<reference key="NSNextResponder" ref="1002809845"/>
 									<int key="NSvFlags">274</int>
-									<string key="NSFrameSize">{610, 435}</string>
+									<string key="NSFrameSize">{598, 547}</string>
 									<reference key="NSSuperview" ref="1002809845"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:11</string>
 								</object>
 							</array>
-							<string key="NSFrameSize">{610, 435}</string>
+							<string key="NSFrameSize">{598, 547}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="1046938690"/>
@@ -1527,13 +1528,13 @@
 							<bool key="NSTransparent">NO</bool>
 						</object>
 					</array>
-					<string key="NSFrameSize">{610, 435}</string>
+					<string key="NSFrameSize">{598, 547}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="1002809845"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 800}}</string>
-				<string key="NSMinSize">{446, 431}</string>
+				<string key="NSMinSize">{600, 628}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<int key="NSWindowCollectionBehavior">128</int>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -3473,6 +3474,8 @@
 				<string key="350.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="351.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="354.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<boolean value="YES" key="371.IBNSWindowAutoPositionCentersHorizontal"/>
+				<boolean value="YES" key="371.IBNSWindowAutoPositionCentersVertical"/>
 				<string key="371.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="371.IBWindowTemplateEditedContentRect">{{380, 496}, {480, 360}}</string>
 				<integer value="1" key="371.NSWindowTemplate.visibleAtLaunch"/>

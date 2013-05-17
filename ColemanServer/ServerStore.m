@@ -17,13 +17,20 @@
 #import "UserStore.h"
 #import "Token.h"
 
-static NSString *kAPINumberOfEntriesURL = @"/blog/numberOfEntries";
+// UnAuthorized API
 
-static NSString *kAPIEntryAtNumberURL = @"/blog/entry/:number";
+static NSString *kAPILoginURL = @"/login/:username/:password"; // GET
 
-static NSString *kAPILoginURL = @"/blog/login/:username/:password";
+static NSString *kAPIBlogURL = @"/blog"; // GET
 
-static NSString *kAPIAddEntryURL = @"/blog/createEntry/:token";
+static NSString *kAPIEntryAtIndexURL = @"/blog/:index"; // GET
+
+// API with token
+
+static NSString *kAPIBlogTokenURL = @"/blog/:token"; // POST
+
+static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELETE
+
 
 
 @implementation ServerStore
@@ -63,16 +70,18 @@ static NSString *kAPIAddEntryURL = @"/blog/createEntry/:token";
         
         [_server setDefaultHeader:@"Server" value:serverHeader];
         
-        // setup response code
+        /////////////////////////
+        
+        // setup response code //
         
         // numberOfEntries...
-        [_server handleMethod:kGETMethod withPath:kAPINumberOfEntriesURL block:^(RouteRequest *request, RouteResponse *response) {
+        [_server handleMethod:kGETMethod withPath:kAPIBlogURL block:^(RouteRequest *request, RouteResponse *response) {
             
             // get the data from the store
             
             NSUInteger count = [BlogStore sharedStore].allEntries.count;
             
-            NSDictionary *jsonObject = @{@"numberOfEntries": [NSNumber numberWithInteger:count]};
+            NSDictionary *jsonObject = @{@"entries": [NSNumber numberWithInteger:count]};
             
             NSError *jsonSerializationError;
             
@@ -96,8 +105,8 @@ static NSString *kAPIAddEntryURL = @"/blog/createEntry/:token";
             
         }];
         
-        // entryAtNumber: ...
-        [_server handleMethod:kGETMethod withPath:kAPIEntryAtNumberURL block:^(RouteRequest *request, RouteResponse *response) {
+        // entry at index
+        [_server handleMethod:kGETMethod withPath:kAPIEntryAtIndexURL block:^(RouteRequest *request, RouteResponse *response) {
             
             NSUInteger count = [BlogStore sharedStore].allEntries.count;
             
@@ -110,20 +119,20 @@ static NSString *kAPIAddEntryURL = @"/blog/createEntry/:token";
             }
             
             // get the index
-            NSString *indexString = [request.params objectForKey:@"number"];
+            NSString *indexString = [request.params objectForKey:@"index"];
+            NSUInteger index = indexString.integerValue;
             
-            NSInteger number = indexString.integerValue;
-            
-            if (!number || number > count) {
+            // check if index is valid
+            if (index >= count) {
                 
                 [response respondWithString:@"No entries for that value"];
                 return;
             }
             
-            BlogEntry *blogEntry = [[BlogStore sharedStore].allEntries objectAtIndex:number - 1];
+            // get blog entry
+            BlogEntry *blogEntry = [[BlogStore sharedStore].allEntries objectAtIndex:index];
             
             // create strings
-            
             NSString *dateString = [NSString stringWithFormat:@"%@", blogEntry.date];
             
             NSString *titleString;
@@ -253,14 +262,85 @@ static NSString *kAPIAddEntryURL = @"/blog/createEntry/:token";
                     [response respondWithData:jsonData];
                     return;
                 }
-                
             }
-            
             
         }];
         
         // add blog entry...
-        [_server handleMethod:kGETMethod withPath:kAPIAddEntryURL block:^(RouteRequest *request, RouteResponse *response) {
+        [_server handleMethod:kPOSTMethod withPath:kAPIBlogTokenURL block:^(RouteRequest *request, RouteResponse *response) {
+            
+            NSString *tokenStringValue = [request.params objectForKey:@"token"];
+            
+            // find the user that token belongs to
+            User *matchingUser;
+            for (User *user in [UserStore sharedStore].allUsers) {
+                
+                for (Token *token in user.tokens) {
+                    
+                    if ([token.stringValue isEqualToString:tokenStringValue]) {
+                        
+                        matchingUser = user;
+                        break;
+                        
+                    }
+                }
+                
+                if (matchingUser) {
+                    break;
+                }
+            }
+            
+            // if the token was not found
+            if (!matchingUser) {
+                NSString *errorResponse = @"invalid token";
+                
+                [response respondWithString:errorResponse];
+                return;
+            }
+            
+            // if the user does not have access
+            if (matchingUser.permissions.integerValue != Admin) {
+                
+                NSString *errorResponse = @"This user does not have access to this";
+                [response respondWithString:errorResponse];
+                return;
+            }
+            
+            // create new entry
+            BlogEntry *entry = [[BlogStore sharedStore] createEntry];
+            
+            NSInteger entryIndex = [[BlogStore sharedStore].allEntries indexOfObject:entry];
+            
+            NSNumber *entryIndexNumber = [NSNumber numberWithInteger:entryIndex];
+            
+            // create JSON Data to send
+            NSDictionary *jsonObject = @{@"index": entryIndexNumber};
+            
+            NSError *jsonError;
+            
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:&jsonError];
+            
+            if (!jsonData) {
+                
+                NSString *errorEntry = [NSString stringWithFormat:@"Could not serialize token into JSON data. %@", jsonError.localizedDescription];
+                
+                [[LogStore sharedStore] addError:errorEntry];
+                
+                [response respondWithString:@"Internal server error"];
+                
+                return;
+            }
+            
+            // success
+            
+            [response respondWithData:jsonData];
+            
+            return;
+            
+        }];
+        
+        // edit blog entry...
+        [_server handleMethod:kPUTMethod withPath:kAPIEntryAtIndexTokenURL block:^(RouteRequest *request, RouteResponse *response) {
             
             NSString *tokenStringValue = [request.params objectForKey:@"token"];
             
@@ -286,8 +366,9 @@ static NSString *kAPIAddEntryURL = @"/blog/createEntry/:token";
             
             // if the token was not found
             if (!matchingUser) {
-                NSString *errorResponse = @"invalid token";
                 
+                NSString *errorResponse = @"invalid token";
+                [response setHeader:@"Status" value:@"401"];
                 [response respondWithString:errorResponse];
                 
                 return;
@@ -297,44 +378,182 @@ static NSString *kAPIAddEntryURL = @"/blog/createEntry/:token";
             if (matchingUser.permissions.integerValue != Admin) {
                 
                 NSString *errorResponse = @"This user does not have access to this";
+                [response setHeader:@"Status" value:@"401"];
                 
                 [response respondWithString:errorResponse];
                 
                 return;
             }
             
-            // create new entry
-            BlogEntry *entry = [[BlogStore sharedStore] createEntry];
+            // get the number of blog entries
+            NSUInteger count = [BlogStore sharedStore].allEntries.count;
             
-            NSInteger entryIndex = [[BlogStore sharedStore].allEntries indexOfObject:entry];
+            // no objects in array
+            if (!count) {
+                
+                [response respondWithString:@"No entries exist on the server"];
+                [response setHeader:@"Status" value:@"404"];
+                return;
+                
+            }
             
-            NSNumber *entryNumber = [NSNumber numberWithInteger:entryIndex + 1];
+            // get the index
+            NSString *indexString = [request.params objectForKey:@"index"];
+            NSUInteger index = indexString.integerValue;
             
-            // create JSON Data to send
-            NSDictionary *jsonObject = @{@"number": entryNumber};
+            // check if index is valid
+            if (index >= count) {
+                
+                [response respondWithString:@"No entries for that value"];
+                [response setHeader:@"Status" value:@"404"];
+
+                return;
+            }
+            
+            // get blog entry
+            BlogEntry *blogEntry = [[BlogStore sharedStore].allEntries objectAtIndex:index];
+            
+            NSData *httpBodyData = request.body;
+            
+            if (!httpBodyData) {
+                
+                [response respondWithString:@"You need to send data"];
+                [response setHeader:@"Status" value:@"400"];
+
+                return;
+                
+            }
             
             NSError *jsonError;
             
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:&jsonError];
+            NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:httpBodyData options:NSJSONReadingAllowFragments error:&jsonError];
             
-            if (!jsonData) {
+            // the data recieved is not JSON
+            if (!jsonObject) {
                 
-                NSString *errorEntry = [NSString stringWithFormat:@"Could not serialize token into JSON data. %@", jsonError.localizedDescription];
-                
-                [[LogStore sharedStore] addError:errorEntry];
-                
-                [response respondWithString:@"Internal server error"];
+                NSString *responseString = [NSString stringWithFormat:@"Could not parse JSON data sent"];
+                [response setHeader:@"Status" value:@"400"];
+
+                [response respondWithString:responseString];
                 
                 return;
             }
             
-            // success
+            // JSON data recieved is not JSON
+            if (![jsonObject isKindOfClass:[NSDictionary class]]) {
+                
+                NSString *responseString = [NSString stringWithFormat:@"Wrong JSON data sent"];
+                [response setHeader:@"Status" value:@"400"];
+                
+                [response respondWithString:responseString];
+                
+                return;
+            }
             
-            [response respondWithData:jsonData];
+            // if the JSON dictionary has a 'title' value, then change the title of the blog entry
+            NSString *title = [jsonObject objectForKey:@"title"];
             
-            return;
+            if (title) {
+                
+                blogEntry.title = title;
+            }
+            
+            // if we got a value for 'content', then set it
+            NSString *content = [jsonObject objectForKey:@"content"];
+            
+            if (content) {
+                
+                blogEntry.content = content;
+            }
+            
+            // respond
+            
+            [response respondWithString:@"Succesfully made the changes"];
+            
             
         }];
+        
+        // remove blog entry
+        [_server handleMethod:kDELETEMethod withPath:kAPIEntryAtIndexTokenURL block:^(RouteRequest *request, RouteResponse *response) {
+           
+            NSString *tokenStringValue = [request.params objectForKey:@"token"];
+            
+            // find the user that token belongs to
+            User *matchingUser;
+            for (User *user in [UserStore sharedStore].allUsers) {
+                
+                for (Token *token in user.tokens) {
+                    
+                    if ([token.stringValue isEqualToString:tokenStringValue]) {
+                        
+                        matchingUser = user;
+                        
+                        break;
+                        
+                    }
+                }
+                
+                if (matchingUser) {
+                    break;
+                }
+            }
+            
+            // if the token was not found
+            if (!matchingUser) {
+                
+                NSString *errorResponse = @"invalid token";
+                [response setHeader:@"Status" value:@"401"];
+                [response respondWithString:errorResponse];
+                
+                return;
+            }
+            
+            // if the user does not have access
+            if (matchingUser.permissions.integerValue != Admin) {
+                
+                NSString *errorResponse = @"This user does not have access to this";
+                [response setHeader:@"Status" value:@"401"];
+                
+                [response respondWithString:errorResponse];
+                
+                return;
+            }
+            
+            // get the number of blog entries
+            NSUInteger count = [BlogStore sharedStore].allEntries.count;
+            
+            // no objects in array
+            if (!count) {
+                
+                [response respondWithString:@"No entries exist on the server"];
+                [response setHeader:@"Status" value:@"404"];
+                return;
+                
+            }
+            
+            // get the index
+            NSString *indexString = [request.params objectForKey:@"index"];
+            NSUInteger index = indexString.integerValue;
+            
+            // check if index is valid
+            if (index >= count) {
+                
+                [response respondWithString:@"No entries for that value"];
+                [response setHeader:@"Status" value:@"404"];
+                
+                return;
+            }
+            
+            // get blog entry
+            BlogEntry *blogEntry = [[BlogStore sharedStore].allEntries objectAtIndex:index];
+            
+            // remove blog entry
+            [[BlogStore sharedStore] removeEntry:blogEntry];
+            
+            [response respondWithString:@"Successfully removed blog entry"];
+            
+        }];
+        
                 
     }
     return self;

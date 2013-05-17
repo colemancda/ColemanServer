@@ -52,7 +52,7 @@
         NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:oldToken.created];
         
         // if the interval is more than allowed
-        if (interval > [UserStore sharedStore].tokenDuration) {
+        if (interval > [UserStore sharedStore].tokenDuration.doubleValue) {
             
             [_tokens removeObjectIdenticalTo:oldToken];
             

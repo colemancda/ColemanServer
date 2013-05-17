@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class RoutingHTTPServer;
-
+#import "RoutingHTTPServer.h"
 @interface ServerStore : NSObject
 {
     RoutingHTTPServer *_server;

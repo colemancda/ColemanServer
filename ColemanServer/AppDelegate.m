@@ -20,8 +20,6 @@ NSString *const kErrorDomain = @"com.ColemanCDA.ColemanServer.ErrorDomain";
 
 const NSInteger kErrorCodeServerLaunch = 101;
 
-
-
 @implementation AppDelegate
 
 +(void)initialize
@@ -30,7 +28,8 @@ const NSInteger kErrorCodeServerLaunch = 101;
     NSDictionary *defaults = @{@"port": @8080,
                                @"adminUsername" : @"admin",
                                @"adminPassword" : @"admin",
-                               @"tokenDuration" : @100000};
+                               @"tokenDuration" : @100000,
+                               @"tokenLength" : @10};
     
     // register Defaults
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
