@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E1DE89C17482806003728D9 /* APIHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E1DE89B17482806003728D9 /* APIHTTPConnection.m */; };
 		6E6938EE173416CE00C5DFF5 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6938C9173416CE00C5DFF5 /* DDData.m */; };
 		6E6938EF173416CE00C5DFF5 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6938CB173416CE00C5DFF5 /* DDNumber.m */; };
 		6E6938F0173416CE00C5DFF5 /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6938CD173416CE00C5DFF5 /* DDRange.m */; };
@@ -73,6 +74,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E1DE89A17482806003728D9 /* APIHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIHTTPConnection.h; sourceTree = "<group>"; };
+		6E1DE89B17482806003728D9 /* APIHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIHTTPConnection.m; sourceTree = "<group>"; };
 		6E6938C8173416CE00C5DFF5 /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
 		6E6938C9173416CE00C5DFF5 /* DDData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDData.m; sourceTree = "<group>"; };
 		6E6938CA173416CE00C5DFF5 /* DDNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDNumber.h; sourceTree = "<group>"; };
@@ -208,6 +211,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E1DE899174827D1003728D9 /* HTTP Connection */ = {
+			isa = PBXGroup;
+			children = (
+				6E1DE89A17482806003728D9 /* APIHTTPConnection.h */,
+				6E1DE89B17482806003728D9 /* APIHTTPConnection.m */,
+			);
+			name = "HTTP Connection";
+			sourceTree = "<group>";
+		};
 		6E6938C6173416CE00C5DFF5 /* Cocoa Http Server */ = {
 			isa = PBXGroup;
 			children = (
@@ -348,6 +360,7 @@
 		6E6939381734317B00C5DFF5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6E1DE899174827D1003728D9 /* HTTP Connection */,
 				6EB726EF173D664F00093237 /* Token */,
 				6EB726E3173C0BFA00093237 /* User */,
 				6EE811CA17370EE200433687 /* Categories */,
@@ -730,6 +743,7 @@
 				6EB72723173F223D00093237 /* ToolBarController.m in Sources */,
 				6E924E8C173FF8FD00B1F131 /* SaveCell.m in Sources */,
 				6E924E92173FFB5600B1F131 /* SaveOption.m in Sources */,
+				6E1DE89C17482806003728D9 /* APIHTTPConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

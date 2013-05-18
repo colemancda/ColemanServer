@@ -482,10 +482,11 @@ static NSString *kAPIResponseInvalidToken = @"Invalid Token";
             
             [response respondWithString:@"Succesfully made the changes"];
             
-            
         }];
         
+        
 #pragma mark Remove Blog Entry
+        
         // remove blog entry
         [_server handleMethod:kDELETEMethod withPath:kAPIEntryAtIndexTokenURL block:^(RouteRequest *request, RouteResponse *response) {
             
@@ -508,7 +509,6 @@ static NSString *kAPIResponseInvalidToken = @"Invalid Token";
                 [response respondWithString:kAPIResponseNoAccess];
                 return;
             }
-            
             
             // get the number of blog entries
             NSUInteger count = [BlogStore sharedStore].allEntries.count;
@@ -541,7 +541,6 @@ static NSString *kAPIResponseInvalidToken = @"Invalid Token";
             
             // remove blog entry
             [[BlogStore sharedStore] removeEntry:blogEntry];
-            
             [response respondWithString:@"Successfully removed blog entry"];
             
         }];
