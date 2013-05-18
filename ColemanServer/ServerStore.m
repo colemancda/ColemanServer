@@ -96,8 +96,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
                 
                 // log
                 [[LogStore sharedStore] addError:errorString];
-                
-                [response respondWithString:@"Error"];
+                [response setStatusCode:500];
+                [response respondWithString:@"Internal Server Error"];
                 
             }
             
@@ -113,6 +113,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // no objects in array
             if (!count) {
                 
+                response.statusCode = 404;
                 [response respondWithString:@"No entries exist on the server"];
                 return;
                 
@@ -125,6 +126,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // check if index is valid
             if (index >= count) {
                 
+                response.statusCode = 404;
                 [response respondWithString:@"No entries for that value"];
                 return;
             }
@@ -174,6 +176,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
                 
                 [[LogStore sharedStore] addError:errorString];
                 
+                response.statusCode = 500;
                 [response respondWithString:@"Error fetching Blog Entry"];
                 
             }
@@ -212,6 +215,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             if (!matchingUser) {
                 NSString *errorResponse = @"No user exists for that username";
                 
+                response.statusCode = 401;
                 [response respondWithString:errorResponse];
                 
                 return;
@@ -224,6 +228,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             if (![matchingUser.password isEqualToString:password])
             {
                 
+                response.statusCode = 401;
                 [response respondWithString:@"Wrong password"];
                 
                 return;
@@ -251,6 +256,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
                     [[LogStore sharedStore] addError:logError];
                     
                     // respond with error
+                    response.statusCode = 500;
                     [response respondWithString:@"Error fetching token. Internal server error."];
                     
                     return;
@@ -294,12 +300,15 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             if (!matchingUser) {
                 NSString *errorResponse = @"invalid token";
                 
+                response.statusCode = 401;
                 [response respondWithString:errorResponse];
                 return;
             }
             
             // if the user does not have access
             if (matchingUser.permissions.integerValue != Admin) {
+                
+                response.statusCode = 403;
                 
                 NSString *errorResponse = @"This user does not have access to this";
                 [response respondWithString:errorResponse];
@@ -326,6 +335,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
                 
                 [[LogStore sharedStore] addError:errorEntry];
                 
+                response.statusCode = 500;
                 [response respondWithString:@"Internal server error"];
                 
                 return;
@@ -367,8 +377,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // if the token was not found
             if (!matchingUser) {
                 
+                response.statusCode = 401;
                 NSString *errorResponse = @"invalid token";
-                [response setHeader:@"Status" value:@"401"];
                 [response respondWithString:errorResponse];
                 
                 return;
@@ -377,9 +387,9 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // if the user does not have access
             if (matchingUser.permissions.integerValue != Admin) {
                 
-                NSString *errorResponse = @"This user does not have access to this";
-                [response setHeader:@"Status" value:@"401"];
+                response.statusCode = 403;
                 
+                NSString *errorResponse = @"This user does not have access to this";
                 [response respondWithString:errorResponse];
                 
                 return;
@@ -391,8 +401,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // no objects in array
             if (!count) {
                 
+                response.statusCode = 404;
                 [response respondWithString:@"No entries exist on the server"];
-                [response setHeader:@"Status" value:@"404"];
                 return;
                 
             }
@@ -404,8 +414,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // check if index is valid
             if (index >= count) {
                 
+                response.statusCode = 400;
                 [response respondWithString:@"No entries for that value"];
-                [response setHeader:@"Status" value:@"404"];
 
                 return;
             }
@@ -417,8 +427,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             
             if (!httpBodyData) {
                 
+                response.statusCode = 400;
                 [response respondWithString:@"You need to send data"];
-                [response setHeader:@"Status" value:@"400"];
 
                 return;
                 
@@ -431,9 +441,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // the data recieved is not JSON
             if (!jsonObject) {
                 
+                response.statusCode = 400;
                 NSString *responseString = [NSString stringWithFormat:@"Could not parse JSON data sent"];
-                [response setHeader:@"Status" value:@"400"];
-
                 [response respondWithString:responseString];
                 
                 return;
@@ -442,9 +451,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // JSON data recieved is not JSON
             if (![jsonObject isKindOfClass:[NSDictionary class]]) {
                 
+                response.statusCode = 400;
                 NSString *responseString = [NSString stringWithFormat:@"Wrong JSON data sent"];
-                [response setHeader:@"Status" value:@"400"];
-                
                 [response respondWithString:responseString];
                 
                 return;
@@ -501,8 +509,9 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // if the token was not found
             if (!matchingUser) {
                 
+                response.statusCode = 401;
+                
                 NSString *errorResponse = @"invalid token";
-                [response setHeader:@"Status" value:@"401"];
                 [response respondWithString:errorResponse];
                 
                 return;
@@ -511,9 +520,9 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // if the user does not have access
             if (matchingUser.permissions.integerValue != Admin) {
                 
-                NSString *errorResponse = @"This user does not have access to this";
-                [response setHeader:@"Status" value:@"401"];
+                response.statusCode = 403;
                 
+                NSString *errorResponse = @"This user does not have access to this";
                 [response respondWithString:errorResponse];
                 
                 return;
@@ -525,8 +534,9 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // no objects in array
             if (!count) {
                 
+                response.statusCode = 404;
+                
                 [response respondWithString:@"No entries exist on the server"];
-                [response setHeader:@"Status" value:@"404"];
                 return;
                 
             }
@@ -538,8 +548,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // check if index is valid
             if (index >= count) {
                 
+                response.statusCode = 400;
                 [response respondWithString:@"No entries for that value"];
-                [response setHeader:@"Status" value:@"404"];
                 
                 return;
             }
