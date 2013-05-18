@@ -8,6 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import "RoutingHTTPServer.h"
+
+typedef NS_ENUM(NSInteger, ServerErrorCodes) {
+    
+    BadRequest = 400,
+    Unauthorized,
+    Forbidden = 403,
+    NotFound,
+    ServerError = 500
+    
+};
+
 @interface ServerStore : NSObject
 {
     RoutingHTTPServer *_server;

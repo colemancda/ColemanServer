@@ -31,7 +31,47 @@ static NSString *kAPIBlogTokenURL = @"/blog/:token"; // POST
 
 static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELETE
 
+// String Responses
 
+static NSString *kAPIResponseServerError = @"Internal Server Error";
+
+static NSString *kAPIResponseWrongUsernamePassword = @"Wrong Username / Password combination";
+
+static NSString *kAPIResponseNoAccess = @"Access Forbidden";
+
+static NSString *kAPIResponseInvalidToken = @"Invalid Token";
+
+@implementation UserStore (Token)
+
+-(User *)userForToken:(NSString *)tokenStringValue
+{
+    if (!tokenStringValue) {
+        return nil;
+    }
+    
+    // find the user that token belongs to
+    User *matchingUser;
+    for (User *user in self.allUsers) {
+        
+        for (Token *token in user.tokens) {
+            
+            if ([token.stringValue isEqualToString:tokenStringValue]) {
+                
+                matchingUser = user;
+                break;
+                
+            }
+        }
+        
+        if (matchingUser) {
+            break;
+        }
+    }
+    
+    return matchingUser;
+}
+
+@end
 
 @implementation ServerStore
 
@@ -70,9 +110,11 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
         
         [_server setDefaultHeader:@"Server" value:serverHeader];
         
-        /////////////////////////
+#pragma mark - API Blocks
         
         // setup response code //
+        
+#pragma mark numberOfEntries
         
         // numberOfEntries...
         [_server handleMethod:kGETMethod withPath:kAPIBlogURL block:^(RouteRequest *request, RouteResponse *response) {
@@ -97,13 +139,15 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
                 // log
                 [[LogStore sharedStore] addError:errorString];
                 [response setStatusCode:500];
-                [response respondWithString:@"Internal Server Error"];
+                [response respondWithString:kAPIResponseServerError];
                 
             }
             
             [response respondWithData:jsonData];
             
         }];
+        
+#pragma mark Entry At Index
         
         // entry at index
         [_server handleMethod:kGETMethod withPath:kAPIEntryAtIndexURL block:^(RouteRequest *request, RouteResponse *response) {
@@ -126,8 +170,8 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             // check if index is valid
             if (index >= count) {
                 
-                response.statusCode = 404;
-                [response respondWithString:@"No entries for that value"];
+                response.statusCode = 400;
+                [response respondWithString:@"Invalid index"];
                 return;
             }
             
@@ -177,7 +221,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
                 [[LogStore sharedStore] addError:errorString];
                 
                 response.statusCode = 500;
-                [response respondWithString:@"Error fetching Blog Entry"];
+                [response respondWithString:kAPIResponseServerError];
                 
             }
             
@@ -189,11 +233,11 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             
         }];
         
+#pragma mark Login
         // login...
         [_server handleMethod:kGETMethod withPath:kAPILoginURL block:^(RouteRequest *request, RouteResponse *response) {
             
             // find user with that username
-            
             NSString *username = [request.params objectForKey:@"username"];
             
             // lowercase the given username
@@ -213,10 +257,9 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             
             // no user exists for that username
             if (!matchingUser) {
-                NSString *errorResponse = @"No user exists for that username";
                 
                 response.statusCode = 401;
-                [response respondWithString:errorResponse];
+                [response respondWithString:kAPIResponseWrongUsernamePassword];
                 
                 return;
             }
@@ -229,7 +272,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             {
                 
                 response.statusCode = 401;
-                [response respondWithString:@"Wrong password"];
+                [response respondWithString:kAPIResponseWrongUsernamePassword];
                 
                 return;
             }
@@ -257,7 +300,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
                     
                     // respond with error
                     response.statusCode = 500;
-                    [response respondWithString:@"Error fetching token. Internal server error."];
+                    [response respondWithString:kAPIResponseServerError];
                     
                     return;
                 }
@@ -272,46 +315,28 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             
         }];
         
+#pragma mark Add Blog Entry
+        
         // add blog entry...
         [_server handleMethod:kPOSTMethod withPath:kAPIBlogTokenURL block:^(RouteRequest *request, RouteResponse *response) {
             
             NSString *tokenStringValue = [request.params objectForKey:@"token"];
             
-            // find the user that token belongs to
-            User *matchingUser;
-            for (User *user in [UserStore sharedStore].allUsers) {
-                
-                for (Token *token in user.tokens) {
-                    
-                    if ([token.stringValue isEqualToString:tokenStringValue]) {
-                        
-                        matchingUser = user;
-                        break;
-                        
-                    }
-                }
-                
-                if (matchingUser) {
-                    break;
-                }
-            }
+            User *user = [[UserStore sharedStore] userForToken:tokenStringValue];
             
             // if the token was not found
-            if (!matchingUser) {
-                NSString *errorResponse = @"invalid token";
+            if (!user) {
                 
                 response.statusCode = 401;
-                [response respondWithString:errorResponse];
+                [response respondWithString:kAPIResponseInvalidToken];
                 return;
             }
             
             // if the user does not have access
-            if (matchingUser.permissions.integerValue != Admin) {
+            if (user.permissions.integerValue != Admin) {
                 
                 response.statusCode = 403;
-                
-                NSString *errorResponse = @"This user does not have access to this";
-                [response respondWithString:errorResponse];
+                [response respondWithString:kAPIResponseNoAccess];
                 return;
             }
             
@@ -336,7 +361,7 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
                 [[LogStore sharedStore] addError:errorEntry];
                 
                 response.statusCode = 500;
-                [response respondWithString:@"Internal server error"];
+                [response respondWithString:kAPIResponseServerError];
                 
                 return;
             }
@@ -349,49 +374,28 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             
         }];
         
+#pragma mark Edit Blog Entry
+        
         // edit blog entry...
         [_server handleMethod:kPUTMethod withPath:kAPIEntryAtIndexTokenURL block:^(RouteRequest *request, RouteResponse *response) {
             
             NSString *tokenStringValue = [request.params objectForKey:@"token"];
             
-            // find the user that token belongs to
-            User *matchingUser;
-            for (User *user in [UserStore sharedStore].allUsers) {
-                
-                for (Token *token in user.tokens) {
-                    
-                    if ([token.stringValue isEqualToString:tokenStringValue]) {
-                        
-                        matchingUser = user;
-                        
-                        break;
-                        
-                    }
-                }
-                
-                if (matchingUser) {
-                    break;
-                }
-            }
+            User *user = [[UserStore sharedStore] userForToken:tokenStringValue];
             
             // if the token was not found
-            if (!matchingUser) {
+            if (!user) {
                 
                 response.statusCode = 401;
-                NSString *errorResponse = @"invalid token";
-                [response respondWithString:errorResponse];
-                
+                [response respondWithString:kAPIResponseInvalidToken];
                 return;
             }
             
             // if the user does not have access
-            if (matchingUser.permissions.integerValue != Admin) {
+            if (user.permissions.integerValue != Admin) {
                 
                 response.statusCode = 403;
-                
-                NSString *errorResponse = @"This user does not have access to this";
-                [response respondWithString:errorResponse];
-                
+                [response respondWithString:kAPIResponseNoAccess];
                 return;
             }
             
@@ -481,52 +485,30 @@ static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELE
             
         }];
         
+#pragma mark Remove Blog Entry
         // remove blog entry
         [_server handleMethod:kDELETEMethod withPath:kAPIEntryAtIndexTokenURL block:^(RouteRequest *request, RouteResponse *response) {
-           
+            
             NSString *tokenStringValue = [request.params objectForKey:@"token"];
             
-            // find the user that token belongs to
-            User *matchingUser;
-            for (User *user in [UserStore sharedStore].allUsers) {
-                
-                for (Token *token in user.tokens) {
-                    
-                    if ([token.stringValue isEqualToString:tokenStringValue]) {
-                        
-                        matchingUser = user;
-                        
-                        break;
-                        
-                    }
-                }
-                
-                if (matchingUser) {
-                    break;
-                }
-            }
+            User *user = [[UserStore sharedStore] userForToken:tokenStringValue];
             
             // if the token was not found
-            if (!matchingUser) {
+            if (!user) {
                 
                 response.statusCode = 401;
-                
-                NSString *errorResponse = @"invalid token";
-                [response respondWithString:errorResponse];
-                
+                [response respondWithString:kAPIResponseInvalidToken];
                 return;
             }
             
             // if the user does not have access
-            if (matchingUser.permissions.integerValue != Admin) {
+            if (user.permissions.integerValue != Admin) {
                 
                 response.statusCode = 403;
-                
-                NSString *errorResponse = @"This user does not have access to this";
-                [response respondWithString:errorResponse];
-                
+                [response respondWithString:kAPIResponseNoAccess];
                 return;
             }
+            
             
             // get the number of blog entries
             NSUInteger count = [BlogStore sharedStore].allEntries.count;
