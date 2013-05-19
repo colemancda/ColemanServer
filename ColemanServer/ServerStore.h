@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "HTTPServer.h"
+#import "RoutingHTTPServer.h"
+
 
 typedef NS_ENUM(NSInteger, ServerErrorCodes) {
     
@@ -21,8 +23,7 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
 
 @interface ServerStore : NSObject
 {
-    HTTPServer *_server;
-    
+    RoutingHTTPServer *_server;
     NSDate *_dateServerStarted;
 }
 
