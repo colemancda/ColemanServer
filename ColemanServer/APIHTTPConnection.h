@@ -10,4 +10,6 @@
 
 @interface APIHTTPConnection : HTTPConnection
 
+@property (readonly) NSSet *APIFunctions;
+
 @end
