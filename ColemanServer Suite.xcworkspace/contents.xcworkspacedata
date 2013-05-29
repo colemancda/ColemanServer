@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ColemanServer/ColemanServer.xcodeproj">
+      location = "container:ColemanServer/ColemanServer.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:ColemanServerAdmin/ColemanServerAdmin.xcodeproj">
