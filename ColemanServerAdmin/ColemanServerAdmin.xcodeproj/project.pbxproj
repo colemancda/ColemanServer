@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		6E0279CE174FF0AD00A82BAA /* BlogEntryEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0279CC174FF0AD00A82BAA /* BlogEntryEditorViewController.m */; };
 		6E0279CF174FF0AD00A82BAA /* BlogEntryEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E0279CD174FF0AD00A82BAA /* BlogEntryEditorViewController.xib */; };
-		6E0279D81750624900A82BAA /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0279D61750624800A82BAA /* PageViewController.m */; };
 		6E045B85174EA03D0022A5CE /* BlogEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E045B84174EA03D0022A5CE /* BlogEntryCell.m */; };
 		6E045B8A174EF5040022A5CE /* NSURLResponse+HTTPCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E045B89174EF5040022A5CE /* NSURLResponse+HTTPCode.m */; };
 		6E1DE89817481081003728D9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E25261C1746975900141A3F /* CoreData.framework */; };
@@ -31,8 +30,6 @@
 		6E0279CB174FF0AC00A82BAA /* BlogEntryEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntryEditorViewController.h; sourceTree = "<group>"; };
 		6E0279CC174FF0AD00A82BAA /* BlogEntryEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntryEditorViewController.m; sourceTree = "<group>"; };
 		6E0279CD174FF0AD00A82BAA /* BlogEntryEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BlogEntryEditorViewController.xib; sourceTree = "<group>"; };
-		6E0279D51750624700A82BAA /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
-		6E0279D61750624800A82BAA /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
 		6E045B83174EA03D0022A5CE /* BlogEntryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntryCell.h; sourceTree = "<group>"; };
 		6E045B84174EA03D0022A5CE /* BlogEntryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntryCell.m; sourceTree = "<group>"; };
 		6E045B88174EF5040022A5CE /* NSURLResponse+HTTPCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLResponse+HTTPCode.h"; sourceTree = "<group>"; };
@@ -91,15 +88,6 @@
 			children = (
 			);
 			name = Categories;
-			sourceTree = "<group>";
-		};
-		6E0279DA1750625000A82BAA /* Page VC */ = {
-			isa = PBXGroup;
-			children = (
-				6E0279D51750624700A82BAA /* PageViewController.h */,
-				6E0279D61750624800A82BAA /* PageViewController.m */,
-			);
-			name = "Page VC";
 			sourceTree = "<group>";
 		};
 		6E045B82174EA0130022A5CE /* Views */ = {
@@ -208,7 +196,6 @@
 				6EC63BE61748AF9600105121 /* Blog Entries */,
 				6E25263B174699D000141A3F /* Login */,
 				6E0279D4174FF4A700A82BAA /* Categories */,
-				6E0279DA1750625000A82BAA /* Page VC */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -342,7 +329,6 @@
 				6E045B85174EA03D0022A5CE /* BlogEntryCell.m in Sources */,
 				6E045B8A174EF5040022A5CE /* NSURLResponse+HTTPCode.m in Sources */,
 				6E0279CE174FF0AD00A82BAA /* BlogEntryEditorViewController.m in Sources */,
-				6E0279D81750624900A82BAA /* PageViewController.m in Sources */,
 				6E49562F1754A4E80052BE67 /* BlogModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -16,6 +16,11 @@
     
     // show progress indicators
     [self showLoadingUI];
+    
+    // initialize date formatter
+    self.dateFormatter = [[NSDateFormatter alloc] init];
+    self.dateFormatter.dateStyle = NSDateFormatterLongStyle;
+    
 }
 
 #pragma mark
@@ -23,7 +28,7 @@
 -(void)showLoadingUI
 {
     // hide the views
-    NSArray *viewsToHide = @[self.contentTextField, self.textField, self.imageView];
+    NSArray *viewsToHide = @[self.contentTextField, self.textField, self.imageView, self.dateTextField];
     for (NSView *viewToHide in viewsToHide) {
         [viewToHide setHidden:YES];
     }
@@ -38,6 +43,7 @@
 
 -(void)showLoadedInfoWithTitle:(NSString *)title
                        content:(NSString *)content
+                          date:(NSDate *)date
 {
     // stop the progress indicator
     [self.infoProgress stopAnimation:nil];
@@ -49,6 +55,10 @@
     
     self.contentTextField.stringValue = content;
     [self.contentTextField setHidden:NO];
+    
+    NSString *dateString = [self.dateFormatter stringFromDate:date];
+    self.dateTextField.stringValue = dateString;
+    [self.dateTextField setHidden:NO];
     
 }
 

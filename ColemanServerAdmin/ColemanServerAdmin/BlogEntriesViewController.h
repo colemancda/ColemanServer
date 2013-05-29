@@ -7,9 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PageViewController.h"
 
-@interface BlogEntriesViewController : PageViewController <NSTableViewDataSource, NSTableViewDelegate>
+@interface BlogEntriesViewController : NSViewController <NSTableViewDataSource, NSTableViewDelegate>
 
 @property (strong) IBOutlet NSBox *box;
 

@@ -13,11 +13,9 @@
 
 @property (assign) IBOutlet NSWindow *window;
 
-@property (strong) IBOutlet NSPageController *pageController;
-
 @property (strong) IBOutlet NSBox *box;
 
-@property (readonly) PageViewController *rootVC;
+@property NSViewController *rootViewController;
 
 #pragma mark
 

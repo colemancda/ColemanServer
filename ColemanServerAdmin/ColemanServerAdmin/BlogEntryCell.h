@@ -16,10 +16,15 @@
 
 @property IBOutlet NSProgressIndicator *infoProgress;
 
+@property IBOutlet NSTextField *dateTextField;
+
+@property NSDateFormatter *dateFormatter;
+
 -(void)showLoadingUI;
 
 -(void)showLoadedInfoWithTitle:(NSString *)title
-                       content:(NSString *)content;
+                       content:(NSString *)content
+                          date:(NSDate *)date;
 
 -(void)showLoadedImage:(NSImage *)image;
 

@@ -42,14 +42,10 @@ static NSString *CellIdentifier = @"BlogEntryCell";
     return self;
 }
 
--(void)viewDidLoad
+-(void)awakeFromNib
 {
+    [super awakeFromNib];
     
-    
-}
-
--(void)viewDidAppear
-{
     // try fo fetch number of entries
     
     [[APIStore sharedStore] fetchNumberOfEntriesWithCompletion:^(NSError *error) {
@@ -133,7 +129,8 @@ static NSString *CellIdentifier = @"BlogEntryCell";
                 NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
                 
                 [cell showLoadedInfoWithTitle:[blogEntry valueForKey:@"title"]
-                                      content:[blogEntry valueForKey:@"content"]];
+                                      content:[blogEntry valueForKey:@"content"]
+                                         date:[blogEntry valueForKey:@"date"]];
                 
             }
             
@@ -157,7 +154,9 @@ static NSString *CellIdentifier = @"BlogEntryCell";
     
     BlogEntryEditorViewController *editorVC = [[BlogEntryEditorViewController alloc] initWithEntry:index];
     
-    [self pushViewController:editorVC];
+    AppDelegate *appDelegate = [NSApp delegate];
+    
+    appDelegate.rootViewController = editorVC;
 }
 
 
@@ -183,7 +182,9 @@ static NSString *CellIdentifier = @"BlogEntryCell";
                 
                 BlogEntryEditorViewController *editorVC = [[BlogEntryEditorViewController alloc] initWithEntry:index];
                 
-                [self pushViewController:editorVC];
+                AppDelegate *appDelegate = [NSApp delegate];
+                
+                appDelegate.rootViewController = editorVC;
             }
             
         }];

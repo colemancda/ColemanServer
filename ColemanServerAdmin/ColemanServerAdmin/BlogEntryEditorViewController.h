@@ -7,9 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PageViewController.h"
 
-@interface BlogEntryEditorViewController : PageViewController
+@interface BlogEntryEditorViewController : NSViewController
 
 @property (readonly) NSUInteger blogEntryIndex;
 

@@ -33,11 +33,15 @@ static NSString *kAPIBlogURL = @"/blog"; // GET
 
 static NSString *kAPIEntryAtIndexURL = @"/blog/:index"; // GET
 
+static NSString *kAPIImageForEntryAtIndexURL = @"/blog/:index/image"; // GET
+
 // API with token
 
 static NSString *kAPIBlogTokenURL = @"/blog/:token"; // POST
 
 static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELETE
+
+static NSString *kAPIImageForEntryAtIndexTokenURL = @"/blog/:index/image/:token"; // PUT, DELETE
 
 // String Responses
 
@@ -165,8 +169,8 @@ static NSString *kAPIResponseInvalidToken = @"Invalid Token";
             // no objects in array
             if (!count) {
                 
-                response.statusCode = 404;
-                [response respondWithString:@"No entries exist on the server"];
+                response.statusCode = 400;
+                [response respondWithString:@"No entries exist on the server. Invalid index."];
                 return;
                 
             }
@@ -567,6 +571,128 @@ static NSString *kAPIResponseInvalidToken = @"Invalid Token";
             
         }];
         
+#pragma mark Fetch Image
+        
+        [_server handleMethod:kGETMethod withPath:kAPIImageForEntryAtIndexURL block:^(RouteRequest *request, RouteResponse *response)
+        {
+            NSUInteger count = [BlogStore sharedStore].allEntries.count;
+            
+            // no objects in array
+            if (!count) {
+                
+                response.statusCode = 400;
+                [response respondWithString:@"No entries exist on the server. Invalid index."];
+                return;
+                
+            }
+            
+            // get the index
+            NSString *indexString = [request.params objectForKey:@"index"];
+            NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+            NSNumber *indexNumber = [numberFormatter numberFromString:indexString];
+            
+            // the string is non numerical
+            if (!indexNumber) {
+                
+                response.statusCode = 400;
+                [response respondWithString:@"Invalid index"];
+                return;
+                
+            }
+            
+            NSUInteger index = indexNumber.integerValue;
+            
+            // check if index is valid
+            if (index >= count) {
+                
+                response.statusCode = 400;
+                [response respondWithString:@"Invalid index"];
+                return;
+            }
+            
+            // get blog entry
+            BlogEntry *blogEntry = [[BlogStore sharedStore].allEntries objectAtIndex:index];
+            
+            // get the image data
+            NSData *imageData = blogEntry.image;
+            
+            // if no image exists
+            if (!imageData) {
+                
+                response.statusCode = 404;
+                [response respondWithString:@"There is no image associated with this entry"];
+                
+                return;
+            }
+            
+            // return the image
+            [response respondWithData:imageData];
+            
+        }];
+        
+#pragma mark Set image data or blog entry
+        
+        [_server handleMethod:kPUTMethod withPath:kAPIImageForEntryAtIndexTokenURL block:^(RouteRequest *request, RouteResponse *response) {
+            
+            NSString *tokenStringValue = [request.params objectForKey:@"token"];
+            
+            User *user = [[UserStore sharedStore] userForToken:tokenStringValue];
+            
+            // if the token was not found
+            if (!user) {
+                
+                response.statusCode = 401;
+                [response respondWithString:kAPIResponseInvalidToken];
+                return;
+            }
+            
+            // if the user does not have access
+            if (user.permissions.integerValue != Admin) {
+                
+                response.statusCode = 403;
+                [response respondWithString:kAPIResponseNoAccess];
+                return;
+            }
+            
+            NSUInteger count = [BlogStore sharedStore].allEntries.count;
+            
+            // no objects in array
+            if (!count) {
+                
+                response.statusCode = 400;
+                [response respondWithString:@"No entries exist on the server. Invalid index."];
+                return;
+                
+            }
+            
+            // get the index
+            NSString *indexString = [request.params objectForKey:@"index"];
+            NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+            NSNumber *indexNumber = [numberFormatter numberFromString:indexString];
+            
+            // the string is non numerical
+            if (!indexNumber) {
+                
+                response.statusCode = 400;
+                [response respondWithString:@"Invalid index"];
+                return;
+                
+            }
+            
+            NSUInteger index = indexNumber.integerValue;
+            
+            // check if index is valid
+            if (index >= count) {
+                
+                response.statusCode = 400;
+                [response respondWithString:@"Invalid index"];
+                return;
+            }
+            
+            // get blog entry
+            BlogEntry *blogEntry = [[BlogStore sharedStore].allEntries objectAtIndex:index];
+            
+        }];
         
     }
     return self;

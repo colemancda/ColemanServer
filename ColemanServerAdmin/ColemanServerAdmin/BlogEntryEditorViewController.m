@@ -8,6 +8,8 @@
 
 #import "BlogEntryEditorViewController.h"
 #import "APIStore.h"
+#import "BlogEntriesViewController.h"
+#import "AppDelegate.h"
 
 @interface BlogEntryEditorViewController ()
 
@@ -53,11 +55,7 @@
 -(void)awakeFromNib
 {
     [super awakeFromNib];
-        
-}
-
--(void)viewDidLoad
-{
+    
     // fetch that blog entry
     NSString *indexKey = [NSString stringWithFormat:@"%ld", self.blogEntryIndex];
     NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
@@ -66,7 +64,11 @@
         
         NSLog(@"You need to download the blog entry before you can edit it");
         
-        [self popViewController];
+        BlogEntriesViewController *entriesVC = [[BlogEntriesViewController alloc] init];
+        
+        AppDelegate *appDelegate = [NSApp delegate];
+        
+        appDelegate.rootViewController = entriesVC;
         
     }
     
@@ -79,14 +81,6 @@
     
     NSString *dateString = [dateFormatter stringFromDate:[blogEntry valueForKey:@"date"]];
     self.dateTextField.stringValue = dateString;
-    
-}
-
--(void)viewDidAppear
-{
-    
-    
-    
 }
 
 #pragma mark
@@ -99,15 +93,24 @@
     
     [[APIStore sharedStore] editEntry:self.blogEntryIndex changes:changes completion:^(NSError *error) {
         
-        if (error) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
-            [NSApp presentError:error];
-        }
-        
-        else {
+            if (error) {
+                
+                [NSApp presentError:error];
+            }
             
-            [self popViewController];
-        }
+            else {
+                
+                BlogEntriesViewController *entriesVC = [[BlogEntriesViewController alloc] init];
+                
+                AppDelegate *appDelegate = [NSApp delegate];
+                
+                appDelegate.rootViewController = entriesVC;
+            
+            }
+            
+        }];
         
     }];
     

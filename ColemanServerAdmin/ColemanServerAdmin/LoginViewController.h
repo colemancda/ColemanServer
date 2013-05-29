@@ -7,9 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PageViewController.h"
 
-@interface LoginViewController : PageViewController
+@interface LoginViewController : NSViewController
 
 // loading View
 @property (strong) IBOutlet NSView *loadingView;

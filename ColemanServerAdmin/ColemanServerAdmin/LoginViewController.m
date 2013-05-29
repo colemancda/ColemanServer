@@ -36,18 +36,6 @@
     return self;
 }
 
--(void)viewDidLoad
-{
-    
-    
-}
-
--(void)viewDidAppear
-{
-    [self hideLoadingView];
-}
-
-
 #pragma mark
 
 - (IBAction)login:(id)sender {
@@ -86,7 +74,9 @@
             
             BlogEntriesViewController *entriesVC = [[BlogEntriesViewController alloc] init];
             
-            [self pushViewController:entriesVC];
+            AppDelegate *appDelegate = [NSApp delegate];
+            
+            appDelegate.rootViewController = entriesVC;
             
         }];
         

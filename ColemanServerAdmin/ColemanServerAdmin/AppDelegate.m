@@ -8,25 +8,25 @@
 
 #import "AppDelegate.h"
 #import "LoginViewController.h"
-#import "PageViewController.h"
+
+static NSString *kRootVCKeyPath = @"rootViewController";
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
+    
+    // KVO RootVC
+    [self addObserver:self
+           forKeyPath:kRootVCKeyPath
+              options:NSKeyValueObservingOptionOld
+              context:nil];
         
     LoginViewController *loginVC = [[LoginViewController alloc] init];
     
-    _rootVC = loginVC;
+    self.rootViewController = loginVC;
     
-    [self.pageController navigateForwardToObject:_rootVC];
-    
-    self.box.contentView = _rootVC.view;
-    
-    [self.rootVC viewDidLoad];
-    
-    [self.rootVC viewDidAppear];
 }
 
 -(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
@@ -34,28 +34,28 @@
     return YES;
 }
 
-#pragma mark - Page Controller Delegate
-
--(void)pageController:(NSPageController *)pageController didTransitionToObject:(id)object
+-(void)dealloc
 {
-    // set the content view of the box
-    PageViewController *vc = (PageViewController *)object;
-    self.box.contentView = vc.view;
-    
-    [vc viewDidAppear];
+    // KVO
+    [self removeObserver:self
+              forKeyPath:kRootVCKeyPath];
 }
 
--(void)pageControllerWillStartLiveTransition:(NSPageController *)pageController
+#pragma mark - KVO
+
+-(void)observeValueForKeyPath:(NSString *)keyPath
+                     ofObject:(id)object
+                       change:(NSDictionary *)change
+                      context:(void *)context
 {
-    
+    if ([keyPath isEqualToString:kRootVCKeyPath]) {
+        
+        // set the content view of the box
+        self.box.contentView = self.rootViewController.view;
+        
+    }
     
 }
-
--(void)pageControllerDidEndLiveTransition:(NSPageController *)pageController
-{
-    [pageController completeTransition];
-}
-
 
 #pragma mark - Dynamic Strings
 
