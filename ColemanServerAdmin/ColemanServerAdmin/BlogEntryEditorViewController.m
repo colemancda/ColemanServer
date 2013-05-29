@@ -74,10 +74,18 @@
     self.titleTextField.stringValue = [blogEntry valueForKey:@"title"];
     self.contentTextView.string = [blogEntry valueForKey:@"content"];
     
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    
+    NSString *dateString = [dateFormatter stringFromDate:[blogEntry valueForKey:@"date"]];
+    self.dateTextField.stringValue = dateString;
+    
 }
 
 -(void)viewDidAppear
 {
+    
+    
     
 }
 

@@ -60,6 +60,7 @@
 		6EC63BE71748AFD200105121 /* BlogEntriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntriesViewController.h; sourceTree = "<group>"; };
 		6EC63BE81748AFD200105121 /* BlogEntriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntriesViewController.m; sourceTree = "<group>"; };
 		6EC63BE91748AFD200105121 /* BlogEntriesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BlogEntriesViewController.xib; sourceTree = "<group>"; };
+		6EF4F12F175587F500052864 /* ColemanServerAdmin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ColemanServerAdmin.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +175,7 @@
 		6E25261E1746975900141A3F /* ColemanServerAdmin */ = {
 			isa = PBXGroup;
 			children = (
+				6EF4F12F175587F500052864 /* ColemanServerAdmin.entitlements */,
 				6E25262A1746975900141A3F /* AppDelegate.h */,
 				6E25262B1746975900141A3F /* AppDelegate.m */,
 				6E49562D1754A4E70052BE67 /* BlogModel.xcdatamodeld */,
@@ -437,6 +439,7 @@
 		6E2526331746975900141A3F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ColemanServerAdmin/ColemanServerAdmin.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ColemanServerAdmin/ColemanServerAdmin-Prefix.pch";
@@ -449,6 +452,7 @@
 		6E2526341746975900141A3F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ColemanServerAdmin/ColemanServerAdmin.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ColemanServerAdmin/ColemanServerAdmin-Prefix.pch";

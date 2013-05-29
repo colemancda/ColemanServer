@@ -368,9 +368,12 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
         NSManagedObject *blogEntry = [self createNewBlogEntryAtIndex:indexOfEntry
                                                                 date:date];
         
-        [blogEntry setValue:title forKey:@"title"];
-        [blogEntry setValue:content forKey:@"content"];
-        [blogEntry setValue:date forKey:@"date"];
+        [blogEntry setValue:title
+                     forKey:@"title"];
+        [blogEntry setValue:content
+                     forKey:@"content"];
+        [blogEntry setValue:date
+                     forKey:@"date"];
         
         NSLog(@"Successfully fetched blog entry %ld", indexOfEntry);
         

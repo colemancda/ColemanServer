@@ -19,6 +19,8 @@
 
 @property (strong) IBOutlet NSTextView *contentTextView;
 
+@property (strong) IBOutlet NSTextField *dateTextField;
+
 - (IBAction)save:(id)sender;
 
 - (id)initWithEntry:(NSUInteger)index;
