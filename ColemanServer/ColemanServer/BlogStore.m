@@ -38,12 +38,8 @@
         _sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date"
                                                         ascending:YES];
         
-        // get the model file
-        NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"BlogModel"
-                                                  withExtension:@"momd"];
-        
         // read in all the Core Data files
-        _model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+        _model = [NSManagedObjectModel mergedModelFromBundles:nil];
         
         NSPersistentStoreCoordinator *persistanceStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
         

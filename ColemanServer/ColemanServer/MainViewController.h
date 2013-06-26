@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class ServerStore;
 
 @interface MainViewController : NSViewController
 {
@@ -30,5 +31,7 @@
 -(void)updateServerUptimeUI;
 
 - (IBAction)startStopServer:(id)sender;
+
+@property (readonly) ServerStore *serverStore;
 
 @end

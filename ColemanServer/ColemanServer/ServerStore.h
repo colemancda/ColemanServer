@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "HTTPServer.h"
-#import "RoutingHTTPServer.h"
-
 
 typedef NS_ENUM(NSInteger, ServerErrorCodes) {
     
@@ -18,12 +16,11 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
     Forbidden = 403,
     NotFound,
     ServerError = 500
-    
 };
 
 @interface ServerStore : NSObject
 {
-    RoutingHTTPServer *_server;
+    HTTPServer *_server;
     NSDate *_dateServerStarted;
 }
 
@@ -36,6 +33,8 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
 @property (readonly) BOOL isRunning;
 
 @property (readonly) NSTimeInterval serverUpTime;
+
+@property BOOL prettyPrintJSON;
 
 -(BOOL)startServerWithPort:(NSUInteger)port;
 

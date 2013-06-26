@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>646FBDF0-086C-4C53-B8B6-29F7F28422C4</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ColemanServer Suite</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>30EC0C5C-9B3E-4ECF-B5FE-80948C8B425A</key>
+		<string>https://github.com/colemancda/ColemanServer.git</string>
+		<key>66A4CE9C-3455-430D-92DF-320DC65A7FCC</key>
+		<string>https://github.com/robbiehanson/CocoaHTTPServer.git</string>
+		<key>C4D50BC9-635C-426A-9545-319EC4B896F9</key>
+		<string>https://github.com/mattstevens/RoutingHTTPServer.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ColemanServer Suite.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>30EC0C5C-9B3E-4ECF-B5FE-80948C8B425A</key>
+		<string>..</string>
+		<key>66A4CE9C-3455-430D-92DF-320DC65A7FCC</key>
+		<string>../../../3rd party projects/CocoaHTTPServer</string>
+		<key>C4D50BC9-635C-426A-9545-319EC4B896F9</key>
+		<string>../../../3rd party projects/RoutingHTTPServer</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/colemancda/ColemanServer.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>30EC0C5C-9B3E-4ECF-B5FE-80948C8B425A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>66A4CE9C-3455-430D-92DF-320DC65A7FCC</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CocoaHTTPServer</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C4D50BC9-635C-426A-9545-319EC4B896F9</string>
+			<key>IDESourceControlWCCName</key>
+			<string>RoutingHTTPServer</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>30EC0C5C-9B3E-4ECF-B5FE-80948C8B425A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ColemanServer</string>
+		</dict>
+	</array>
+</dict>
+</plist>

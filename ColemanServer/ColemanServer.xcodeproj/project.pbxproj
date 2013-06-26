@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E0A46C9177B2B7500074FC2 /* NSString+isNonNegativeInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */; };
+		6E3FF8FB1777AA1700DDA324 /* MyHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */; };
 		6E6939011734176200C5DFF5 /* ServerStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6939001734176200C5DFF5 /* ServerStore.m */; };
 		6E693937173430EF00C5DFF5 /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E693936173430EF00C5DFF5 /* Log.m */; };
 		6E924E8C173FF8FD00B1F131 /* SaveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E924E8B173FF8FD00B1F131 /* SaveCell.m */; };
@@ -22,22 +24,16 @@
 		6E9D603A1733829700FD292E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9D60381733829700FD292E /* MainViewController.m */; };
 		6E9D603B1733829700FD292E /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E9D60391733829700FD292E /* MainViewController.xib */; };
 		6E9D60421733873F00FD292E /* LogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9D60411733873F00FD292E /* LogStore.m */; };
+		6EA60F28177A869700D72843 /* HTTPMIMEDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */; };
 		6EB726E1173C0B8800093237 /* UserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726E0173C0B8800093237 /* UserStore.m */; };
 		6EB726F2173D665E00093237 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F1173D665E00093237 /* Token.m */; };
 		6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F4173D67CB00093237 /* NSString+RandomString.m */; };
-		6EB72709173E972700093237 /* UserModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72707173E972700093237 /* UserModel.xcdatamodeld */; };
 		6EB72711173F156C00093237 /* SaveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7270F173F156C00093237 /* SaveViewController.m */; };
 		6EB72712173F156C00093237 /* SaveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EB72710173F156C00093237 /* SaveViewController.xib */; };
 		6EB72718173F180600093237 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72717173F180500093237 /* User.m */; };
 		6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7271A173F1D2200093237 /* UsersViewController.m */; };
 		6EB7271D173F1D2300093237 /* UsersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EB7271B173F1D2300093237 /* UsersViewController.xib */; };
 		6EB72723173F223D00093237 /* ToolBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72722173F223D00093237 /* ToolBarController.m */; };
-		6ED9E44C1755787A00A3A814 /* HTTPResponseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E3B81755787A00A3A814 /* HTTPResponseProxy.m */; };
-		6ED9E44D1755787A00A3A814 /* Route.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E3BA1755787A00A3A814 /* Route.m */; };
-		6ED9E44E1755787A00A3A814 /* RouteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E3BC1755787A00A3A814 /* RouteRequest.m */; };
-		6ED9E44F1755787A00A3A814 /* RouteResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E3BE1755787A00A3A814 /* RouteResponse.m */; };
-		6ED9E4501755787A00A3A814 /* RoutingConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E3C01755787A00A3A814 /* RoutingConnection.m */; };
-		6ED9E4511755787A00A3A814 /* RoutingHTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E3C21755787A00A3A814 /* RoutingHTTPServer.m */; };
 		6ED9E85817557AF300A3A814 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E83317557AF300A3A814 /* DDData.m */; };
 		6ED9E85917557AF300A3A814 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E83517557AF300A3A814 /* DDNumber.m */; };
 		6ED9E85A17557AF300A3A814 /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E83717557AF300A3A814 /* DDRange.m */; };
@@ -65,12 +61,16 @@
 		6ED9E88917557B1100A3A814 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87E17557B1100A3A814 /* DispatchQueueLogFormatter.m */; };
 		6EE811BA1735BACA00433687 /* BlogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811B91735BACA00433687 /* BlogStore.m */; };
 		6EE811BB1736069700433687 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9D5F1D1733707000FD292E /* CoreData.framework */; };
-		6EE811BE1736080000433687 /* BlogModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811BC173607FE00433687 /* BlogModel.xcdatamodeld */; };
 		6EE811C61736269B00433687 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811C51736269B00433687 /* BlogEntry.m */; };
 		6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811CC17370F2600433687 /* NSString+Counter.m */; };
+		6EF4F1321757DBAC00052864 /* ColemanServer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EF4F1301757DBAC00052864 /* ColemanServer.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E0A46C7177B2B7500074FC2 /* NSString+isNonNegativeInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+isNonNegativeInteger.h"; sourceTree = "<group>"; };
+		6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+isNonNegativeInteger.m"; sourceTree = "<group>"; };
+		6E3FF8F91777AA1700DDA324 /* MyHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHTTPConnection.h; sourceTree = "<group>"; };
+		6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyHTTPConnection.m; sourceTree = "<group>"; };
 		6E6938FF1734176200C5DFF5 /* ServerStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerStore.h; sourceTree = "<group>"; };
 		6E6939001734176200C5DFF5 /* ServerStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerStore.m; sourceTree = "<group>"; };
 		6E693935173430EF00C5DFF5 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
@@ -100,13 +100,14 @@
 		6E9D60391733829700FD292E /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
 		6E9D60401733873F00FD292E /* LogStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogStore.h; sourceTree = "<group>"; };
 		6E9D60411733873F00FD292E /* LogStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogStore.m; sourceTree = "<group>"; };
+		6EA60F26177A869700D72843 /* HTTPMIMEDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPMIMEDataResponse.h; sourceTree = "<group>"; };
+		6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPMIMEDataResponse.m; sourceTree = "<group>"; };
 		6EB726DF173C0B8800093237 /* UserStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserStore.h; sourceTree = "<group>"; };
 		6EB726E0173C0B8800093237 /* UserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserStore.m; sourceTree = "<group>"; };
 		6EB726F0173D665E00093237 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		6EB726F1173D665E00093237 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6EB726F3173D67CB00093237 /* NSString+RandomString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RandomString.h"; sourceTree = "<group>"; };
 		6EB726F4173D67CB00093237 /* NSString+RandomString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RandomString.m"; sourceTree = "<group>"; };
-		6EB72708173E972700093237 /* UserModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserModel.xcdatamodel; sourceTree = "<group>"; };
 		6EB7270E173F156C00093237 /* SaveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveViewController.h; sourceTree = "<group>"; };
 		6EB7270F173F156C00093237 /* SaveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveViewController.m; sourceTree = "<group>"; };
 		6EB72710173F156C00093237 /* SaveViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SaveViewController.xib; sourceTree = "<group>"; };
@@ -117,18 +118,6 @@
 		6EB7271B173F1D2300093237 /* UsersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UsersViewController.xib; sourceTree = "<group>"; };
 		6EB72721173F223D00093237 /* ToolBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBarController.h; sourceTree = "<group>"; };
 		6EB72722173F223D00093237 /* ToolBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBarController.m; sourceTree = "<group>"; };
-		6ED9E3B71755787A00A3A814 /* HTTPResponseProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPResponseProxy.h; sourceTree = "<group>"; };
-		6ED9E3B81755787A00A3A814 /* HTTPResponseProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPResponseProxy.m; sourceTree = "<group>"; };
-		6ED9E3B91755787A00A3A814 /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Route.h; sourceTree = "<group>"; };
-		6ED9E3BA1755787A00A3A814 /* Route.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Route.m; sourceTree = "<group>"; };
-		6ED9E3BB1755787A00A3A814 /* RouteRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteRequest.h; sourceTree = "<group>"; };
-		6ED9E3BC1755787A00A3A814 /* RouteRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteRequest.m; sourceTree = "<group>"; };
-		6ED9E3BD1755787A00A3A814 /* RouteResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteResponse.h; sourceTree = "<group>"; };
-		6ED9E3BE1755787A00A3A814 /* RouteResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteResponse.m; sourceTree = "<group>"; };
-		6ED9E3BF1755787A00A3A814 /* RoutingConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoutingConnection.h; sourceTree = "<group>"; };
-		6ED9E3C01755787A00A3A814 /* RoutingConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoutingConnection.m; sourceTree = "<group>"; };
-		6ED9E3C11755787A00A3A814 /* RoutingHTTPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoutingHTTPServer.h; sourceTree = "<group>"; };
-		6ED9E3C21755787A00A3A814 /* RoutingHTTPServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoutingHTTPServer.m; sourceTree = "<group>"; };
 		6ED9E83217557AF300A3A814 /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
 		6ED9E83317557AF300A3A814 /* DDData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDData.m; sourceTree = "<group>"; };
 		6ED9E83417557AF300A3A814 /* DDNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDNumber.h; sourceTree = "<group>"; };
@@ -186,11 +175,11 @@
 		6ED9E87F17557B1100A3A814 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		6EE811B81735BAC900433687 /* BlogStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogStore.h; sourceTree = "<group>"; };
 		6EE811B91735BACA00433687 /* BlogStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogStore.m; sourceTree = "<group>"; };
-		6EE811BD1736080000433687 /* BlogModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BlogModel.xcdatamodel; sourceTree = "<group>"; };
 		6EE811C41736269B00433687 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
 		6EE811C51736269B00433687 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
 		6EE811CB17370F2600433687 /* NSString+Counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Counter.h"; sourceTree = "<group>"; };
 		6EE811CC17370F2600433687 /* NSString+Counter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Counter.m"; sourceTree = "<group>"; };
+		6EF4F1311757DBAC00052864 /* ColemanServer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ColemanServer.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,12 +196,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E3FF8F81777A9F100DDA324 /* HTTP Connection */ = {
+			isa = PBXGroup;
+			children = (
+				6E3FF8F91777AA1700DDA324 /* MyHTTPConnection.h */,
+				6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */,
+			);
+			name = "HTTP Connection";
+			sourceTree = "<group>";
+		};
 		6E6939381734317B00C5DFF5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6EE811CA17370EE200433687 /* Categories */,
+				6EA60F25177A864800D72843 /* HTTP Response */,
+				6E3FF8F81777A9F100DDA324 /* HTTP Connection */,
 				6EB726EF173D664F00093237 /* Token */,
 				6EB726E3173C0BFA00093237 /* User */,
-				6EE811CA17370EE200433687 /* Categories */,
 				6EE811BF1736245E00433687 /* Blog Entry */,
 				6EE811C01736246800433687 /* Log Entry */,
 				6E924E93173FFB5B00B1F131 /* SaveOption */,
@@ -282,8 +282,7 @@
 				6E9D5F2B1733707000FD292E /* AppDelegate.h */,
 				6E9D5F2C1733707000FD292E /* AppDelegate.m */,
 				6E9D5F2E1733707100FD292E /* MainMenu.xib */,
-				6EE811BC173607FE00433687 /* BlogModel.xcdatamodeld */,
-				6EB72707173E972700093237 /* UserModel.xcdatamodeld */,
+				6EF4F1301757DBAC00052864 /* ColemanServer.xcdatamodeld */,
 				6EE811B41734DC2000433687 /* Views */,
 				6E6939381734317B00C5DFF5 /* Models */,
 				6E9D603F173385EC00FD292E /* Stores */,
@@ -297,7 +296,6 @@
 			isa = PBXGroup;
 			children = (
 				6ED9E83017557AF300A3A814 /* CocoaHTTPServer */,
-				6ED9E28E1755787800A3A814 /* RoutingHTTPServer */,
 				6E9D5F381733738100FD292E /* ColemanServer.entitlements */,
 				6E9D5F211733707000FD292E /* ColemanServer-Info.plist */,
 				6E9D5F221733707000FD292E /* InfoPlist.strings */,
@@ -338,6 +336,15 @@
 				6EB726E2173C0B8D00093237 /* Users */,
 			);
 			name = Stores;
+			sourceTree = "<group>";
+		};
+		6EA60F25177A864800D72843 /* HTTP Response */ = {
+			isa = PBXGroup;
+			children = (
+				6EA60F26177A869700D72843 /* HTTPMIMEDataResponse.h */,
+				6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */,
+			);
+			name = "HTTP Response";
 			sourceTree = "<group>";
 		};
 		6EB726E2173C0B8D00093237 /* Users */ = {
@@ -394,6 +401,8 @@
 				6EE811CC17370F2600433687 /* NSString+Counter.m */,
 				6EB726F3173D67CB00093237 /* NSString+RandomString.h */,
 				6EB726F4173D67CB00093237 /* NSString+RandomString.m */,
+				6E0A46C7177B2B7500074FC2 /* NSString+isNonNegativeInteger.h */,
+				6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */,
 			);
 			name = NSString;
 			sourceTree = "<group>";
@@ -405,34 +414,6 @@
 				6EB72722173F223D00093237 /* ToolBarController.m */,
 			);
 			name = Toolbar;
-			sourceTree = "<group>";
-		};
-		6ED9E28E1755787800A3A814 /* RoutingHTTPServer */ = {
-			isa = PBXGroup;
-			children = (
-				6ED9E3B61755787A00A3A814 /* Source */,
-			);
-			name = RoutingHTTPServer;
-			path = "../../../../3rd party projects/RoutingHTTPServer";
-			sourceTree = "<group>";
-		};
-		6ED9E3B61755787A00A3A814 /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				6ED9E3B71755787A00A3A814 /* HTTPResponseProxy.h */,
-				6ED9E3B81755787A00A3A814 /* HTTPResponseProxy.m */,
-				6ED9E3B91755787A00A3A814 /* Route.h */,
-				6ED9E3BA1755787A00A3A814 /* Route.m */,
-				6ED9E3BB1755787A00A3A814 /* RouteRequest.h */,
-				6ED9E3BC1755787A00A3A814 /* RouteRequest.m */,
-				6ED9E3BD1755787A00A3A814 /* RouteResponse.h */,
-				6ED9E3BE1755787A00A3A814 /* RouteResponse.m */,
-				6ED9E3BF1755787A00A3A814 /* RoutingConnection.h */,
-				6ED9E3C01755787A00A3A814 /* RoutingConnection.m */,
-				6ED9E3C11755787A00A3A814 /* RoutingHTTPServer.h */,
-				6ED9E3C21755787A00A3A814 /* RoutingHTTPServer.m */,
-			);
-			path = Source;
 			sourceTree = "<group>";
 		};
 		6ED9E83017557AF300A3A814 /* CocoaHTTPServer */ = {
@@ -692,25 +673,17 @@
 				6E6939011734176200C5DFF5 /* ServerStore.m in Sources */,
 				6E693937173430EF00C5DFF5 /* Log.m in Sources */,
 				6EE811BA1735BACA00433687 /* BlogStore.m in Sources */,
-				6EE811BE1736080000433687 /* BlogModel.xcdatamodeld in Sources */,
 				6EE811C61736269B00433687 /* BlogEntry.m in Sources */,
 				6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */,
 				6EB726E1173C0B8800093237 /* UserStore.m in Sources */,
 				6EB726F2173D665E00093237 /* Token.m in Sources */,
 				6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */,
-				6EB72709173E972700093237 /* UserModel.xcdatamodeld in Sources */,
 				6EB72711173F156C00093237 /* SaveViewController.m in Sources */,
 				6EB72718173F180600093237 /* User.m in Sources */,
 				6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */,
 				6EB72723173F223D00093237 /* ToolBarController.m in Sources */,
 				6E924E8C173FF8FD00B1F131 /* SaveCell.m in Sources */,
 				6E924E92173FFB5600B1F131 /* SaveOption.m in Sources */,
-				6ED9E44C1755787A00A3A814 /* HTTPResponseProxy.m in Sources */,
-				6ED9E44D1755787A00A3A814 /* Route.m in Sources */,
-				6ED9E44E1755787A00A3A814 /* RouteRequest.m in Sources */,
-				6ED9E44F1755787A00A3A814 /* RouteResponse.m in Sources */,
-				6ED9E4501755787A00A3A814 /* RoutingConnection.m in Sources */,
-				6ED9E4511755787A00A3A814 /* RoutingHTTPServer.m in Sources */,
 				6ED9E85817557AF300A3A814 /* DDData.m in Sources */,
 				6ED9E85917557AF300A3A814 /* DDNumber.m in Sources */,
 				6ED9E85A17557AF300A3A814 /* DDRange.m in Sources */,
@@ -736,6 +709,10 @@
 				6ED9E88717557B1100A3A814 /* DDTTYLogger.m in Sources */,
 				6ED9E88817557B1100A3A814 /* ContextFilterLogFormatter.m in Sources */,
 				6ED9E88917557B1100A3A814 /* DispatchQueueLogFormatter.m in Sources */,
+				6EF4F1321757DBAC00052864 /* ColemanServer.xcdatamodeld in Sources */,
+				6E3FF8FB1777AA1700DDA324 /* MyHTTPConnection.m in Sources */,
+				6EA60F28177A869700D72843 /* HTTPMIMEDataResponse.m in Sources */,
+				6E0A46C9177B2B7500074FC2 /* NSString+isNonNegativeInteger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -886,23 +863,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		6EB72707173E972700093237 /* UserModel.xcdatamodeld */ = {
+		6EF4F1301757DBAC00052864 /* ColemanServer.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				6EB72708173E972700093237 /* UserModel.xcdatamodel */,
+				6EF4F1311757DBAC00052864 /* ColemanServer.xcdatamodel */,
 			);
-			currentVersion = 6EB72708173E972700093237 /* UserModel.xcdatamodel */;
-			path = UserModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		6EE811BC173607FE00433687 /* BlogModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				6EE811BD1736080000433687 /* BlogModel.xcdatamodel */,
-			);
-			currentVersion = 6EE811BD1736080000433687 /* BlogModel.xcdatamodel */;
-			path = BlogModel.xcdatamodeld;
+			currentVersion = 6EF4F1311757DBAC00052864 /* ColemanServer.xcdatamodel */;
+			path = ColemanServer.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

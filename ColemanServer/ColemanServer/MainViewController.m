@@ -164,8 +164,15 @@
         
         [self.portField setEnabled:YES];
     }
-    
-    
 }
+
+#pragma mark
+
+-(ServerStore *)serverStore
+{
+    return [ServerStore sharedStore];
+}
+
+
 
 @end

@@ -51,11 +51,8 @@
                   options:NSKeyValueObservingOptionOld
                   context:nil];
         
-        // load model file
-        NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"UserModel"
-                                                  withExtension:@"momd"];
-        
-        _model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+        // read in all the Core Data files
+        _model = [NSManagedObjectModel mergedModelFromBundles:nil];
         
         NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
         
@@ -110,7 +107,7 @@
         
     }
     
-    if ([keyPath isEqualToString:@"self.tokenDuration"]) {
+    if ([keyPath isEqualToString:@"self.tokenDuration"] && object == self.admin) {
         
         // update user defaults
         [[NSUserDefaults standardUserDefaults] setObject:self.tokenDuration
@@ -124,7 +121,7 @@
         
     }
     
-    if ([keyPath isEqualToString:@"self.tokenCharacterLength"]) {
+    if ([keyPath isEqualToString:@"self.tokenCharacterLength"] && object == self.admin) {
         
         // update user defaults
         [[NSUserDefaults standardUserDefaults] setObject:self.tokenCharacterLength
