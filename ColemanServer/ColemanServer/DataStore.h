@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class BlogEntry, User;
+@class BlogEntry, User, Token, EntryComment;
 
 @interface DataStore : NSObject
 {
@@ -55,6 +55,12 @@
 -(User *)userForUsername:(NSString *)username
                 password:(NSString *)password;
 
--(User *)userForToken:(NSString *)token;
+-(Token *)tokenWithStringValue:(NSString *)stringValue;
+
+#pragma mark - Advanced Actions
+
+-(Token *)createTokenForUser:(User *)user;
+
+-(EntryComment *)createCommentForUser:(User *)user blogEntry:(BlogEntry *)entry;
 
 @end

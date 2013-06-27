@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		6E0A46C9177B2B7500074FC2 /* NSString+isNonNegativeInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */; };
 		6E3FF8FB1777AA1700DDA324 /* MyHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */; };
+		6E650110177CA05C00C01CF3 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E65010F177CA05C00C01CF3 /* BlogEntry.m */; };
+		6E650113177CA07000C01CF3 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E650112177CA07000C01CF3 /* Token.m */; };
+		6E650116177CA07000C01CF3 /* EntryComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E650115177CA07000C01CF3 /* EntryComment.m */; };
+		6E650119177CA07000C01CF3 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E650118177CA07000C01CF3 /* User.m */; };
 		6E6939011734176200C5DFF5 /* ServerStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6939001734176200C5DFF5 /* ServerStore.m */; };
 		6E693937173430EF00C5DFF5 /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E693936173430EF00C5DFF5 /* Log.m */; };
 		6E924E8C173FF8FD00B1F131 /* SaveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E924E8B173FF8FD00B1F131 /* SaveCell.m */; };
@@ -25,11 +29,9 @@
 		6E9D603B1733829700FD292E /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E9D60391733829700FD292E /* MainViewController.xib */; };
 		6E9D60421733873F00FD292E /* LogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9D60411733873F00FD292E /* LogStore.m */; };
 		6EA60F28177A869700D72843 /* HTTPMIMEDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */; };
-		6EB726F2173D665E00093237 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F1173D665E00093237 /* Token.m */; };
 		6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F4173D67CB00093237 /* NSString+RandomString.m */; };
 		6EB72711173F156C00093237 /* SaveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7270F173F156C00093237 /* SaveViewController.m */; };
 		6EB72712173F156C00093237 /* SaveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EB72710173F156C00093237 /* SaveViewController.xib */; };
-		6EB72718173F180600093237 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72717173F180500093237 /* User.m */; };
 		6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7271A173F1D2200093237 /* UsersViewController.m */; };
 		6EB7271D173F1D2300093237 /* UsersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EB7271B173F1D2300093237 /* UsersViewController.xib */; };
 		6EB72723173F223D00093237 /* ToolBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72722173F223D00093237 /* ToolBarController.m */; };
@@ -60,7 +62,6 @@
 		6ED9E88817557B1100A3A814 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87C17557B1100A3A814 /* ContextFilterLogFormatter.m */; };
 		6ED9E88917557B1100A3A814 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87E17557B1100A3A814 /* DispatchQueueLogFormatter.m */; };
 		6EE811BB1736069700433687 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9D5F1D1733707000FD292E /* CoreData.framework */; };
-		6EE811C61736269B00433687 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811C51736269B00433687 /* BlogEntry.m */; };
 		6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811CC17370F2600433687 /* NSString+Counter.m */; };
 		6EF4F1321757DBAC00052864 /* ColemanServer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EF4F1301757DBAC00052864 /* ColemanServer.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,14 @@
 		6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+isNonNegativeInteger.m"; sourceTree = "<group>"; };
 		6E3FF8F91777AA1700DDA324 /* MyHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHTTPConnection.h; sourceTree = "<group>"; };
 		6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyHTTPConnection.m; sourceTree = "<group>"; };
+		6E65010E177CA05C00C01CF3 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
+		6E65010F177CA05C00C01CF3 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
+		6E650111177CA07000C01CF3 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
+		6E650112177CA07000C01CF3 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
+		6E650114177CA07000C01CF3 /* EntryComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntryComment.h; sourceTree = "<group>"; };
+		6E650115177CA07000C01CF3 /* EntryComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntryComment.m; sourceTree = "<group>"; };
+		6E650117177CA07000C01CF3 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		6E650118177CA07000C01CF3 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		6E6938FF1734176200C5DFF5 /* ServerStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerStore.h; sourceTree = "<group>"; };
 		6E6939001734176200C5DFF5 /* ServerStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerStore.m; sourceTree = "<group>"; };
 		6E693935173430EF00C5DFF5 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
@@ -101,15 +110,11 @@
 		6E9D60411733873F00FD292E /* LogStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogStore.m; sourceTree = "<group>"; };
 		6EA60F26177A869700D72843 /* HTTPMIMEDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPMIMEDataResponse.h; sourceTree = "<group>"; };
 		6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPMIMEDataResponse.m; sourceTree = "<group>"; };
-		6EB726F0173D665E00093237 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
-		6EB726F1173D665E00093237 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6EB726F3173D67CB00093237 /* NSString+RandomString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RandomString.h"; sourceTree = "<group>"; };
 		6EB726F4173D67CB00093237 /* NSString+RandomString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RandomString.m"; sourceTree = "<group>"; };
 		6EB7270E173F156C00093237 /* SaveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveViewController.h; sourceTree = "<group>"; };
 		6EB7270F173F156C00093237 /* SaveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveViewController.m; sourceTree = "<group>"; };
 		6EB72710173F156C00093237 /* SaveViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SaveViewController.xib; sourceTree = "<group>"; };
-		6EB72716173F180400093237 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		6EB72717173F180500093237 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		6EB72719173F1D2200093237 /* UsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsersViewController.h; sourceTree = "<group>"; };
 		6EB7271A173F1D2200093237 /* UsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsersViewController.m; sourceTree = "<group>"; };
 		6EB7271B173F1D2300093237 /* UsersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UsersViewController.xib; sourceTree = "<group>"; };
@@ -172,8 +177,6 @@
 		6ED9E87D17557B1100A3A814 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
 		6ED9E87E17557B1100A3A814 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
 		6ED9E87F17557B1100A3A814 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		6EE811C41736269B00433687 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
-		6EE811C51736269B00433687 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
 		6EE811CB17370F2600433687 /* NSString+Counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Counter.h"; sourceTree = "<group>"; };
 		6EE811CC17370F2600433687 /* NSString+Counter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Counter.m"; sourceTree = "<group>"; };
 		6EF4F1311757DBAC00052864 /* ColemanServer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ColemanServer.xcdatamodel; sourceTree = "<group>"; };
@@ -202,15 +205,33 @@
 			name = "HTTP Connection";
 			sourceTree = "<group>";
 		};
+		6E639782177C98E4005D6C4E /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				6E650114177CA07000C01CF3 /* EntryComment.h */,
+				6E650115177CA07000C01CF3 /* EntryComment.m */,
+			);
+			name = Comment;
+			sourceTree = "<group>";
+		};
+		6E639795177C9D4A005D6C4E /* NSManagedObject */ = {
+			isa = PBXGroup;
+			children = (
+				6EE811BF1736245E00433687 /* Blog Entry */,
+				6EB726E3173C0BFA00093237 /* User */,
+				6E639782177C98E4005D6C4E /* Comment */,
+				6EB726EF173D664F00093237 /* Token */,
+			);
+			name = NSManagedObject;
+			sourceTree = "<group>";
+		};
 		6E6939381734317B00C5DFF5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6E639795177C9D4A005D6C4E /* NSManagedObject */,
 				6EE811CA17370EE200433687 /* Categories */,
 				6EA60F25177A864800D72843 /* HTTP Response */,
 				6E3FF8F81777A9F100DDA324 /* HTTP Connection */,
-				6EB726EF173D664F00093237 /* Token */,
-				6EB726E3173C0BFA00093237 /* User */,
-				6EE811BF1736245E00433687 /* Blog Entry */,
 				6EE811C01736246800433687 /* Log Entry */,
 				6E924E93173FFB5B00B1F131 /* SaveOption */,
 			);
@@ -280,8 +301,8 @@
 				6E9D5F2C1733707000FD292E /* AppDelegate.m */,
 				6E9D5F2E1733707100FD292E /* MainMenu.xib */,
 				6EF4F1301757DBAC00052864 /* ColemanServer.xcdatamodeld */,
-				6EE811B41734DC2000433687 /* Views */,
 				6E6939381734317B00C5DFF5 /* Models */,
+				6EE811B41734DC2000433687 /* Views */,
 				6E9D603F173385EC00FD292E /* Stores */,
 				6E9D60361733821400FD292E /* Controllers */,
 				6E9D5F201733707000FD292E /* Supporting Files */,
@@ -346,8 +367,8 @@
 		6EB726E3173C0BFA00093237 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				6EB72716173F180400093237 /* User.h */,
-				6EB72717173F180500093237 /* User.m */,
+				6E650117177CA07000C01CF3 /* User.h */,
+				6E650118177CA07000C01CF3 /* User.m */,
 			);
 			name = User;
 			sourceTree = "<group>";
@@ -355,8 +376,8 @@
 		6EB726EF173D664F00093237 /* Token */ = {
 			isa = PBXGroup;
 			children = (
-				6EB726F0173D665E00093237 /* Token.h */,
-				6EB726F1173D665E00093237 /* Token.m */,
+				6E650111177CA07000C01CF3 /* Token.h */,
+				6E650112177CA07000C01CF3 /* Token.m */,
 			);
 			name = Token;
 			sourceTree = "<group>";
@@ -543,8 +564,8 @@
 		6EE811BF1736245E00433687 /* Blog Entry */ = {
 			isa = PBXGroup;
 			children = (
-				6EE811C41736269B00433687 /* BlogEntry.h */,
-				6EE811C51736269B00433687 /* BlogEntry.m */,
+				6E65010E177CA05C00C01CF3 /* BlogEntry.h */,
+				6E65010F177CA05C00C01CF3 /* BlogEntry.m */,
 			);
 			name = "Blog Entry";
 			sourceTree = "<group>";
@@ -659,12 +680,9 @@
 				6E9D60421733873F00FD292E /* LogStore.m in Sources */,
 				6E6939011734176200C5DFF5 /* ServerStore.m in Sources */,
 				6E693937173430EF00C5DFF5 /* Log.m in Sources */,
-				6EE811C61736269B00433687 /* BlogEntry.m in Sources */,
 				6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */,
-				6EB726F2173D665E00093237 /* Token.m in Sources */,
 				6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */,
 				6EB72711173F156C00093237 /* SaveViewController.m in Sources */,
-				6EB72718173F180600093237 /* User.m in Sources */,
 				6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */,
 				6EB72723173F223D00093237 /* ToolBarController.m in Sources */,
 				6E924E8C173FF8FD00B1F131 /* SaveCell.m in Sources */,
@@ -699,6 +717,10 @@
 				6EA60F28177A869700D72843 /* HTTPMIMEDataResponse.m in Sources */,
 				6E0A46C9177B2B7500074FC2 /* NSString+isNonNegativeInteger.m in Sources */,
 				6ECAADFD177B5116007A8876 /* DataStore.m in Sources */,
+				6E650110177CA05C00C01CF3 /* BlogEntry.m in Sources */,
+				6E650113177CA07000C01CF3 /* Token.m in Sources */,
+				6E650116177CA07000C01CF3 /* EntryComment.m in Sources */,
+				6E650119177CA07000C01CF3 /* User.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

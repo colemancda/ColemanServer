@@ -1,22 +1,22 @@
 //
-//  BlogEntry.m
+//  EntryComment.m
 //  ColemanServer
 //
 //  Created by Alsey Coleman Miller on 6/27/13.
 //  Copyright (c) 2013 ColemanCDA. All rights reserved.
 //
 
-#import "BlogEntry.h"
 #import "EntryComment.h"
+#import "BlogEntry.h"
+#import "User.h"
 
 
-@implementation BlogEntry
+@implementation EntryComment
 
 @dynamic content;
 @dynamic date;
-@dynamic image;
-@dynamic title;
-@dynamic comments;
+@dynamic blogEntry;
+@dynamic user;
 
 -(void)awakeFromInsert
 {

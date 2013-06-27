@@ -18,6 +18,7 @@
 #import "User.h"
 #import "BlogEntry.h"
 #import "Token.h"
+#import "LogStore.h"
 
 static NSString *MimeTypeJSON = @"application/json";
 
@@ -57,6 +58,70 @@ static NSString *MimeTypeJSON = @"application/json";
 
 static NSString *serverHeader;
 
+@implementation MyHTTPConnection (Authorization)
+
+-(User *)userForToken
+{
+    // check for authentication header
+    NSString *authorization = [request headerField:@"Authorization"];
+    
+    if (!authorization) {
+        
+        return nil;
+    }
+    
+    // encode it
+    NSData *authorizationHeaderData = [authorization dataUsingEncoding:NSUTF8StringEncoding];
+    
+    // de serialize json
+    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:authorizationHeaderData
+                                                               options:NSJSONReadingAllowFragments
+                                                                 error:nil];
+    
+    if (!jsonObject || ![jsonObject isKindOfClass:[NSDictionary class]]) {
+        
+        return nil;
+    }
+    
+    // get the authorization token
+    NSString *tokenString = [jsonObject objectForKey:@"token"];
+    
+    if (!tokenString) {
+        
+        return nil;
+        
+    }
+    
+    // search for token in DataStore
+    Token *token = [[DataStore sharedStore] tokenWithStringValue:tokenString];
+    
+    // check if token was found
+    if (!token) {
+        
+        return nil;
+        
+    }
+    
+    // get the user
+    User *user = token.user;
+    
+    // warn if there is no user attached
+    if (!user) {
+        
+        NSString *errorDescription = [NSString stringWithFormat:@"The token with '%@' string value and created at '%@' has no User object attached to it!", token.stringValue, token.created];
+        
+        [[LogStore sharedStore] addError:errorDescription];
+        
+        [self handleInternalError];
+        
+        return nil;
+    }
+    
+    return user;
+}
+
+@end
+
 @implementation MyHTTPConnection
 
 -(NSObject<HTTPResponse> *)httpResponseForMethod:(NSString *)method
@@ -76,7 +141,7 @@ static NSString *serverHeader;
     // dissect the URI
     NSURL *url = [NSURL URLWithString:path];
     NSArray *pathComponents = [url pathComponents];
-    
+        
     ///////////////////
     // API FUNCTIONS
     ////////////////////
@@ -146,7 +211,7 @@ static NSString *serverHeader;
             }
             
             // create session token
-            Token *token = [user createToken];
+            Token *token = [[DataStore sharedStore] createTokenForUser:user];
             
             // create JSON object
             NSDictionary *jsonObject = @{@"token": token.stringValue};
@@ -219,11 +284,84 @@ static NSString *serverHeader;
             // POST - Create new entry
         
             if ([method isEqualToString:HTTP_METHOD_POST]) {
-            
-            // check for authentication header
-            // [request headerField:]
-            
+                
+                // get user for token
+                User *user = [self userForToken];
+                
+                if (!user) {
+                    
+                    [self handleAuthenticationFailed];
+                    
+                    return nil;
+                    
+                }
+                
+                // Check if the user is an admin
+                if (user.permissions.integerValue != Admin) {
+                    
+                    [self handleForbidden];
+                    
+                    return nil;
+                    
+                }
+                
+                // check for attached JSON data
+                NSDictionary *jsonObjectRequest = [NSJSONSerialization JSONObjectWithData:request.body
+                                                                           options:NSJSONReadingAllowFragments
+                                                                             error:nil];
+                // check for error
+                if (!jsonObjectRequest || ![jsonObjectRequest isKindOfClass:[NSDictionary class]]) {
+                    
+                    [self handleInvalidRequest:request.body];
+                    
+                    return nil;
+                    
+                }
+                
+                // check for title and content
+                NSString *title = [jsonObjectRequest objectForKey:@"title"];
+                
+                NSString *content = [jsonObjectRequest objectForKey:@"content"];
+                
+                if (!title || !content) {
+                    
+                    [self handleInvalidRequest:request.body];
+                    
+                    return nil;
+                }
+                
+                // create new blog entry
+                BlogEntry *entry = [[DataStore sharedStore] createEntry];
+                entry.title = title;
+                entry.content = content;
+                
+                // get the index of the entry
+                NSUInteger index = [[DataStore sharedStore].allEntries indexOfObject:entry];
+                
+                // create JSON data to return
+                NSDictionary *jsonObject = @{@"index": [NSNumber numberWithInteger:index]};
+                
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                                   options:self.printJSONOption
+                                                                     error:nil];
+                if (!jsonData) {
+                    
+                    [self handleInternalError];
+                    
+                    return nil;
+                    
+                }
+                
+                // create HTTP MIME response
+                HTTPMIMEDataResponse *response = [[HTTPMIMEDataResponse alloc] initWithData:jsonData
+                                                                                   mimeType:MimeTypeJSON];
+                
+                return response;
             }
+            
+            [self handleUnknownMethod:method];
+            
+            return nil;
             
         }
 
@@ -416,6 +554,31 @@ static NSString *serverHeader;
 	NSData *responseData = [self preprocessErrorResponse:response];
 	[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_ERROR tag:HTTP_RESPONSE];
     
+}
+
+-(void)handleForbidden
+{
+    // Status Code 403 - Forbidden
+	HTTPMessage *response = [[HTTPMessage alloc] initResponseWithStatusCode:403
+                                                                description:nil
+                                                                    version:HTTPVersion1_1];
+	[response setHeaderField:@"Content-Length" value:@"0"];
+	
+	NSData *responseData = [self preprocessErrorResponse:response];
+	[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_ERROR tag:HTTP_RESPONSE];
+    
+}
+
+#pragma mark
+
+-(BOOL)supportsMethod:(NSString *)method atPath:(NSString *)path
+{
+    return YES;
+}
+
+-(void)processBodyData:(NSData *)postDataChunk
+{
+    [request appendData:postDataChunk];
 }
 
 

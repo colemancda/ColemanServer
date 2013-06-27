@@ -2,13 +2,14 @@
 //  User.h
 //  ColemanServer
 //
-//  Created by Alsey Coleman Miller on 5/11/13.
+//  Created by Alsey Coleman Miller on 6/27/13.
 //  Copyright (c) 2013 ColemanCDA. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-@class Token;
+
+@class EntryComment, Token;
 
 typedef NS_ENUM(NSInteger, UserPermissionLevel) {
     
@@ -18,17 +19,25 @@ typedef NS_ENUM(NSInteger, UserPermissionLevel) {
 };
 
 @interface User : NSManagedObject
-{
-    NSMutableArray *_tokens;
-}
 
-@property (nonatomic, retain) NSString * username;
-@property (nonatomic, retain) NSString * password;
 @property (nonatomic, retain) NSDate * created;
+@property (nonatomic, retain) NSString * password;
 @property (nonatomic, retain) NSNumber * permissions;
+@property (nonatomic, retain) NSString * username;
+@property (nonatomic, retain) NSSet *comments;
+@property (nonatomic, retain) NSSet *tokens;
+@end
 
-@property (readonly) NSArray *tokens;
+@interface User (CoreDataGeneratedAccessors)
 
--(Token *)createToken;
+- (void)addCommentsObject:(EntryComment *)value;
+- (void)removeCommentsObject:(EntryComment *)value;
+- (void)addComments:(NSSet *)values;
+- (void)removeComments:(NSSet *)values;
+
+- (void)addTokensObject:(Token *)value;
+- (void)removeTokensObject:(Token *)value;
+- (void)addTokens:(NSSet *)values;
+- (void)removeTokens:(NSSet *)values;
 
 @end

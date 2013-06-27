@@ -1,5 +1,5 @@
 //
-//  Token.h
+//  EntryComment.h
 //  ColemanServer
 //
 //  Created by Alsey Coleman Miller on 6/27/13.
@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class User;
+@class BlogEntry, User;
 
-@interface Token : NSManagedObject
+@interface EntryComment : NSManagedObject
 
-@property (nonatomic, retain) NSDate * created;
-@property (nonatomic, retain) NSString * stringValue;
+@property (nonatomic, retain) NSString * content;
+@property (nonatomic, retain) NSDate * date;
+@property (nonatomic, retain) BlogEntry *blogEntry;
 @property (nonatomic, retain) User *user;
 
 @end

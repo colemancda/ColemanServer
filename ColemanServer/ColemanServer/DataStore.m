@@ -10,6 +10,7 @@
 #import "LogStore.h"
 #import "User.h"
 #import "BlogEntry.h"
+#import "Token.h"
 
 @implementation DataStore
 
@@ -56,12 +57,14 @@
             
             [[LogStore sharedStore] addError:openPersistanceError.localizedDescription];
             
-            [[LogStore sharedStore] saveToURL:[NSURL URLWithString:[LogStore sharedStore].defaultArchivePath]];
+            [[LogStore sharedStore] saveToURL:[NSURL fileURLWithPath:[LogStore sharedStore].defaultArchivePath]];
             
             [NSApp presentError:openPersistanceError];
             
             [NSException raise:@"Opening Persistance Failed"
                         format:@"%@", openPersistanceError];
+            
+            
         }
         
         // create the context
@@ -384,6 +387,75 @@
     User *user = result[0];
     
     return user;
+}
+
+-(Token *)tokenWithStringValue:(NSString *)stringValue
+{
+    NSFetchRequest *fetchRequest = [_model fetchRequestFromTemplateWithName:@"FetchToken"
+                                                      substitutionVariables:@{@"STRINGVALUE": stringValue}];
+    
+    NSError *fetchError;
+    
+    // execute the request
+    NSArray *result = [_context executeFetchRequest:fetchRequest
+                                              error:&fetchError];
+    
+    if (!result) {
+        
+        NSString *fetchErrorDescription = [NSString stringWithFormat:@"Could not fetch request for token stingValue '%@'. %@", stringValue, fetchError.localizedDescription];
+        
+        [[LogStore sharedStore] addError:fetchErrorDescription];
+        
+        return nil;
+    }
+    
+    // if no tokens were found
+    if (!result.count) {
+        
+        return nil;
+    }
+    
+    // warn if there are multiple tokens with the same string value
+    if (result.count > 1) {
+        
+        NSString *multipleTokensError = [NSString stringWithFormat:@"There are %ld Tokens with '%@' stringValue!", (unsigned long)result.count, stringValue];
+        
+    }
+    
+    Token *token = result[0];
+    
+    return token;
+    
+}
+
+#pragma mark - Advanced Actions
+
+-(Token *)createTokenForUser:(User *)user
+{
+    // create new token
+    Token *token = [NSEntityDescription insertNewObjectForEntityForName:@"Token"
+                                                 inManagedObjectContext:_context];
+    
+    // add to to user
+    [user addTokensObject:token];
+    
+    return token;
+}
+
+-(EntryComment *)createCommentForUser:(User *)user
+                            blogEntry:(BlogEntry *)entry
+{
+    // create new comment
+    EntryComment *comment = [NSEntityDescription insertNewObjectForEntityForName:@"Comment"
+                                                          inManagedObjectContext:_context];
+    
+    // add to user
+    [user addCommentsObject:comment];
+    
+    // add to blog entry
+    [entry addCommentsObject:comment];
+    
+    return comment;
 }
 
 @end

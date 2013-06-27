@@ -21,5 +21,6 @@
 
 -(void)handleInternalError;
 
+-(void)handleForbidden;
 
 @end
