@@ -34,10 +34,6 @@
         
         NSLog(@"Initializing DataStore...");
         
-        // create sort descriptor
-        _dateSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date"
-                                                        ascending:YES];
-        
         // read in all Model files
         _model = [NSManagedObjectModel mergedModelFromBundles:nil];
         
@@ -80,6 +76,7 @@
         [self loadAllUsers];
         
     }
+    
     return self;
 }
 
@@ -117,9 +114,14 @@
         
         NSLog(@"Fetching all Blog Entries...");
         
-        NSFetchRequest *fetchRequest = [_model fetchRequestTemplateForName:@"AllEntries"];
+        // create fetch reuqest from model and create mutable copy
+        NSFetchRequest *fetchRequest = [_model fetchRequestTemplateForName:@"AllEntries"].copy;
         
-        fetchRequest.sortDescriptors = @[_dateSortDescriptor];
+        // create sort descriptor
+        NSSortDescriptor *dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date"
+                                                                   ascending:YES];
+        
+        fetchRequest.sortDescriptors = @[dateSort];
         
         NSError *fetchError;
         
@@ -155,10 +157,14 @@
         NSLog(@"Fetching all Users...");
         
         // get fetch request
-        NSFetchRequest *allUsersFetchRequest = [_model fetchRequestTemplateForName:@"AllUsers"];
+        NSFetchRequest *allUsersFetchRequest = [_model fetchRequestTemplateForName:@"AllUsers"].copy;
+        
+        // create sort descriptor
+        NSSortDescriptor *dateSort = [NSSortDescriptor sortDescriptorWithKey:@"created"
+                                                                   ascending:YES];
         
         // set sorting
-        allUsersFetchRequest.sortDescriptors = @[_dateSortDescriptor];
+        allUsersFetchRequest.sortDescriptors = @[dateSort];
         
         NSError *fetchAllUsersError;
         
@@ -166,7 +172,7 @@
                                                           error:&fetchAllUsersError];
         
         // if we could not fetch the results, we terminate the app
-        if (allUsersResult) {
+        if (!allUsersResult) {
             
             [[LogStore sharedStore] addError:fetchAllUsersError.localizedDescription];
             
@@ -188,7 +194,6 @@
         [[LogStore sharedStore] addEntry:@"Successfully loaded all Users"];
         
     }
-    
 }
 
 -(void)loadAdminUser
@@ -197,7 +202,7 @@
         
         NSLog(@"Fetching Admin User...");
         
-        NSFetchRequest *adminFetchRequest = [_model fetchRequestTemplateForName:@"FetchAdmin"];
+        NSFetchRequest *adminFetchRequest = [_model fetchRequestTemplateForName:@"FetchAdmin"].copy;
         
         // we dont sort the results becuase there should only be one...
         
@@ -216,7 +221,7 @@
         // check if the array has more than 1 admin
         if (adminResult.count > 1) {
             
-            [[LogStore sharedStore] addError:[NSString stringWithFormat:@"%ld admins exist!",
+            [[LogStore sharedStore] addError:[NSString stringWithFormat:@"%ld Admins exist!",
                                               (unsigned long)adminResult.count]];
             
         }        
@@ -225,7 +230,7 @@
         if (!adminResult.count) {
             
             // create admin user
-            _admin = [[DataStore sharedStore] createUser];
+            _admin = [self createUser];
             
             _admin.username = @"admin";
             
@@ -233,8 +238,12 @@
             
         }
         
-        // get the admin
-        _admin = adminResult[0];
+        else {
+            
+            // get the admin
+            _admin = adminResult[0];
+            
+        }
         
         [[LogStore sharedStore] addEntry:@"Successfully loaded Admin User"];
         

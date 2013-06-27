@@ -16,8 +16,6 @@
     
     NSManagedObjectContext *_context;
     NSManagedObjectModel *_model;
-    
-    NSSortDescriptor *_dateSortDescriptor;
 }
 
 + (DataStore *)sharedStore;
@@ -52,6 +50,10 @@
 
 -(void)removeUser:(User *)user;
 
+#pragma mark - Searches
 
+-(User *)userForUsername:(NSString *)username password:(NSString *)password;
+
+-(User *)userForToken:(NSString *)token;
 
 @end

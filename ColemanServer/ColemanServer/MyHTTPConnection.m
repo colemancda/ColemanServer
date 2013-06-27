@@ -73,6 +73,39 @@ static NSString *serverHeader;
     // dissect the URI
     NSArray *pathComponents = [path pathComponents];
     
+    ///////////////////
+    // API FUNCTIONS
+    ////////////////////
+    
+    // /login
+    
+    if ([pathComponents[0] isEqualToString:@"login"] &&
+        pathComponents[0] == pathComponents.lastObject) {
+        
+        // get authentication header
+        NSString *authenticationString = [request headerField:@"Authorization"];
+        
+        NSData *jsonData = [authenticationString dataUsingEncoding:NSUTF8StringEncoding];
+        
+        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                   options:NSJSONReadingAllowFragments
+                                                                     error:nil];
+        // check of not valid JSON
+        if (!jsonObject || [jsonObject isKindOfClass:[NSDictionary class]]) {
+            
+            [self handleAuthenticationFailed];
+            
+        }
+        
+        // check for username and password
+        NSString *username = [jsonObject objectForKey:@"username"];
+        
+        NSString *password = [jsonObject objectForKey:@"password"];
+        
+        
+        
+    }
+    
     // /blog...
     /////////////
     if ([pathComponents[0] caseInsensitiveCompare:@"blog"] == NSOrderedSame) {
@@ -87,7 +120,7 @@ static NSString *serverHeader;
             if ([method isEqualToString:HTTP_METHOD_GET]) {
                 
                 // put togeather JSON dictionary
-                NSDictionary *jsonObject = @{@"entries": [NSNumber numberWithInteger:numberOfEntries]};
+                NSDictionary *jsonObject = @{@"numberOfEntries": [NSNumber numberWithInteger:numberOfEntries]};
                 
                 // create JSON Data to export
                 NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
@@ -148,7 +181,7 @@ static NSString *serverHeader;
             }
             
             // get the entry for that index
-            BlogEntry *entry = [BlogStore sharedStore].allEntries[index];
+            BlogEntry *entry = [DataStore sharedStore].allEntries[index];
             
             // only /blog/#
             
@@ -205,7 +238,7 @@ static NSString *serverHeader;
 
 -(NSJSONWritingOptions)printJSONOption
 {
-    if ([ServerStore sharedStore].prettyPrintJSON) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"prettyPrintJSON"]) {
         
         return NSJSONWritingPrettyPrinted;
     }

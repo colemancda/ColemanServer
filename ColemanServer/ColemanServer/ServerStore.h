@@ -9,15 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "HTTPServer.h"
 
-typedef NS_ENUM(NSInteger, ServerErrorCodes) {
-    
-    BadRequest = 400,
-    Unauthorized,
-    Forbidden = 403,
-    NotFound,
-    ServerError = 500
-};
-
 @interface ServerStore : NSObject
 {
     HTTPServer *_server;
@@ -33,8 +24,6 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
 @property (readonly) BOOL isRunning;
 
 @property (readonly) NSTimeInterval serverUpTime;
-
-@property BOOL prettyPrintJSON;
 
 -(BOOL)startServerWithPort:(NSUInteger)port;
 

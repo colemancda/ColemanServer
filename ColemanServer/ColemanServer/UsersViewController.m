@@ -7,7 +7,7 @@
 //
 
 #import "UsersViewController.h"
-#import "UserStore.h"
+#import "DataStore.h"
 
 @interface UsersViewController ()
 
@@ -34,9 +34,11 @@
     return self;
 }
 
--(UserStore *)userStore
+#pragma mark
+
+-(DataStore *)dataStore
 {
-    return [UserStore sharedStore];
+    return [DataStore sharedStore];
 }
 
 @end

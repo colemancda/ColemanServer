@@ -9,11 +9,9 @@
 #import "ServerStore.h"
 #import "HTTPServer.h"
 #import "LogStore.h"
-#import "BlogStore.h"
 #import "BlogEntry.h"
 #import "NSString+Counter.h"
 #import "User.h"
-#import "UserStore.h"
 #import "Token.h"
 #import "MyHTTPConnection.h"
 
@@ -81,15 +79,6 @@ static NSString *kAPIResponseIndexBlogEntryIndex = @"Invalid Blog Entry Index";
         _server = [[HTTPServer alloc] init];
         
         _server.connectionClass = [MyHTTPConnection class];
-        
-        // load user defaults
-        self.prettyPrintJSON = [[NSUserDefaults standardUserDefaults] boolForKey:@"prettyPrintJSON"];
-        
-        // observe KVC
-        [self addObserver:self
-               forKeyPath:@"self.prettyPrintJSON"
-                  options:NSKeyValueObservingOptionOld
-                  context:nil];
         
     }
     return self;
@@ -179,24 +168,6 @@ static NSString *kAPIResponseIndexBlogEntryIndex = @"Invalid Blog Entry Index";
 -(NSTimeInterval)serverUpTime
 {
     return [[NSDate date] timeIntervalSinceDate:_dateServerStarted];
-}
-
-#pragma mark - KVC
-
--(void)observeValueForKeyPath:(NSString *)keyPath
-                     ofObject:(id)object
-                       change:(NSDictionary *)change
-                      context:(void *)context
-{
-    
-    if ([keyPath isEqualToString:@"self.prettyPrintJSON"] &&
-        object == self) {
-        
-        [[NSUserDefaults standardUserDefaults] setBool:self.prettyPrintJSON
-                                                forKey:@"prettyPrintJSON"];
-        
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
 }
 
 @end

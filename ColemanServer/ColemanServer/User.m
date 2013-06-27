@@ -8,7 +8,6 @@
 
 #import "User.h"
 #import "Token.h"
-#import "UserStore.h"
 
 @implementation User
 
@@ -52,7 +51,7 @@
         NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:oldToken.created];
         
         // if the interval is more than allowed
-        if (interval > [UserStore sharedStore].tokenDuration.doubleValue) {
+        if (interval > [[NSUserDefaults standardUserDefaults] integerForKey:@"tokenDuration"]) {
             
             [_tokens removeObjectIdenticalTo:oldToken];
             

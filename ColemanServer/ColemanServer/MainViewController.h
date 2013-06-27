@@ -32,6 +32,4 @@
 
 - (IBAction)startStopServer:(id)sender;
 
-@property (readonly) ServerStore *serverStore;
-
 @end

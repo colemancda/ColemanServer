@@ -8,7 +8,6 @@
 
 #import "Token.h"
 #import "NSString+RandomString.h"
-#import "UserStore.h"
 
 @implementation Token
 
@@ -21,7 +20,8 @@
         _created = [NSDate date];
         
         // generate random token
-        _stringValue = [NSString randomStringWithLength:[UserStore sharedStore].tokenCharacterLength.integerValue];
+        NSInteger length = [[NSUserDefaults standardUserDefaults] integerForKey:@"tokenLength"];
+        _stringValue = [NSString randomStringWithLength:length];
         
     }
     return self;

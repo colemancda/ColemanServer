@@ -26,7 +26,8 @@ const NSInteger kErrorCodeServerLaunch = 101;
     // create defaults
     NSDictionary *defaults = @{@"port": @8080,
                                @"tokenDuration" : @100000,
-                               @"tokenLength" : @10};
+                               @"tokenLength" : @10,
+                               @"prettyPrintJSON" : @YES};
     
     // register Defaults
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];

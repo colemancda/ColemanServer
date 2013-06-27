@@ -168,11 +168,6 @@
 
 #pragma mark
 
--(ServerStore *)serverStore
-{
-    return [ServerStore sharedStore];
-}
-
 
 
 @end
