@@ -27,7 +27,14 @@
     
     // initalize mutable array
     _tokens = [[NSMutableArray alloc] init];
+}
+
+-(void)awakeFromFetch
+{
+    [super awakeFromFetch];
     
+    // initalize mutable array
+    _tokens = [[NSMutableArray alloc] init];
 }
 
 #pragma mark - Properties

@@ -17,7 +17,6 @@
         <attribute name="created" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="permissions" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="tokens" optional="YES" transient="YES" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="myComments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="user" inverseEntity="Comment" syncable="YES"/>
     </entity>
@@ -28,6 +27,6 @@
     <elements>
         <element name="BlogEntry" positionX="-144" positionY="51" width="128" height="120"/>
         <element name="Comment" positionX="36" positionY="189" width="128" height="105"/>
-        <element name="User" positionX="207" positionY="117" width="128" height="135"/>
+        <element name="User" positionX="207" positionY="117" width="128" height="120"/>
     </elements>
 </model>

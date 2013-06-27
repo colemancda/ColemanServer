@@ -74,7 +74,8 @@ static NSString *serverHeader;
     path = [path substringFromIndex:1];
     
     // dissect the URI
-    NSArray *pathComponents = [path pathComponents];
+    NSURL *url = [NSURL URLWithString:path];
+    NSArray *pathComponents = [url pathComponents];
     
     ///////////////////
     // API FUNCTIONS
