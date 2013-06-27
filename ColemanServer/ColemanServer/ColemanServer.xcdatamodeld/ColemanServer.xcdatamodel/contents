@@ -24,6 +24,7 @@
     <fetchRequest name="AllEntries" entity="BlogEntry"/>
     <fetchRequest name="AllUsers" entity="User"/>
     <fetchRequest name="FetchAdmin" entity="User" predicateString="permissions == 100"/>
+    <fetchRequest name="FetchUserForUsername" entity="User" predicateString="username ==[c] $USERNAME"/>
     <elements>
         <element name="BlogEntry" positionX="-144" positionY="51" width="128" height="120"/>
         <element name="Comment" positionX="36" positionY="189" width="128" height="105"/>

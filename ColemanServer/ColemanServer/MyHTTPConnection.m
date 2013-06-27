@@ -15,6 +15,9 @@
 #import "ServerStore.h"
 #import "NSString+isNonNegativeInteger.h"
 #import "DataStore.h"
+#import "User.h"
+#import "BlogEntry.h"
+#import "Token.h"
 
 static NSString *MimeTypeJSON = @"application/json";
 
@@ -82,28 +85,99 @@ static NSString *serverHeader;
     if ([pathComponents[0] isEqualToString:@"login"] &&
         pathComponents[0] == pathComponents.lastObject) {
         
-        // get authentication header
-        NSString *authenticationString = [request headerField:@"Authorization"];
-        
-        NSData *jsonData = [authenticationString dataUsingEncoding:NSUTF8StringEncoding];
-        
-        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                                   options:NSJSONReadingAllowFragments
-                                                                     error:nil];
-        // check of not valid JSON
-        if (!jsonObject || [jsonObject isKindOfClass:[NSDictionary class]]) {
+        // GET - Get authentication token
+        if ([method isEqualToString:HTTP_METHOD_GET]) {
             
-            [self handleAuthenticationFailed];
+            // get authentication header
+            NSString *authenticationString = [request headerField:@"Authorization"];
+            
+            if (!authenticationString) {
+                
+                [self handleAuthenticationFailed];
+                
+                return nil;
+            }
+            
+            NSData *jsonDataAuthorization = [authenticationString dataUsingEncoding:NSUTF8StringEncoding];
+            
+            NSDictionary *jsonObjectAuthorization = [NSJSONSerialization JSONObjectWithData:jsonDataAuthorization
+                                                                       options:NSJSONReadingAllowFragments
+                                                                         error:nil];
+            // check of not valid JSON
+            if (!jsonObjectAuthorization || ![jsonObjectAuthorization isKindOfClass:[NSDictionary class]]) {
+                
+                [self handleAuthenticationFailed];
+                
+                return nil;
+                
+            }
+            
+            // check for username and password
+            NSString *username = [jsonObjectAuthorization objectForKey:@"username"];
+            
+            NSString *password = [jsonObjectAuthorization objectForKey:@"password"];
+            
+            if (!username || !password) {
+                
+                [self handleAuthenticationFailed];
+                
+                return nil;
+            }
+            
+            // find user for that username
+            User *user = [[DataStore sharedStore] userForUsername:username
+                                                         password:password];
+            
+            // if none is found
+            if (!user) {
+                
+                [self handleAuthenticationFailed];
+                
+                return nil;
+            }
+            
+            // compare passwords
+            if (![user.password isEqualToString:password]) {
+                
+                [self handleAuthenticationFailed];
+                
+                return nil;
+            }
+            
+            // create session token
+            Token *token = [user createToken];
+            
+            // create JSON object
+            NSDictionary *jsonObject = @{@"token": token.stringValue};
+            
+            // serialize JSON
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                               options:self.printJSONOption
+                                                                 error:nil];
+            // check for error
+            if (!jsonData) {
+                
+                [self handleInternalError];
+                
+                return nil;
+            }
+            
+            HTTPMIMEDataResponse *response = [[HTTPMIMEDataResponse alloc] initWithData:jsonData
+                                                                               mimeType:MimeTypeJSON];
+            
+            return response;
+        }
+        
+        // POST - Create new account
+        if ([method isEqualToString:HTTP_METHOD_POST]) {
+            
+            
             
         }
         
-        // check for username and password
-        NSString *username = [jsonObject objectForKey:@"username"];
-        
-        NSString *password = [jsonObject objectForKey:@"password"];
-        
-        
-        
+        // unsupported method
+        [self handleUnknownMethod:method];
+
     }
     
     // /blog...

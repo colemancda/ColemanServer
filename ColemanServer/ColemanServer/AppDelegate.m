@@ -112,6 +112,14 @@ const NSInteger kErrorCodeServerLaunch = 101;
         
     }
     
+    // save preferences
+    BOOL savePreferences = [[NSUserDefaults standardUserDefaults] synchronize];
+    if (!savePreferences) {
+        
+        [[LogStore sharedStore] addError:@"Could not save Preferences"];
+        
+    }
+    
     // try to save the log
     [[LogStore sharedStore] saveToURL:[NSURL fileURLWithPath:[LogStore sharedStore].defaultArchivePath]];
     

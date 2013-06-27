@@ -232,6 +232,8 @@
             // create admin user
             _admin = [self createUser];
             
+            _admin.permissions = [NSNumber numberWithInteger:Admin];
+            
             _admin.username = @"admin";
             
             _admin.password = @"admin";
@@ -312,5 +314,76 @@
     
 }
 
+#pragma mark - Save
+
+-(BOOL)save
+{
+    [[LogStore sharedStore] addEntry:@"Saving DataStore..."];
+    
+    NSError *error;
+    
+    BOOL success = [_context save:&error];
+    
+    if (!success) {
+        
+        NSString *errorMessage = [NSString stringWithFormat:@"Could not save DataStore. %@", error.localizedDescription];
+        
+        [[LogStore sharedStore] addError:errorMessage];
+        
+    }
+    else {
+        
+        [[LogStore sharedStore] addEntry:@"Successfully saved DataStore"];
+        
+    }
+    
+    return success;
+}
+
+#pragma mark - Search
+
+-(User *)userForUsername:(NSString *)username
+                password:(NSString *)password
+{
+    // fetch from the context a user matching the username
+    NSFetchRequest *fetchRequest = [_model fetchRequestFromTemplateWithName:@"FetchUserForUsername"
+                                                      substitutionVariables:@{@"USERNAME": username}];
+    
+    NSError *fetchError;
+    
+    // execute search
+    NSArray *result = [_context executeFetchRequest:fetchRequest
+                                              error:&fetchError];
+    
+    if (!result) {
+        
+        NSString *errorDescription = [NSString stringWithFormat:@"Could not fetch request for username '%@'. %@", username, fetchError];
+        
+        [[LogStore sharedStore] addError:errorDescription];
+        
+        return nil;
+    }
+    
+    // got results...
+    
+    // check if any users were found
+    if (!result.count) {
+        
+        return nil;
+    }
+    
+    // warn if there are multiple users with same username
+    if (result.count > 1) {
+        
+        NSString *multipleUsersError = [NSString stringWithFormat:@"There are %ld Users with the '%@' username!", (unsigned long)result.count, username];
+        
+        [[LogStore sharedStore] addError:multipleUsersError];
+        
+    }
+    
+    User *user = result[0];
+    
+    return user;
+}
 
 @end

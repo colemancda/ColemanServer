@@ -52,7 +52,8 @@
 
 #pragma mark - Searches
 
--(User *)userForUsername:(NSString *)username password:(NSString *)password;
+-(User *)userForUsername:(NSString *)username
+                password:(NSString *)password;
 
 -(User *)userForToken:(NSString *)token;
 
