@@ -124,7 +124,7 @@
     [self didChangeValueForKey:@"log"];
     
     // save log
-    [self saveToURL:[NSURL URLWithString:self.defaultArchivePath]];
+    [self saveToURL:[NSURL fileURLWithPath:self.defaultArchivePath]];
     
     // present to user
     [NSApp presentError:error];

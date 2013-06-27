@@ -10,11 +10,11 @@
 #import "MyHTTPConnection.h"
 #import "HTTPDataResponse.h"
 #import "HTTPMessage.h"
-#import "BlogStore.h"
 #import "HTTPMIMEDataResponse.h"
 #import "GCDAsyncSocket.h"
 #import "ServerStore.h"
 #import "NSString+isNonNegativeInteger.h"
+#import "DataStore.h"
 
 static NSString *MimeTypeJSON = @"application/json";
 
@@ -78,7 +78,7 @@ static NSString *serverHeader;
     if ([pathComponents[0] caseInsensitiveCompare:@"blog"] == NSOrderedSame) {
         
         // get number of entries
-        NSInteger numberOfEntries = [BlogStore sharedStore].allEntries.count;
+        NSInteger numberOfEntries = [DataStore sharedStore].allEntries.count;
         
         // only /blog
         if (pathComponents[0] == pathComponents.lastObject) {

@@ -11,8 +11,7 @@
 #import "LogStore.h"
 #import "ServerStore.h"
 #import "MainViewController.h"
-#import "BlogStore.h"
-#import "UserStore.h"
+#import "DataStore.h"
 
 static NSString *kRootVCKeyPath = @"rootViewController";
 
@@ -26,8 +25,6 @@ const NSInteger kErrorCodeServerLaunch = 101;
 {
     // create defaults
     NSDictionary *defaults = @{@"port": @8080,
-                               @"adminUsername" : @"admin",
-                               @"adminPassword" : @"admin",
                                @"tokenDuration" : @100000,
                                @"tokenLength" : @10};
     
@@ -41,18 +38,15 @@ const NSInteger kErrorCodeServerLaunch = 101;
     // Insert code here to initialize your application
     
     // log the app start
-    [[LogStore sharedStore] addEntry:@"App launched"];
+    [[LogStore sharedStore] addEntry:@"Server App launched"];
     
     // try to start the server...
     
     // get the default port
     NSNumber *defaultPort = [[NSUserDefaults standardUserDefaults] objectForKey:@"port"];
     
-    // initialize the blog store
-    [BlogStore sharedStore];
-    
-    // initialize the user store
-    [UserStore sharedStore];
+    // initialize the data store
+    [DataStore sharedStore];
     
     // start server
     [[ServerStore sharedStore] startServerWithPort:defaultPort.unsignedIntegerValue];
@@ -108,11 +102,14 @@ const NSInteger kErrorCodeServerLaunch = 101;
     
     [[LogStore sharedStore] addEntry:@"Stopped server"];
     
-    // try to save blog entries
-    [[BlogStore sharedStore] save];
+    // try to save data
+    BOOL saveData = [[DataStore sharedStore] save];
     
-    // try to save users
-    [[UserStore sharedStore] save];
+    if (!saveData) {
+        
+        [[LogStore sharedStore] addError:@"Could not save DataStore"];
+        
+    }
     
     // try to save the log
     [[LogStore sharedStore] saveToURL:[NSURL fileURLWithPath:[LogStore sharedStore].defaultArchivePath]];

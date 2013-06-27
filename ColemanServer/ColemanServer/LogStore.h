@@ -21,14 +21,14 @@
 
 @property NSDateFormatterStyle timeStyle;
 
+@property (readonly) NSString *defaultArchivePath;
+
 -(void)addEntry:(NSString *)string;
 
 -(void)addError:(NSString *)string;
 
 -(void)addTerminalError:(NSError *)error
                  reason:(NSString *)reason;
-
-@property (readonly) NSString *defaultArchivePath;
 
 -(BOOL)saveToURL:(NSURL *)url;
 

@@ -55,38 +55,6 @@ static NSString *kAPIResponseInvalidToken = @"Invalid Token";
 
 static NSString *kAPIResponseIndexBlogEntryIndex = @"Invalid Blog Entry Index";
 
-@implementation UserStore (Token)
-
--(User *)userForToken:(NSString *)tokenStringValue
-{
-    if (!tokenStringValue) {
-        return nil;
-    }
-    
-    // find the user that token belongs to
-    User *matchingUser;
-    for (User *user in self.allUsers) {
-        
-        for (Token *token in user.tokens) {
-            
-            if ([token.stringValue isEqualToString:tokenStringValue]) {
-                
-                matchingUser = user;
-                break;
-                
-            }
-        }
-        
-        if (matchingUser) {
-            break;
-        }
-    }
-    
-    return matchingUser;
-}
-
-@end
-
 @implementation ServerStore
 
 + (ServerStore *)sharedStore

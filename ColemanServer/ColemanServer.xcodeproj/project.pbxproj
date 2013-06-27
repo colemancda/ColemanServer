@@ -25,7 +25,6 @@
 		6E9D603B1733829700FD292E /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E9D60391733829700FD292E /* MainViewController.xib */; };
 		6E9D60421733873F00FD292E /* LogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9D60411733873F00FD292E /* LogStore.m */; };
 		6EA60F28177A869700D72843 /* HTTPMIMEDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */; };
-		6EB726E1173C0B8800093237 /* UserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726E0173C0B8800093237 /* UserStore.m */; };
 		6EB726F2173D665E00093237 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F1173D665E00093237 /* Token.m */; };
 		6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F4173D67CB00093237 /* NSString+RandomString.m */; };
 		6EB72711173F156C00093237 /* SaveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7270F173F156C00093237 /* SaveViewController.m */; };
@@ -60,7 +59,6 @@
 		6ED9E88717557B1100A3A814 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87917557B1100A3A814 /* DDTTYLogger.m */; };
 		6ED9E88817557B1100A3A814 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87C17557B1100A3A814 /* ContextFilterLogFormatter.m */; };
 		6ED9E88917557B1100A3A814 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87E17557B1100A3A814 /* DispatchQueueLogFormatter.m */; };
-		6EE811BA1735BACA00433687 /* BlogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811B91735BACA00433687 /* BlogStore.m */; };
 		6EE811BB1736069700433687 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9D5F1D1733707000FD292E /* CoreData.framework */; };
 		6EE811C61736269B00433687 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811C51736269B00433687 /* BlogEntry.m */; };
 		6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811CC17370F2600433687 /* NSString+Counter.m */; };
@@ -103,8 +101,6 @@
 		6E9D60411733873F00FD292E /* LogStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogStore.m; sourceTree = "<group>"; };
 		6EA60F26177A869700D72843 /* HTTPMIMEDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPMIMEDataResponse.h; sourceTree = "<group>"; };
 		6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPMIMEDataResponse.m; sourceTree = "<group>"; };
-		6EB726DF173C0B8800093237 /* UserStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserStore.h; sourceTree = "<group>"; };
-		6EB726E0173C0B8800093237 /* UserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserStore.m; sourceTree = "<group>"; };
 		6EB726F0173D665E00093237 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		6EB726F1173D665E00093237 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6EB726F3173D67CB00093237 /* NSString+RandomString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RandomString.h"; sourceTree = "<group>"; };
@@ -176,8 +172,6 @@
 		6ED9E87D17557B1100A3A814 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
 		6ED9E87E17557B1100A3A814 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
 		6ED9E87F17557B1100A3A814 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		6EE811B81735BAC900433687 /* BlogStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogStore.h; sourceTree = "<group>"; };
-		6EE811B91735BACA00433687 /* BlogStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogStore.m; sourceTree = "<group>"; };
 		6EE811C41736269B00433687 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
 		6EE811C51736269B00433687 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
 		6EE811CB17370F2600433687 /* NSString+Counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Counter.h"; sourceTree = "<group>"; };
@@ -336,8 +330,6 @@
 				6ECAADFA177B50CA007A8876 /* DataStore */,
 				6EE811C71736ABA000433687 /* Logs */,
 				6EE811C81736ABA900433687 /* HTTP Server */,
-				6EE811C91736ABB500433687 /* Blog */,
-				6EB726E2173C0B8D00093237 /* Users */,
 			);
 			name = Stores;
 			sourceTree = "<group>";
@@ -349,15 +341,6 @@
 				6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */,
 			);
 			name = "HTTP Response";
-			sourceTree = "<group>";
-		};
-		6EB726E2173C0B8D00093237 /* Users */ = {
-			isa = PBXGroup;
-			children = (
-				6EB726DF173C0B8800093237 /* UserStore.h */,
-				6EB726E0173C0B8800093237 /* UserStore.m */,
-			);
-			name = Users;
 			sourceTree = "<group>";
 		};
 		6EB726E3173C0BFA00093237 /* User */ = {
@@ -593,15 +576,6 @@
 			name = "HTTP Server";
 			sourceTree = "<group>";
 		};
-		6EE811C91736ABB500433687 /* Blog */ = {
-			isa = PBXGroup;
-			children = (
-				6EE811B81735BAC900433687 /* BlogStore.h */,
-				6EE811B91735BACA00433687 /* BlogStore.m */,
-			);
-			name = Blog;
-			sourceTree = "<group>";
-		};
 		6EE811CA17370EE200433687 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -685,10 +659,8 @@
 				6E9D60421733873F00FD292E /* LogStore.m in Sources */,
 				6E6939011734176200C5DFF5 /* ServerStore.m in Sources */,
 				6E693937173430EF00C5DFF5 /* Log.m in Sources */,
-				6EE811BA1735BACA00433687 /* BlogStore.m in Sources */,
 				6EE811C61736269B00433687 /* BlogEntry.m in Sources */,
 				6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */,
-				6EB726E1173C0B8800093237 /* UserStore.m in Sources */,
 				6EB726F2173D665E00093237 /* Token.m in Sources */,
 				6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */,
 				6EB72711173F156C00093237 /* SaveViewController.m in Sources */,
