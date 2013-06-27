@@ -5,10 +5,11 @@
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="comments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="blogEntry" inverseEntity="Comment" syncable="YES"/>
+        <relationship name="comments" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Comment" inverseName="blogEntry" inverseEntity="Comment" syncable="YES"/>
     </entity>
     <entity name="Comment" syncable="YES">
         <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="blogEntry" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="BlogEntry" inverseName="comments" inverseEntity="BlogEntry" syncable="YES"/>
         <relationship name="user" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="myComments" inverseEntity="User" syncable="YES"/>
     </entity>
@@ -21,9 +22,10 @@
     </entity>
     <fetchRequest name="AllEntries" entity="BlogEntry"/>
     <fetchRequest name="AllUsers" entity="User"/>
+    <fetchRequest name="FetchAdmin" entity="User" predicateString="permissions == 100"/>
     <elements>
         <element name="BlogEntry" positionX="-144" positionY="51" width="128" height="120"/>
-        <element name="Comment" positionX="36" positionY="189" width="128" height="90"/>
+        <element name="Comment" positionX="36" positionY="189" width="128" height="105"/>
         <element name="User" positionX="207" positionY="117" width="128" height="120"/>
     </elements>
 </model>

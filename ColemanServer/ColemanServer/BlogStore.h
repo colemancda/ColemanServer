@@ -11,25 +11,10 @@
 
 @interface BlogStore : NSObject
 {
-    NSMutableArray *_blogEntries;
-    NSManagedObjectContext *_context;
-    NSManagedObjectModel *_model;
-    
-    NSSortDescriptor *_sortDescriptor;
 }
 
 + (BlogStore *)sharedStore;
 
-@property (readonly) NSString *archivePath;
 
--(BOOL)save;
-
--(void)loadAllItems;
-
-@property (readonly) NSArray *allEntries;
-
--(BlogEntry *)createEntry;
-
--(void)removeEntry:(BlogEntry *)blogEntry;
 
 @end

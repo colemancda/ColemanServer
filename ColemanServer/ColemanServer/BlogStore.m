@@ -34,9 +34,6 @@
         
         NSLog(@"Initializing Blog Store...");
         
-        // create sort descriptor
-        _sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date"
-                                                        ascending:YES];
         
         // read in all the Core Data files
         _model = [NSManagedObjectModel mergedModelFromBundles:nil];
@@ -162,27 +159,5 @@
     
 }
 
--(BlogEntry *)createEntry
-{
-    // create new item in context
-    BlogEntry *entry = [NSEntityDescription insertNewObjectForEntityForName:@"BlogEntry" inManagedObjectContext:_context];
-    
-    // add to array (or else we wont have a pointer to it)
-    [_blogEntries addObject:entry];
-    
-    // return
-    return entry;
-    
-}
-
--(void)removeEntry:(BlogEntry *)blogEntry
-{
-    // delete from core data context
-    [_context deleteObject:blogEntry];
-    
-    // delete from array
-    [_blogEntries removeObjectIdenticalTo:blogEntry];
-    
-}
 
 @end

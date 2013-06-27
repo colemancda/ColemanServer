@@ -37,7 +37,6 @@
 
 #pragma mark - Loading and Saving
 
--(void)loadAllUsers;
 
 -(BOOL)save;
 

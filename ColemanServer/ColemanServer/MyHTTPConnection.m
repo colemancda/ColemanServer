@@ -77,14 +77,13 @@ static NSString *serverHeader;
     /////////////
     if ([pathComponents[0] caseInsensitiveCompare:@"blog"] == NSOrderedSame) {
         
-        
         // get number of entries
         NSInteger numberOfEntries = [BlogStore sharedStore].allEntries.count;
         
         // only /blog
         if (pathComponents[0] == pathComponents.lastObject) {
             
-            // return the numer of blog entries
+            // GET - return the numer of blog entries
             if ([method isEqualToString:HTTP_METHOD_GET]) {
                 
                 // put togeather JSON dictionary
@@ -107,10 +106,19 @@ static NSString *serverHeader;
                                                                                    mimeType:MimeTypeJSON];
                 
                 return response;
-                
             }
-        }
+            
+            // POST - Create new entry
         
+            if ([method isEqualToString:HTTP_METHOD_POST]) {
+            
+            // check for authentication header
+            // [request headerField:]
+            
+            }
+            
+        }
+
         // /blog/#...
         
         if ([pathComponents[1] isNonNegativeInteger]) {
@@ -146,22 +154,44 @@ static NSString *serverHeader;
             
             if (pathComponents[1] == pathComponents.lastObject) {
                 
+                // GET - Return the entry
                 
+                if ([method isEqualToString:HTTP_METHOD_GET]) {
+                    
+                    
+                    
+                }
                 
+                // PUT - Upload changes to entry
                 
+                if ([method isEqualToString:HTTP_METHOD_PUT]) {
+                    
+                    
+                    
+                }
+                
+                // DELETE - Delete entry
+                if ([method isEqualToString:HTTP_METHOD_DELETE]) {
+                    
+                    
+                    
+                }
                 
             }
             
+            // only /blog/#/photo
+            if ([pathComponents[2] isEqualToString:@"photo"] &&
+                pathComponents[2] == pathComponents.lastObject) {
+                
+                // GET - return the Photo file
+                if ([method isEqualToString:HTTP_METHOD_GET]) {
+                    
+                    
+                    
+                }
+                
+            }
         }
-    
-    // GET REST functions
-    if ([method isEqualToString:@"GET"]) {
-        
-        
-        
-        
-        }
-
     }
     
     // if none of the API functions were called, then return 404
@@ -181,21 +211,6 @@ static NSString *serverHeader;
     }
     
     return 0;
-}
-
-#pragma mark - Number Formatter
-
-+(NSNumberFormatter *)numberFormatter
-{
-    if (numberFormatter) {
-        
-        numberFormatter = [[NSNumberFormatter alloc] init];
-        
-        numberFormatter
-        
-    }
-    
-    return numberFormatter;
 }
 
 #pragma mark - ServerName String
@@ -260,7 +275,7 @@ static NSString *serverHeader;
 	// }
     
     // add html message
-    NSString *errorPageHTML = [NSString stringWithFormat:@"Error %ld", (long)[response statusCode]];
+    NSString *errorPageHTML = [NSString stringWithFormat:@"Error %ld \n\n%@", (long)[response statusCode], [self.class serverHeader]];
     [response setBody:[errorPageHTML dataUsingEncoding:NSUTF8StringEncoding]];
     
     // update content length

@@ -105,6 +105,35 @@
     [self didChangeValueForKey:@"log"];
 }
 
+-(void)addTerminalError:(NSError *)error
+                 reason:(NSString *)reason
+{
+    // KVO pre change
+    [self willChangeValueForKey:@"log"];
+    
+    // error string
+    NSString *errorString = [NSString stringWithFormat:@"Fatal Error: %@", error.localizedDescription];
+    
+    // create the log
+    Log *log = [[Log alloc] initWithString:errorString];
+    
+    // add to array
+    [_logEntries addObject:log];
+    
+    // KVO Post change
+    [self didChangeValueForKey:@"log"];
+    
+    // save log
+    [self saveToURL:[NSURL URLWithString:self.defaultArchivePath]];
+    
+    // present to user
+    [NSApp presentError:error];
+    
+    // create exception
+    [NSException raise:reason
+                format:@"%@", error.localizedDescription];
+}
+
 #pragma mark
 
 -(NSString *)defaultArchivePath

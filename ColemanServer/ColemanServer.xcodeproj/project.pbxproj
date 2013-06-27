@@ -34,6 +34,7 @@
 		6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7271A173F1D2200093237 /* UsersViewController.m */; };
 		6EB7271D173F1D2300093237 /* UsersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EB7271B173F1D2300093237 /* UsersViewController.xib */; };
 		6EB72723173F223D00093237 /* ToolBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB72722173F223D00093237 /* ToolBarController.m */; };
+		6ECAADFD177B5116007A8876 /* DataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECAADFC177B5116007A8876 /* DataStore.m */; };
 		6ED9E85817557AF300A3A814 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E83317557AF300A3A814 /* DDData.m */; };
 		6ED9E85917557AF300A3A814 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E83517557AF300A3A814 /* DDNumber.m */; };
 		6ED9E85A17557AF300A3A814 /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E83717557AF300A3A814 /* DDRange.m */; };
@@ -118,6 +119,8 @@
 		6EB7271B173F1D2300093237 /* UsersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UsersViewController.xib; sourceTree = "<group>"; };
 		6EB72721173F223D00093237 /* ToolBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBarController.h; sourceTree = "<group>"; };
 		6EB72722173F223D00093237 /* ToolBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBarController.m; sourceTree = "<group>"; };
+		6ECAADFB177B5116007A8876 /* DataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataStore.h; sourceTree = "<group>"; };
+		6ECAADFC177B5116007A8876 /* DataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataStore.m; sourceTree = "<group>"; };
 		6ED9E83217557AF300A3A814 /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
 		6ED9E83317557AF300A3A814 /* DDData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDData.m; sourceTree = "<group>"; };
 		6ED9E83417557AF300A3A814 /* DDNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDNumber.h; sourceTree = "<group>"; };
@@ -330,6 +333,7 @@
 		6E9D603F173385EC00FD292E /* Stores */ = {
 			isa = PBXGroup;
 			children = (
+				6ECAADFA177B50CA007A8876 /* DataStore */,
 				6EE811C71736ABA000433687 /* Logs */,
 				6EE811C81736ABA900433687 /* HTTP Server */,
 				6EE811C91736ABB500433687 /* Blog */,
@@ -414,6 +418,15 @@
 				6EB72722173F223D00093237 /* ToolBarController.m */,
 			);
 			name = Toolbar;
+			sourceTree = "<group>";
+		};
+		6ECAADFA177B50CA007A8876 /* DataStore */ = {
+			isa = PBXGroup;
+			children = (
+				6ECAADFB177B5116007A8876 /* DataStore.h */,
+				6ECAADFC177B5116007A8876 /* DataStore.m */,
+			);
+			name = DataStore;
 			sourceTree = "<group>";
 		};
 		6ED9E83017557AF300A3A814 /* CocoaHTTPServer */ = {
@@ -713,6 +726,7 @@
 				6E3FF8FB1777AA1700DDA324 /* MyHTTPConnection.m in Sources */,
 				6EA60F28177A869700D72843 /* HTTPMIMEDataResponse.m in Sources */,
 				6E0A46C9177B2B7500074FC2 /* NSString+isNonNegativeInteger.m in Sources */,
+				6ECAADFD177B5116007A8876 /* DataStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
