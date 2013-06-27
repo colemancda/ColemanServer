@@ -151,6 +151,8 @@ static NSString *serverHeader;
     if ([pathComponents[0] isEqualToString:@"login"] &&
         pathComponents[0] == pathComponents.lastObject) {
         
+#pragma mark GET /login
+        
         // GET - Get authentication token
         if ([method isEqualToString:HTTP_METHOD_GET]) {
             
@@ -234,6 +236,7 @@ static NSString *serverHeader;
             return response;
         }
         
+#pragma mark POST /login
         // POST - Create new account
         if ([method isEqualToString:HTTP_METHOD_POST]) {
             
@@ -256,6 +259,7 @@ static NSString *serverHeader;
         // only /blog
         if (pathComponents[0] == pathComponents.lastObject) {
             
+#pragma mark GET /blog
             // GET - return the numer of blog entries
             if ([method isEqualToString:HTTP_METHOD_GET]) {
                 
@@ -281,8 +285,8 @@ static NSString *serverHeader;
                 return response;
             }
             
+#pragma mark POST /blog
             // POST - Create new entry
-        
             if ([method isEqualToString:HTTP_METHOD_POST]) {
                 
                 // get user for token
@@ -365,12 +369,11 @@ static NSString *serverHeader;
             
         }
 
-        // /blog/#...
         
+        // /blog/#...
         if ([pathComponents[1] isNonNegativeInteger]) {
             
             // get the blog entry for that index
-            
             NSString *numberString = pathComponents[1];
             
             NSUInteger index = numberString.integerValue;
@@ -400,14 +403,15 @@ static NSString *serverHeader;
             
             if (pathComponents[1] == pathComponents.lastObject) {
                 
+#pragma mark GET /blog/#
                 // GET - Return the entry
-                
                 if ([method isEqualToString:HTTP_METHOD_GET]) {
                     
                     
                     
                 }
                 
+#pragma mark PUT /blog/#
                 // PUT - Upload changes to entry
                 
                 if ([method isEqualToString:HTTP_METHOD_PUT]) {
@@ -416,6 +420,7 @@ static NSString *serverHeader;
                     
                 }
                 
+#pragma mark DELETE /blog/#
                 // DELETE - Delete entry
                 if ([method isEqualToString:HTTP_METHOD_DELETE]) {
                     
@@ -429,10 +434,37 @@ static NSString *serverHeader;
             if ([pathComponents[2] isEqualToString:@"photo"] &&
                 pathComponents[2] == pathComponents.lastObject) {
                 
+#pragma mark GET /blog/#/photo
                 // GET - return the Photo file
                 if ([method isEqualToString:HTTP_METHOD_GET]) {
                     
                     
+                    
+                }
+            }
+            
+            // /blog/#/comment...
+            if ([pathComponents[2] isEqualToString:@"comment"]) {
+                
+                if (pathComponents[2] == pathComponents.lastObject) {
+                    
+#pragma mark GET /blog/#/comment
+
+                    // GET - Number of comments
+                    if ([method isEqualToString:HTTP_METHOD_GET]) {
+                        
+                        
+                        
+                    }
+                    
+#pragma mark POST /blog/#/comment
+                    
+                    // POST - upload comment
+                    if ([method isEqualToString:HTTP_METHOD_POST]) {
+                        
+                        
+                        
+                    }
                     
                 }
                 
