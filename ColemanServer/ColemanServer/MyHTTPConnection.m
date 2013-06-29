@@ -175,9 +175,7 @@ static NSString *serverHeader;
             if (!jsonObjectAuthorization || ![jsonObjectAuthorization isKindOfClass:[NSDictionary class]]) {
                 
                 [self handleAuthenticationFailed];
-                
                 return nil;
-                
             }
             
             // check for username and password
@@ -368,7 +366,6 @@ static NSString *serverHeader;
             return nil;
             
         }
-
         
         // /blog/#...
         if ([pathComponents[1] isNonNegativeInteger]) {
@@ -407,8 +404,46 @@ static NSString *serverHeader;
                 // GET - Return the entry
                 if ([method isEqualToString:HTTP_METHOD_GET]) {
                     
+                    // put togeather JSON object
+                    NSDictionary *jsonObject = @{@"title": entry.title,
+                                                 @"content" : entry.content,
+                                                 @"date" : [NSString stringWithFormat:@"%@", entry.date]};
                     
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                                   options:self.printJSONOption
+                                                                     error:nil];
                     
+                    if (!data) {
+                        
+                        [self handleInternalError];
+                        
+                        return nil;
+                        
+                    }
+                    
+                    // create HTTP Response
+                    HTTPMIMEDataResponse *response = [[HTTPMIMEDataResponse alloc] initWithData:data  mimeType:MimeTypeJSON];
+                    
+                    return response;
+                    
+                }
+                
+                // check who is authorizing
+                User *user = [self userForToken];
+                
+                // for any other methods than GET, you have to authorize as admin for this resource
+                if (!user) {
+                    
+                    [self handleAuthenticationFailed];
+                    
+                    return nil;
+                }
+                
+                if (user.permissions.integerValue != Admin) {
+                    
+                    [self handleForbidden];
+                    
+                    return nil;
                 }
                 
 #pragma mark PUT /blog/#
@@ -416,7 +451,47 @@ static NSString *serverHeader;
                 
                 if ([method isEqualToString:HTTP_METHOD_PUT]) {
                     
+                    // check for JSON body
+                    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:request.body
+                                                                                   options:NSJSONReadingAllowFragments
+                                                                                     error:nil];
                     
+                    if (!jsonDictionary || ![jsonDictionary isKindOfClass:[NSDictionary class]]) {
+                        
+                        [self handleInvalidRequest:request.body];
+                        
+                        return nil;
+                        
+                    }
+                    
+                    NSString *title = [jsonDictionary objectForKey:@"title"];
+                    
+                    NSString *content = [jsonDictionary objectForKey:@"content"];
+                    
+                    // if no changes were uploaded
+                    if (!title || !content) {
+                        
+                        [self handleInvalidRequest:request.body];
+                        
+                        return nil;
+                        
+                    }
+                    
+                    if (title) {
+                        entry.title = title;
+                    }
+                    
+                    if (content) {
+                        entry.content = content;
+                    }
+                    
+                    NSString *message = [NSString stringWithFormat:@"Successfully uploaded changes\n%@", [[self class ] serverHeader]];
+                    
+                    NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
+                    
+                    HTTPDataResponse *response = [[HTTPDataResponse alloc] initWithData:messageData];
+                    
+                    return response;
                     
                 }
                 
@@ -424,8 +499,15 @@ static NSString *serverHeader;
                 // DELETE - Delete entry
                 if ([method isEqualToString:HTTP_METHOD_DELETE]) {
                     
+                    [[DataStore sharedStore] removeEntry:entry];
                     
+                    NSString *message = [NSString stringWithFormat:@"Successfully deleted Blog Entry %ld\n%@", (unsigned long)index, [[self class] serverHeader] ];
                     
+                    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+                    
+                    HTTPDataResponse *response = [[HTTPDataResponse alloc] initWithData:data];
+                    
+                    return response;
                 }
                 
             }
@@ -441,6 +523,8 @@ static NSString *serverHeader;
                     
                     
                 }
+                
+                
             }
             
             // /blog/#/comment...

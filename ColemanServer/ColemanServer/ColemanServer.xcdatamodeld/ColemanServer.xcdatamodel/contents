@@ -32,7 +32,7 @@
     <fetchRequest name="FetchToken" entity="Token" predicateString="stringValue == $STRINGVALUE"/>
     <fetchRequest name="FetchUserForUsername" entity="User" predicateString="username ==[c] $USERNAME"/>
     <elements>
-        <element name="BlogEntry" positionX="-144" positionY="51" width="128" height="120"/>
+        <element name="BlogEntry" positionX="-144" positionY="51" width="128" height="118"/>
         <element name="Comment" positionX="36" positionY="189" width="128" height="105"/>
         <element name="Token" positionX="81" positionY="342" width="128" height="88"/>
         <element name="User" positionX="241" positionY="54" width="128" height="133"/>

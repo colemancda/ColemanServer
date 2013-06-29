@@ -420,6 +420,7 @@
         
         NSString *multipleTokensError = [NSString stringWithFormat:@"There are %ld Tokens with '%@' stringValue!", (unsigned long)result.count, stringValue];
         
+        [[LogStore sharedStore] addError:multipleTokensError];
     }
     
     Token *token = result[0];
