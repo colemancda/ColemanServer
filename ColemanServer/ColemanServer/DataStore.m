@@ -346,7 +346,6 @@
 #pragma mark - Search
 
 -(User *)userForUsername:(NSString *)username
-                password:(NSString *)password
 {
     // fetch from the context a user matching the username
     NSFetchRequest *fetchRequest = [_model fetchRequestFromTemplateWithName:@"FetchUserForUsername"

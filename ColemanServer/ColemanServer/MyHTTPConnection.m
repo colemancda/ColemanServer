@@ -191,8 +191,7 @@ static NSString *serverHeader;
             }
             
             // find user for that username
-            User *user = [[DataStore sharedStore] userForUsername:username
-                                                         password:password];
+            User *user = [[DataStore sharedStore] userForUsername:username];
             
             // if none is found
             if (!user) {
@@ -238,13 +237,61 @@ static NSString *serverHeader;
         // POST - Create new account
         if ([method isEqualToString:HTTP_METHOD_POST]) {
             
+            // get JSON data body
+            NSDictionary *jsonObjectAccountInfo = [NSJSONSerialization JSONObjectWithData:request.body
+                                                                                  options:NSJSONReadingAllowFragments
+                                                                                    error:nil];
+            if (!jsonObjectAccountInfo || ![jsonObjectAccountInfo isKindOfClass:[NSDictionary class]]) {
+                
+                [self handleInvalidRequest:request.body];
+                
+                return nil;
+            }
             
+            // get the values
+            NSString *username = [jsonObjectAccountInfo objectForKey:@"username"];
+            NSString *password = [jsonObjectAccountInfo objectForKey:@"password"];
+            
+            // check if they are in the JSON Data
+            if (!username || !password) {
+                
+                [self handleInvalidRequest:request.body];
+                
+                return nil;
+                
+            }
+            
+            // check if that username is available
+            User *user = [[DataStore sharedStore] userForUsername:username];
+            
+            // if one already exists
+            if (user) {
+                
+                [self handleForbidden];
+                
+                return nil;
+            }
+            
+            // create new user
+            user = [[DataStore sharedStore] createUser];
+            
+            // set the values
+            user.username = username;
+            user.password = password;
+            
+            // return success message
+            NSString *message = [NSString stringWithFormat:@"Successfully created new user '%@'\n%@", username, [[self class] serverHeader]];
+            
+            NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
+            
+            HTTPDataResponse *response = [[HTTPDataResponse alloc] initWithData:messageData];
+            
+            return response;
             
         }
         
         // unsupported method
         [self handleUnknownMethod:method];
-
     }
     
     // /blog...
@@ -523,6 +570,41 @@ static NSString *serverHeader;
                     
                     
                 }
+                
+                // check who is authorizing
+                User *user = [self userForToken];
+                
+                // for any other methods than GET, you have to authorize as admin for this resource
+                if (!user) {
+                    
+                    [self handleAuthenticationFailed];
+                    
+                    return nil;
+                }
+                
+                if (user.permissions.integerValue != Admin) {
+                    
+                    [self handleForbidden];
+                    
+                    return nil;
+                }
+                
+#pragma mark PUT /blog/#/photo
+                // PUT - Upload Photo
+                if ([method isEqualToString:HTTP_METHOD_PUT]) {
+                    
+                    
+                    
+                }
+                
+#pragma mark DELETE /blog/#/photo
+                // Delete - Delete Photo
+                if ([method isEqualToString:HTTP_METHOD_DELETE]) {
+                    
+                    
+                    
+                }
+                
                 
                 
             }

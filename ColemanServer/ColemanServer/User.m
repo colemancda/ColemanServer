@@ -28,6 +28,9 @@
     
     // set date created
     self.created = [NSDate date];
+    
+    // set default permissions
+    self.permissions = [NSNumber numberWithInteger:Viewer];
 }
 
 @end
