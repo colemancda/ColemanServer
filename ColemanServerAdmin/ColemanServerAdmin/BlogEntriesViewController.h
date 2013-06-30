@@ -10,36 +10,19 @@
 
 @interface BlogEntriesViewController : NSViewController <NSTableViewDataSource, NSTableViewDelegate>
 
-@property (strong) IBOutlet NSBox *box;
-
 @property (strong) IBOutlet NSTableView *tableView;
 
 @property (strong) IBOutlet NSScrollView *tableViewScrollView;
 
-#pragma mark - Loading View
-
-@property (strong) IBOutlet NSView *loadingView;
-
-@property (strong) IBOutlet NSProgressIndicator *loadingProgressIndicator;
-
-#pragma mark - Zero Entries
-
-@property (strong) IBOutlet NSView *zeroEntriesView;
-
-#pragma mark - UI Change
-
--(void)showLoadingView;
-
--(void)showZeroEntriesView;
-
--(void)showTableView;
-
-#pragma mark - Properties
-
-@property NSNumber *numberOfEntries;
+@property BOOL canPerformAction;
 
 #pragma mark
 
 - (IBAction)createNewEntry:(id)sender;
+
+- (IBAction)deleteEntry:(id)sender;
+
+- (IBAction)editEntry:(id)sender;
+
 
 @end

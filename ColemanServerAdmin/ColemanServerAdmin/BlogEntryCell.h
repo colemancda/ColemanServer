@@ -12,15 +12,9 @@
 
 @property IBOutlet NSTextField *contentTextField;
 
-@property IBOutlet NSProgressIndicator *imageProgress;
-
-@property IBOutlet NSProgressIndicator *infoProgress;
-
 @property IBOutlet NSTextField *dateTextField;
 
 @property NSDateFormatter *dateFormatter;
-
--(void)showLoadingUI;
 
 -(void)showLoadedInfoWithTitle:(NSString *)title
                        content:(NSString *)content

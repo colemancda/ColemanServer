@@ -30,6 +30,10 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
 
 - (IBAction)save:(id)sender;
 
+- (IBAction)cancel:(id)sender;
+
+#pragma mark - Initialization
+
 - (id)initWithEntry:(NSUInteger)index;
 
 - (id)initWithNewEntry;

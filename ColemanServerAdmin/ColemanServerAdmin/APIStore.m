@@ -16,6 +16,24 @@ static NSString *notAuthorizedErrorDescription = @"You are not logged in";
 
 static NSString *notAuthorizedErrorSuggestion = @"Please log in";
 
+static NSError *notAuthorizedError;
+
+@implementation APIStore (CommonErrors)
+
+-(void)initializeCommonErrors;
+{
+    if (!notAuthorizedError) {
+        
+        // create the 401 error
+        notAuthorizedError = [NSError errorWithDomain:[AppDelegate errorDomain] code:401 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(notAuthorizedErrorDescription, notAuthorizedErrorDescription), NSLocalizedRecoverySuggestionErrorKey : NSLocalizedString(notAuthorizedErrorSuggestion, notAuthorizedErrorSuggestion)}];
+        
+    }
+    
+    
+}
+
+@end
+
 @implementation APIStore
 
 + (APIStore *)sharedStore
@@ -41,6 +59,9 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
         
         // initialize the queue
         _connectionQueue = [[NSOperationQueue alloc] init];
+        
+        // initliaze the common error
+        [self initializeCommonErrors];
         
         // blog entries core data
         _model = [NSManagedObjectModel mergedModelFromBundles:nil];
@@ -286,7 +307,7 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
     
     urlString = [urlString stringByAppendingPathComponent:indexString];
     
-    NSLog(@"Fetching Blog entry %ld", (unsigned long)indexOfEntry);
+    NSLog(@"Fetching Blog entry %ld...", (unsigned long)indexOfEntry);
     
     [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]] queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
@@ -384,11 +405,6 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
                     content:(NSString *)content
              withCompletion:(completionBlock)completionBlock
 {
-    // you must already have a token do do this, and Admin user account
-    
-    // create the 401 error
-    NSError *notAuthorizedError = [NSError errorWithDomain:[AppDelegate errorDomain] code:401 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(notAuthorizedErrorDescription, notAuthorizedErrorDescription), NSLocalizedRecoverySuggestionErrorKey : NSLocalizedString(notAuthorizedErrorSuggestion, notAuthorizedErrorSuggestion)}];
-    
     if (!self.token) {
         if (completionBlock) {
             completionBlock(notAuthorizedError);
@@ -519,11 +535,6 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
                     format:@"You need to specify a non-nil NSDictionary for the changes"];
     }
     
-    // you must already have a token do do this, and Admin user account
-    
-    // create the 401 error
-    NSError *notAuthorizedError = [NSError errorWithDomain:[AppDelegate errorDomain] code:401 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(notAuthorizedErrorDescription, notAuthorizedErrorDescription), NSLocalizedRecoverySuggestionErrorKey : NSLocalizedString(notAuthorizedErrorSuggestion, notAuthorizedErrorSuggestion)}];
-    
     if (!self.token) {
         if (completionBlock) {
             completionBlock(notAuthorizedError);
@@ -608,6 +619,118 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
         return;
         
     }];
+}
+
+-(void)removeEntry:(NSUInteger)entryIndex
+        completion:(completionBlock)completionBlock
+{
+    // you must already have a token do do this, and Admin user account
+    
+    if (!self.token) {
+        if (completionBlock) {
+            completionBlock(notAuthorizedError);
+        }
+        
+        return;
+    }
+    
+    // put togeather URL
+    NSString *urlString = [self.baseURL stringByAppendingPathComponent:@"blog"];
+    NSString *indexString = [NSString stringWithFormat:@"%lu", entryIndex];
+    urlString = [urlString stringByAppendingPathComponent:indexString];
+    
+    // put togeather request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    request.HTTPMethod = @"DELETE";
+    request.allHTTPHeaderFields = @{@"Authorization": self.token};
+    
+    NSLog(@"Requesting to delete blog entry %@...", indexString);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        if (error) {
+            
+            if (error.code == NSURLErrorUserCancelledAuthentication) {
+                
+                if (completionBlock) {
+                    completionBlock(notAuthorizedError);
+                }
+                
+                return;
+                
+            }
+            
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        // put togeather other error
+        
+        
+        // create other error
+        NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to delete blog entry", @"Unable to delete blog entry")};
+        
+        NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                  code:4004
+                                              userInfo:otherErrorUserInfo];
+        
+        // get HTTP Status code
+        if (response.httpCode.integerValue != 200) {
+            
+            // if not authorized
+            if (response.httpCode.integerValue == 401) {
+                
+                if (completionBlock) {
+                    completionBlock(notAuthorizedError);
+                }
+                
+                return;
+            }
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+            
+        }
+        
+        // successfully deleted blog entry on server, now we need to update the cache
+        NSManagedObject *removedEntry = [_blogEntriesCache objectForKey:indexString];
+        [_context deleteObject:removedEntry];
+        [_blogEntriesCache removeObjectForKey:indexString];
+        
+        // update the keys
+        for (NSString *key in _blogEntriesCache.allKeys) {
+            
+            // decrease by 1 from all the keys that are equal or larger than the removed index
+            if (key.integerValue <= entryIndex) {
+                
+                NSUInteger oldIndex = key.integerValue;
+                NSUInteger newIndex = oldIndex - 1;
+                
+                NSString *newIndexKey = [NSString stringWithFormat:@"%ld", (unsigned long)newIndex];
+                
+                // get the object
+                NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:key];
+                
+                // add new key pair
+                [_blogEntriesCache setObject:blogEntry
+                                      forKey:newIndexKey];
+                
+                // delete the old key value pair
+                [_blogEntriesCache removeObjectForKey:key];
+            }
+            
+        }
+        
+        NSLog(@"Successfully removed entry %@", indexString);
+        
+    }];
+    
 }
 
 

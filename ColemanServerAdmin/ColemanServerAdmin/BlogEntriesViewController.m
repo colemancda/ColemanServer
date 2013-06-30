@@ -60,42 +60,11 @@ static NSString *CellIdentifier = @"BlogEntryCell";
             else {
                 
                 [self.tableView reloadData];
-                
-                [self showTableView];
-                
-                // if there are zero entries
-                if (![APIStore sharedStore].numberOfEntries.integerValue) {
-                    
-                    [self showZeroEntriesView];
-                    
-                }
-                
             }
             
         }];
         
     }];
-}
-
-#pragma mark - UI Change
-
--(void)showLoadingView
-{
-    self.box.contentView = self.loadingView;
-    
-    [self.loadingProgressIndicator startAnimation:nil];
-    
-}
-
--(void)showZeroEntriesView
-{
-    self.box.contentView = self.zeroEntriesView;
-}
-
--(void)showTableView
-{
-    self.box.contentView = self.tableViewScrollView;
-    
 }
 
 #pragma mark - NSTableView DataSource Protocol
@@ -145,20 +114,32 @@ static NSString *CellIdentifier = @"BlogEntryCell";
 
 #pragma mark - NSTableView Delegate Protocol
 
--(void)tableViewSelectionDidChange:(NSNotification *)notification
+-(BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
 {
-    // get the index
-    NSTableView *tableView = notification.object;
+    NSString *indexKey = [NSString stringWithFormat:@"%ld", (long)row];
+    NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
     
-    NSUInteger index = tableView.selectedRow;
+    if (!blogEntry) {
+        return NO;
+    }
     
-    BlogEntryEditorViewController *editorVC = [[BlogEntryEditorViewController alloc] initWithEntry:index];
-    
-    AppDelegate *appDelegate = [NSApp delegate];
-    
-    appDelegate.rootViewController = editorVC;
+    return YES;
 }
 
+#pragma mark - NSTableView Notifications
+
+-(void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+    NSTableView *tableView = notification.object;
+    
+    if (tableView.selectedRow == -1) {
+        
+        self.canPerformAction = NO;
+    }
+    else {
+        self.canPerformAction = YES;
+    }
+}
 
 #pragma mark - Buttons
 
@@ -170,6 +151,35 @@ static NSString *CellIdentifier = @"BlogEntryCell";
     
     appDelegate.rootViewController = editorVC;
     
+}
+
+-(void)deleteEntry:(id)sender
+{
+    [[APIStore sharedStore] removeEntry:self.tableView.selectedRow completion:^(NSError *error) {
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            
+            if (error) {
+                
+                [NSApp presentError:error];
+                
+            }
+            
+            else {
+                
+                [self.tableView reloadData];
+            }
+            
+        }];
+    }];
+}
+
+- (IBAction)editEntry:(id)sender {
+    
+    BlogEntryEditorViewController *editorVC = [[BlogEntryEditorViewController alloc] initWithEntry:self.tableView.selectedRow];
+    
+    AppDelegate *appDelegate = [NSApp delegate];
+    appDelegate.rootViewController = editorVC;
 }
 
 

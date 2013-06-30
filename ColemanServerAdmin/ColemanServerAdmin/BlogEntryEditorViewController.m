@@ -182,5 +182,13 @@
     }
 }
 
+- (IBAction)cancel:(id)sender {
+    
+    BlogEntriesViewController *entriesVC = [[BlogEntriesViewController alloc] init];
+    AppDelegate *appDelegate = [NSApp delegate];
+    appDelegate.rootViewController = entriesVC;
+    
+}
+
 
 @end
