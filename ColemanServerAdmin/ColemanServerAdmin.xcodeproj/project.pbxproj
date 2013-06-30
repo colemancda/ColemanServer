@@ -21,7 +21,7 @@
 		6E252639174699CB00141A3F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E252637174699CB00141A3F /* LoginViewController.m */; };
 		6E25263A174699CB00141A3F /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E252638174699CB00141A3F /* LoginViewController.xib */; };
 		6E25263E1746AE1700141A3F /* APIStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E25263D1746AE1700141A3F /* APIStore.m */; };
-		6E49562F1754A4E80052BE67 /* BlogModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6E49562D1754A4E70052BE67 /* BlogModel.xcdatamodeld */; };
+		6E49562F1754A4E80052BE67 /* ColemanClient.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6E49562D1754A4E70052BE67 /* ColemanClient.xcdatamodeld */; };
 		6EC63BEA1748AFD200105121 /* BlogEntriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC63BE81748AFD200105121 /* BlogEntriesViewController.m */; };
 		6EC63BEB1748AFD200105121 /* BlogEntriesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EC63BE91748AFD200105121 /* BlogEntriesViewController.xib */; };
 /* End PBXBuildFile section */
@@ -53,7 +53,7 @@
 		6E25263C1746AE1700141A3F /* APIStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIStore.h; sourceTree = "<group>"; };
 		6E25263D1746AE1700141A3F /* APIStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIStore.m; sourceTree = "<group>"; };
 		6E2526401746B4DC00141A3F /* NSObject+CompletionBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CompletionBlock.h"; sourceTree = "<group>"; };
-		6E49562E1754A4E80052BE67 /* BlogModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BlogModel.xcdatamodel; sourceTree = "<group>"; };
+		6E49562E1754A4E80052BE67 /* ColemanClient.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ColemanClient.xcdatamodel; sourceTree = "<group>"; };
 		6EC63BE71748AFD200105121 /* BlogEntriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntriesViewController.h; sourceTree = "<group>"; };
 		6EC63BE81748AFD200105121 /* BlogEntriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntriesViewController.m; sourceTree = "<group>"; };
 		6EC63BE91748AFD200105121 /* BlogEntriesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BlogEntriesViewController.xib; sourceTree = "<group>"; };
@@ -166,7 +166,6 @@
 				6EF4F12F175587F500052864 /* ColemanServerAdmin.entitlements */,
 				6E25262A1746975900141A3F /* AppDelegate.h */,
 				6E25262B1746975900141A3F /* AppDelegate.m */,
-				6E49562D1754A4E70052BE67 /* BlogModel.xcdatamodeld */,
 				6E25262D1746975900141A3F /* MainMenu.xib */,
 				6E045B82174EA0130022A5CE /* Views */,
 				6E2526411746B4E000141A3F /* Models */,
@@ -213,6 +212,7 @@
 		6E25263F1746AE1C00141A3F /* API Store */ = {
 			isa = PBXGroup;
 			children = (
+				6E49562D1754A4E70052BE67 /* ColemanClient.xcdatamodeld */,
 				6E25263C1746AE1700141A3F /* APIStore.h */,
 				6E25263D1746AE1700141A3F /* APIStore.m */,
 			);
@@ -329,7 +329,7 @@
 				6E045B85174EA03D0022A5CE /* BlogEntryCell.m in Sources */,
 				6E045B8A174EF5040022A5CE /* NSURLResponse+HTTPCode.m in Sources */,
 				6E0279CE174FF0AD00A82BAA /* BlogEntryEditorViewController.m in Sources */,
-				6E49562F1754A4E80052BE67 /* BlogModel.xcdatamodeld in Sources */,
+				6E49562F1754A4E80052BE67 /* ColemanClient.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,13 +472,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		6E49562D1754A4E70052BE67 /* BlogModel.xcdatamodeld */ = {
+		6E49562D1754A4E70052BE67 /* ColemanClient.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				6E49562E1754A4E80052BE67 /* BlogModel.xcdatamodel */,
+				6E49562E1754A4E80052BE67 /* ColemanClient.xcdatamodel */,
 			);
-			currentVersion = 6E49562E1754A4E80052BE67 /* BlogModel.xcdatamodel */;
-			path = BlogModel.xcdatamodeld;
+			currentVersion = 6E49562E1754A4E80052BE67 /* ColemanClient.xcdatamodel */;
+			path = ColemanClient.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

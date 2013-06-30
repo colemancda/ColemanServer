@@ -8,9 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
+    
+    NewEntry,
+    ExistingEntry
+};
+
 @interface BlogEntryEditorViewController : NSViewController
 
-@property (readonly) NSUInteger blogEntryIndex;
+@property (readonly) BlogEntryEditorMode mode;
+
+@property (readonly) NSInteger blogEntryIndex;
 
 @property (strong) IBOutlet NSImageView *imageView;
 
@@ -23,5 +31,7 @@
 - (IBAction)save:(id)sender;
 
 - (id)initWithEntry:(NSUInteger)index;
+
+- (id)initWithNewEntry;
 
 @end

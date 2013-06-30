@@ -62,29 +62,8 @@ static NSString *serverHeader;
 
 -(User *)userForToken
 {
-    // check for authentication header
-    NSString *authorization = [request headerField:@"Authorization"];
-    
-    if (!authorization) {
-        
-        return nil;
-    }
-    
-    // encode it
-    NSData *authorizationHeaderData = [authorization dataUsingEncoding:NSUTF8StringEncoding];
-    
-    // de serialize json
-    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:authorizationHeaderData
-                                                               options:NSJSONReadingAllowFragments
-                                                                 error:nil];
-    
-    if (!jsonObject || ![jsonObject isKindOfClass:[NSDictionary class]]) {
-        
-        return nil;
-    }
-    
     // get the authorization token
-    NSString *tokenString = [jsonObject objectForKey:@"token"];
+    NSString *tokenString = [request headerField:@"Authorization"];
     
     if (!tokenString) {
         
@@ -516,7 +495,7 @@ static NSString *serverHeader;
                     NSString *content = [jsonDictionary objectForKey:@"content"];
                     
                     // if no changes were uploaded
-                    if (!title || !content) {
+                    if (!title && !content) {
                         
                         [self handleInvalidRequest:request.body];
                         

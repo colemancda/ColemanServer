@@ -23,19 +23,26 @@
     if (self) {
         
         _blogEntryIndex = index;
+        _mode = ExistingEntry;
         
     }
     return self;
 }
 
-- (id)init
+-(id)initWithNewEntry
 {
-    [NSException raise:@"Wrong initialization method"
-                format:@"You cannot use %@ with '-%@', you have to use '-%@'",
-     self,
-     NSStringFromSelector(_cmd),
-     NSStringFromSelector(@selector(initWithEntry:))];
-    return nil;
+    self = [self initWithNibName:NSStringFromClass([self class]) bundle:nil];
+    if (self) {
+        
+        _mode = NewEntry;
+        
+    }
+    return self;
+}
+
+-(id)init
+{
+    return self.initWithNewEntry;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -50,37 +57,38 @@
     return self;
 }
 
-#pragma mark - 
+#pragma mark
 
 -(void)awakeFromNib
 {
     [super awakeFromNib];
     
-    // fetch that blog entry
-    NSString *indexKey = [NSString stringWithFormat:@"%ld", self.blogEntryIndex];
-    NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
-    
-    if (!blogEntry) {
-        
-        NSLog(@"You need to download the blog entry before you can edit it");
-        
-        BlogEntriesViewController *entriesVC = [[BlogEntriesViewController alloc] init];
-        
-        AppDelegate *appDelegate = [NSApp delegate];
-        
-        appDelegate.rootViewController = entriesVC;
-        
-    }
-    
-    // set the UI
-    self.titleTextField.stringValue = [blogEntry valueForKey:@"title"];
-    self.contentTextView.string = [blogEntry valueForKey:@"content"];
-    
+    // date
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateStyle = NSDateFormatterMediumStyle;
     
-    NSString *dateString = [dateFormatter stringFromDate:[blogEntry valueForKey:@"date"]];
-    self.dateTextField.stringValue = dateString;
+    if (_mode == ExistingEntry) {
+        
+        // get the entry from the store
+        NSString *indexKey = [NSString stringWithFormat:@"%ld", (long)self.blogEntryIndex];
+        NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
+        
+        // set the UI
+        self.titleTextField.stringValue = [blogEntry valueForKey:@"title"];
+        self.contentTextView.string = [blogEntry valueForKey:@"content"];
+        
+        NSString *dateString = [dateFormatter stringFromDate:[blogEntry valueForKey:@"date"]];
+        self.dateTextField.stringValue = dateString;
+    }
+    
+    else {
+        
+        NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
+        self.dateTextField.stringValue = dateString;
+        
+    }
+    
+    
 }
 
 #pragma mark
@@ -88,33 +96,90 @@
 
 - (IBAction)save:(id)sender {
     
-    NSDictionary *changes = @{@"title": self.titleTextField.stringValue,
-                              @"content" : self.contentTextView.string};
+    NSString *title = self.titleTextField.stringValue;
+    NSString *content = self.contentTextView.string;
     
-    [[APIStore sharedStore] editEntry:self.blogEntryIndex changes:changes completion:^(NSError *error) {
+    // if new entry
+    if (self.mode == NewEntry) {
         
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [[APIStore sharedStore] createEntryWithTitle:title content:content withCompletion:^(NSError *error) {
             
-            if (error) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 
-                [NSApp presentError:error];
-            }
-            
-            else {
+                if (error) {
+                    
+                    [NSApp presentError:error];
+                    
+                }
                 
                 BlogEntriesViewController *entriesVC = [[BlogEntriesViewController alloc] init];
                 
                 AppDelegate *appDelegate = [NSApp delegate];
-                
                 appDelegate.rootViewController = entriesVC;
+                
+            }];
+        }];
+    }
+    
+    else {
+        
+        // get the blogEntry
+        NSString *indexKey = [NSString stringWithFormat:@"%lu", self.blogEntryIndex];
+        NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
+        
+        // check what changed...
+        NSMutableDictionary *changes = [[NSMutableDictionary alloc] init];
+        
+        if (![[blogEntry valueForKey:@"title"] isEqualToString:title]) {
             
-            }
+            [changes setObject:title
+                        forKey:@"title"];
+            
+        }
+        
+        if (![[blogEntry valueForKey:@"content"] isEqualToString:content]) {
+            
+            [changes setObject:content
+                        forKey:@"content"];
+            
+        }
+        
+        // if no changes occurred
+        if (changes.allKeys.count == 0) {
+            
+            BlogEntriesViewController *entriesVC = [[BlogEntriesViewController alloc] init];
+            
+            AppDelegate *appDelegate = [NSApp delegate];
+            
+            appDelegate.rootViewController = entriesVC;
+            
+            return;
+        }
+        
+        [[APIStore sharedStore] editEntry:self.blogEntryIndex changes:changes completion:^(NSError *error) {
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                
+                if (error) {
+                    
+                    [NSApp presentError:error];
+                }
+                
+                else {
+                    
+                    BlogEntriesViewController *entriesVC = [[BlogEntriesViewController alloc] init];
+                    
+                    AppDelegate *appDelegate = [NSApp delegate];
+                    
+                    appDelegate.rootViewController = entriesVC;
+                    
+                }
+                
+            }];
             
         }];
         
-    }];
-    
-    
+    }
 }
 
 

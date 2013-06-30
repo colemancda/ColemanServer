@@ -16,31 +16,6 @@ static NSString *notAuthorizedErrorDescription = @"You are not logged in";
 
 static NSString *notAuthorizedErrorSuggestion = @"Please log in";
 
-@implementation APIStore (BlogEntry)
-
--(NSManagedObject *)createNewBlogEntryAtIndex:(NSUInteger)index
-                                         date:(NSDate *)dateCreated
-{
-    // save the blog entry in the core data cache...
-        
-    NSManagedObject *blogEntry = [NSEntityDescription insertNewObjectForEntityForName:BlogEntryEntityName
-                                                               inManagedObjectContext:_context];
-    
-    NSString *indexKey = [NSString stringWithFormat:@"%ld", (unsigned long)index];
-    
-    [_blogEntriesCache setObject:blogEntry
-                          forKey:indexKey];
-    
-    // initalized values
-    [blogEntry setValue:@"" forKey:@"title"];
-    [blogEntry setValue:@"" forKey:@"content"];
-    [blogEntry setValue:dateCreated forKey:@"date"];
-    
-    return blogEntry;
-}
-
-@end
-
 @implementation APIStore
 
 + (APIStore *)sharedStore
@@ -85,20 +60,28 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
                 password:(NSString *)password
               completion:(completionBlock)completionBlock
 {
-    if (!username || !password || !self.baseURL) {
-        return;
-    }
-    
     // put togeather the url
     NSString *relativeURLString = @"login";
-    relativeURLString = [relativeURLString stringByAppendingPathComponent:username];
-    relativeURLString = [relativeURLString stringByAppendingPathComponent:password];
     NSString *urlString = [self.baseURL stringByAppendingPathComponent:relativeURLString];
     NSURL *url = [NSURL URLWithString:urlString];
     
+    // make the JSON credentials
+    NSDictionary *credentials = @{@"username": username, @"password" : password};
+    
+    NSData *credentialsJSONData = [NSJSONSerialization dataWithJSONObject:credentials
+                                                                  options:0
+                                                                    error:nil];
+    
+    NSString *credentialsJSONString = [[NSString alloc] initWithData:credentialsJSONData
+                                                            encoding:NSUTF8StringEncoding];
+    
+    // put togeather the request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    [request setAllHTTPHeaderFields:@{@"Authorization": credentialsJSONString}];
+    
     NSLog(@"Fetching Login Token...");
     
-    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
         // create error to show user when we dont wanna show details
         NSString *otherErrorDescription = NSLocalizedString(@"Unable to login",
@@ -210,6 +193,8 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
     NSString *urlString = self.baseURL;
     urlString = [urlString stringByAppendingPathComponent:@"blog"];
     
+    NSLog(@"Fetching number of entries...");
+    
     [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]] queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
         // create NSError for errors that we dont wanna show the user
@@ -260,7 +245,7 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
         }
         
         // get the value
-        NSNumber *numberOfEntries = [jsonObject valueForKey:@"entries"];
+        NSNumber *numberOfEntries = [jsonObject valueForKey:@"numberOfEntries"];
         
         if (!numberOfEntries || ![numberOfEntries isKindOfClass:[NSNumber class]]) {
             
@@ -365,8 +350,14 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
         // get the date created
         NSDate *date = [NSDate dateWithString:dateString];
         
-        NSManagedObject *blogEntry = [self createNewBlogEntryAtIndex:indexOfEntry
-                                                                date:date];
+        // save the blog entry in the core data cache...
+        NSManagedObject *blogEntry = [NSEntityDescription insertNewObjectForEntityForName:BlogEntryEntityName
+                                                                   inManagedObjectContext:_context];
+        
+        NSString *indexKey = [NSString stringWithFormat:@"%ld", (unsigned long)indexOfEntry];
+        
+        [_blogEntriesCache setObject:blogEntry
+                              forKey:indexKey];
         
         [blogEntry setValue:title
                      forKey:@"title"];
@@ -375,7 +366,7 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
         [blogEntry setValue:date
                      forKey:@"date"];
         
-        NSLog(@"Successfully fetched blog entry %ld", indexOfEntry);
+        NSLog(@"Successfully fetched blog entry %@", indexKey);
         
         if (completionBlock) {
             completionBlock(nil);
@@ -389,7 +380,9 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
 
 #pragma mark - Authorized API Functions
 
--(void)createEntryWithCompletion:(completionBlock)completionBlock
+-(void)createEntryWithTitle:(NSString *)title
+                    content:(NSString *)content
+             withCompletion:(completionBlock)completionBlock
 {
     // you must already have a token do do this, and Admin user account
     
@@ -414,12 +407,21 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
     // put togeather the URL
     NSString *urlString = self.baseURL;
     urlString = [urlString stringByAppendingPathComponent:@"blog"];
-    urlString = [urlString stringByAppendingPathComponent:self.token];
     
     // make the request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
-    
     request.HTTPMethod = @"POST";
+    request.allHTTPHeaderFields = @{@"Authorization": self.token};
+    
+    // make JSON object
+    NSDictionary *jsonObject = @{@"title" : title,
+                                 @"content" : content};
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                       options:0
+                                                         error:nil];
+    
+    request.HTTPBody = jsonData;
     
     NSLog(@"Requesting new blog entry...");
     
@@ -456,7 +458,9 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
         }
         
         // get JSON object from data
-        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data
+                                                                   options:NSJSONReadingAllowFragments
+                                                                     error:nil];
         
         if (!jsonObject || ![jsonObject isKindOfClass:[NSDictionary class]]) {
             
@@ -540,27 +544,15 @@ static NSString *notAuthorizedErrorSuggestion = @"Please log in";
     urlString = [urlString stringByAppendingPathComponent:@"blog"];
     NSString *indexString = [NSString stringWithFormat:@"%ld", (unsigned long)entryIndex];
     urlString = [urlString stringByAppendingPathComponent:indexString];
-    urlString = [urlString stringByAppendingPathComponent:self.token];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     request.HTTPMethod = @"PUT";
-
+    request.allHTTPHeaderFields = @{@"Authorization": self.token};
+    
     // convert changes dictionary to JSON data
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:changes
                                                        options:0
                                                          error:nil];
-    
-    if (!jsonData) {
-        
-        NSLog(@"The changes dicitonary was not a valid JSON object");
-        
-        if (completionBlock) {
-            completionBlock(otherError);
-        }
-        
-        return;
-        
-    }
     
     // attach the data to the HTTP body
     request.HTTPBody = jsonData;

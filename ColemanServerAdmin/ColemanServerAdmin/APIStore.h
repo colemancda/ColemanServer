@@ -59,9 +59,11 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
 -(void)fetchImageForEntry:(NSUInteger)indexOfEntry
                completion:(completionBlock)completionBlock;
 
-#pragma mark - Actions
+#pragma mark - Manipulate Entries
 
--(void)createEntryWithCompletion:(completionBlock)completionBlock;
+-(void)createEntryWithTitle:(NSString *)title
+                    content:(NSString *)content
+             withCompletion:(completionBlock)completionBlock;
 
 -(void)removeEntry:(NSUInteger)entryIndex
         completion:(completionBlock)completionBlock;
@@ -70,9 +72,14 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
          changes:(NSDictionary *)changes
       completion:(completionBlock)completionBlock;
 
+#pragma mark - Manipulate Images
+
 -(void)setImage:(NSImage *)image
        forEntry:(NSUInteger)indexOfEntry
      completion:(completionBlock)completionBlock;
+
+-(void)removeImageFromEntry:(NSUInteger)entryIndex
+                 completion:(completionBlock)completionBlock;
 
 
 @end

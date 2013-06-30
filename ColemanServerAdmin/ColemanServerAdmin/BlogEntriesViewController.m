@@ -164,32 +164,11 @@ static NSString *CellIdentifier = @"BlogEntryCell";
 
 - (IBAction)createNewEntry:(id)sender {
     
-    // ask the API to create a new entry
+    BlogEntryEditorViewController *editorVC = [[BlogEntryEditorViewController alloc] initWithNewEntry];
     
-    [[APIStore sharedStore] createEntryWithCompletion:^(NSError *error) {
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            
-            if (error) {
-                
-                [NSApp presentError:error];
-                
-            }
-            else {
-                
-                // get the index of the last object
-                NSUInteger index = [APIStore sharedStore].blogEntriesCache.allKeys.count - 1;
-                
-                BlogEntryEditorViewController *editorVC = [[BlogEntryEditorViewController alloc] initWithEntry:index];
-                
-                AppDelegate *appDelegate = [NSApp delegate];
-                
-                appDelegate.rootViewController = editorVC;
-            }
-            
-        }];
-        
-    }];
+    AppDelegate *appDelegate = [NSApp delegate];
+    
+    appDelegate.rootViewController = editorVC;
     
 }
 
