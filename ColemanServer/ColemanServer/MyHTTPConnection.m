@@ -19,6 +19,7 @@
 #import "BlogEntry.h"
 #import "Token.h"
 #import "LogStore.h"
+#import "EntryComment.h"
 
 static NSString *MimeTypeJSON = @"application/json";
 
@@ -396,7 +397,7 @@ static NSString *serverHeader;
         // /blog/#...
         if ([pathComponents[1] isNonNegativeInteger]) {
             
-            // get the blog entry for that index
+            // get the blog entry for that index...
             NSString *numberString = pathComponents[1];
             
             NSUInteger index = numberString.integerValue;
@@ -546,7 +547,18 @@ static NSString *serverHeader;
                 // GET - return the Photo file
                 if ([method isEqualToString:HTTP_METHOD_GET]) {
                     
+                    NSData *imageData = entry.image;
                     
+                    if (!imageData) {
+                        
+                        [self handleResourceNotFound];
+                        
+                        return nil;
+                    }
+                    
+                    HTTPDataResponse *response = [[HTTPDataResponse alloc] initWithData:imageData];
+                    
+                    return response;
                     
                 }
                 
@@ -572,19 +584,44 @@ static NSString *serverHeader;
                 // PUT - Upload Photo
                 if ([method isEqualToString:HTTP_METHOD_PUT]) {
                     
+                    // check if the data is image data
+                    NSImage *image = [[NSImage alloc] initWithData:request.body];
                     
+                    if (!image) {
+                        
+                        [self handleInvalidRequest:request.body];
+                        
+                        return nil;
+                    }
                     
+                    entry.image = request.body;
+                    
+                    // return message
+                    NSString *message = [NSString stringWithFormat:@"Successfully uploaded image data\n%@",  [[self class] serverHeader]];
+                    
+                    NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
+                    
+                    HTTPDataResponse *response = [[HTTPDataResponse alloc] initWithData:messageData];
+                    
+                    return response;
                 }
                 
 #pragma mark DELETE /blog/#/photo
                 // Delete - Delete Photo
                 if ([method isEqualToString:HTTP_METHOD_DELETE]) {
                     
+                    entry.image = nil;
                     
+                    // return message
                     
+                    NSString *message = [NSString stringWithFormat:@"Successfully deleted photo\n%@", [[self class] serverHeader]];
+                    
+                    NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
+                    
+                    HTTPDataResponse *response = [[HTTPDataResponse alloc] initWithData:messageData];
+                    
+                    return response;
                 }
-                
-                
                 
             }
             
@@ -598,19 +635,210 @@ static NSString *serverHeader;
                     // GET - Number of comments
                     if ([method isEqualToString:HTTP_METHOD_GET]) {
                         
+                        NSDictionary *jsonObject = @{@"numberOfComments": [NSNumber numberWithInteger:entry.comments.count]};
                         
+                        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                                           options:self.printJSONOption
+                                                                             error:nil];
                         
+                        HTTPMIMEDataResponse *response = [[HTTPMIMEDataResponse alloc] initWithData:jsonData mimeType:MimeTypeJSON];
+                        
+                        return response;
                     }
+                    
+                    // check for user
+                    User *user = [self userForToken];
+                    
+                    if (!user) {
+                        
+                        [self handleAuthenticationFailed];
+                        
+                        return nil;
+                    }
+                    
                     
 #pragma mark POST /blog/#/comment
                     
                     // POST - upload comment
                     if ([method isEqualToString:HTTP_METHOD_POST]) {
                         
+                        // check for JSON data attatched
+                        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:request.body
+                                                                                   options:NSJSONReadingAllowFragments
+                                                                                     error:nil];
+                        if (!jsonObject || ![jsonObject isKindOfClass:[NSDictionary class]]) {
+                            
+                            [self handleInvalidRequest:request.body];
+                            
+                            return nil;
+                            
+                        }
                         
+                        // get value
+                        NSString *content = [jsonObject objectForKey:@"content"];
+                        
+                        // check if value was in JSON Data
+                        if (!content) {
+                            
+                            [self handleInvalidRequest:request.body];
+                            
+                            return nil;
+                            
+                        }
+                        
+                        // create new comment
+                        EntryComment *comment = [[DataStore sharedStore] createCommentForUser:user
+                                                                               blogEntry:entry];
+                        comment.content = content;
+                        
+                        // return success message
+                        NSString *message = [NSString stringWithFormat:@"Successfully created new comment\n%@", [self.class serverHeader]];
+                        
+                        NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
+                        
+                        HTTPMIMEDataResponse *response = [[HTTPMIMEDataResponse alloc] initWithData:messageData mimeType:MimeTypeJSON];
+                        
+                        return response;
+                    }
+                    
+                    [self handleUnknownMethod:method];
+                    
+                    return nil;
+                
+                }
+                
+                // only /blog/#/comment/#
+                if ([pathComponents[3] isNonNegativeInteger] && pathComponents[3] == pathComponents.lastObject)
+                {
+                    // validate the index...
+                    NSString *commentIndexString = pathComponents[3];
+                    NSUInteger commentIndex = commentIndexString.integerValue;
+                    
+                    // get the number of comments
+                    NSUInteger numberOfComments = entry.comments.count;
+                    
+                    // if there are no comments
+                    if (!numberOfComments) {
+                        
+                        [self handleResourceNotFound];
+                        
+                        return nil;
+                    }
+                    
+                    // if the requested index is invalid
+                    if (commentIndex >= numberOfComments) {
+                        
+                        [self handleResourceNotFound];
+                        
+                        return nil;
+                    }
+                    
+                    // organize comments
+                    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES];
+                    NSArray *comments = [entry.comments.array sortedArrayUsingDescriptors:@[sortDescriptor]];
+                    
+                    // get comment
+                    EntryComment *comment = comments[commentIndex];
+                    
+                    
+                    
+#pragma mark GET /blog/#/comment/#
+                    
+                    // GET
+                    if ([method isEqualToString:HTTP_METHOD_GET]) {
+                        
+                        // make JSON data
+                        NSDictionary *jsonObject = @{@"content": comment.content,
+                                                     @"date" : [NSString stringWithFormat:@"%@", comment.date],
+                                                     @"user" : comment.user.username};
+                        
+                        NSData *data = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                                       options:self.printJSONOption
+                                                                         error:nil];
+                        
+                        // make HTTP response
+                        HTTPMIMEDataResponse *response = [[HTTPMIMEDataResponse alloc] initWithData:data mimeType:MimeTypeJSON];
+                        
+                        return response;
                         
                     }
                     
+                    
+                    // check for user
+                    User *user = [self userForToken];
+                    
+                    if (!user) {
+                        
+                        [self handleAuthenticationFailed];
+                        
+                        return nil;
+                    }
+                    
+                    // check if this is the same user that created the object or the admin
+                    if (user != comment.user && user.permissions.integerValue != Admin) {
+                        
+                        [self  handleForbidden];
+                        
+                        return nil;
+                    }
+                    
+#pragma mark PUT /blog/#/comment/#
+                    // PUT - Edit comment
+                    if ([method isEqualToString:HTTP_METHOD_PUT]) {
+                        
+                        // get JSON object
+                        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:request.body options:NSJSONReadingAllowFragments error:nil];
+                        
+                        if (!jsonObject || ![jsonObject isKindOfClass:[NSDictionary class]]) {
+                            
+                            [self handleInvalidRequest:nil];
+                            
+                            return nil;
+                            
+                        }
+                        
+                        // get values
+                        NSString *content = [jsonObject objectForKey:@"content"];
+                        
+                        if (!content) {
+                            
+                            [self handleInvalidRequest:nil];
+                            
+                            return nil;
+                        }
+                        
+                        // upload value
+                        comment.content = content;
+                        
+                        // return sucess message
+                        NSString *message = [NSString stringWithFormat:@"Successfully changed comment\n%@", [self.class serverHeader]];
+                        
+                        NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
+                        
+                        HTTPDataResponse *response = [[HTTPDataResponse alloc] initWithData:messageData];
+                        
+                        return response;
+                    }
+                    
+#pragma mark DELETE /blog/#/comment/#
+                    if ([method isEqualToString:HTTP_METHOD_DELETE]) {
+                        
+                        // delete comment
+                        [entry removeCommentsObject:comment];
+                        
+                        // return success message
+                        NSString *message = [NSString stringWithFormat:@"Successfully deleted comment\n%@", [self.class serverHeader]];
+                        
+                        NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
+                        
+                        HTTPDataResponse *response = [[HTTPDataResponse alloc] initWithData:messageData];
+                        
+                        return response;
+                    }
+                    
+                    [self handleUnknownMethod:method];
+                    
+                    return nil;
                 }
                 
             }
