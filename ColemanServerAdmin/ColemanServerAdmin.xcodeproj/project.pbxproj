@@ -7,13 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6E0279CE174FF0AD00A82BAA /* BlogEntryEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0279CC174FF0AD00A82BAA /* BlogEntryEditorViewController.m */; };
-		6E0279CF174FF0AD00A82BAA /* BlogEntryEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E0279CD174FF0AD00A82BAA /* BlogEntryEditorViewController.xib */; };
 		6E045B85174EA03D0022A5CE /* BlogEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E045B84174EA03D0022A5CE /* BlogEntryCell.m */; };
 		6E045B8A174EF5040022A5CE /* NSURLResponse+HTTPCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E045B89174EF5040022A5CE /* NSURLResponse+HTTPCode.m */; };
 		6E08CFCD1788598900D14BCA /* ColemanClient.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6E08CFCB1788598900D14BCA /* ColemanClient.xcdatamodeld */; };
-		6E08CFD217886A2600D14BCA /* NSViewController+LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E08CFD117886A2600D14BCA /* NSViewController+LoadingView.m */; };
-		6E08CFD417886A4F00D14BCA /* LoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E08CFD317886A4F00D14BCA /* LoadingView.xib */; };
 		6E1DE89817481081003728D9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E25261C1746975900141A3F /* CoreData.framework */; };
 		6E2526191746975900141A3F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E2526181746975900141A3F /* Cocoa.framework */; };
 		6E2526231746975900141A3F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6E2526211746975900141A3F /* InfoPlist.strings */; };
@@ -21,25 +17,15 @@
 		6E2526291746975900141A3F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6E2526271746975900141A3F /* Credits.rtf */; };
 		6E25262C1746975900141A3F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E25262B1746975900141A3F /* AppDelegate.m */; };
 		6E25262F1746975900141A3F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E25262D1746975900141A3F /* MainMenu.xib */; };
-		6E252639174699CB00141A3F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E252637174699CB00141A3F /* LoginViewController.m */; };
-		6E25263A174699CB00141A3F /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E252638174699CB00141A3F /* LoginViewController.xib */; };
 		6E25263E1746AE1700141A3F /* APIStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E25263D1746AE1700141A3F /* APIStore.m */; };
-		6EC63BEA1748AFD200105121 /* BlogEntriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC63BE81748AFD200105121 /* BlogEntriesViewController.m */; };
-		6EC63BEB1748AFD200105121 /* BlogEntriesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EC63BE91748AFD200105121 /* BlogEntriesViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6E0279CB174FF0AC00A82BAA /* BlogEntryEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntryEditorViewController.h; sourceTree = "<group>"; };
-		6E0279CC174FF0AD00A82BAA /* BlogEntryEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntryEditorViewController.m; sourceTree = "<group>"; };
-		6E0279CD174FF0AD00A82BAA /* BlogEntryEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BlogEntryEditorViewController.xib; sourceTree = "<group>"; };
 		6E045B83174EA03D0022A5CE /* BlogEntryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntryCell.h; sourceTree = "<group>"; };
 		6E045B84174EA03D0022A5CE /* BlogEntryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntryCell.m; sourceTree = "<group>"; };
 		6E045B88174EF5040022A5CE /* NSURLResponse+HTTPCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLResponse+HTTPCode.h"; sourceTree = "<group>"; };
 		6E045B89174EF5040022A5CE /* NSURLResponse+HTTPCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLResponse+HTTPCode.m"; sourceTree = "<group>"; };
 		6E08CFCC1788598900D14BCA /* ColemanClient.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ColemanClient.xcdatamodel; sourceTree = "<group>"; };
-		6E08CFD017886A2600D14BCA /* NSViewController+LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSViewController+LoadingView.h"; sourceTree = "<group>"; };
-		6E08CFD117886A2600D14BCA /* NSViewController+LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSViewController+LoadingView.m"; sourceTree = "<group>"; };
-		6E08CFD317886A4F00D14BCA /* LoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingView.xib; sourceTree = "<group>"; };
 		6E2526151746975900141A3F /* ColemanServerAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColemanServerAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E2526181746975900141A3F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6E25261B1746975900141A3F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -53,15 +39,9 @@
 		6E25262A1746975900141A3F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6E25262B1746975900141A3F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6E25262E1746975900141A3F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		6E252636174699CB00141A3F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		6E252637174699CB00141A3F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		6E252638174699CB00141A3F /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		6E25263C1746AE1700141A3F /* APIStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIStore.h; sourceTree = "<group>"; };
 		6E25263D1746AE1700141A3F /* APIStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIStore.m; sourceTree = "<group>"; };
 		6E2526401746B4DC00141A3F /* NSObject+CompletionBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CompletionBlock.h"; sourceTree = "<group>"; };
-		6EC63BE71748AFD200105121 /* BlogEntriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntriesViewController.h; sourceTree = "<group>"; };
-		6EC63BE81748AFD200105121 /* BlogEntriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntriesViewController.m; sourceTree = "<group>"; };
-		6EC63BE91748AFD200105121 /* BlogEntriesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BlogEntriesViewController.xib; sourceTree = "<group>"; };
 		6EF4F12F175587F500052864 /* ColemanServerAdmin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ColemanServerAdmin.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,23 +58,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6E0279D0174FF0B400A82BAA /* Blog Entry Editor */ = {
-			isa = PBXGroup;
-			children = (
-				6E0279CB174FF0AC00A82BAA /* BlogEntryEditorViewController.h */,
-				6E0279CC174FF0AD00A82BAA /* BlogEntryEditorViewController.m */,
-				6E0279CD174FF0AD00A82BAA /* BlogEntryEditorViewController.xib */,
-			);
-			name = "Blog Entry Editor";
-			sourceTree = "<group>";
-		};
-		6E0279D4174FF4A700A82BAA /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Categories;
-			sourceTree = "<group>";
-		};
 		6E045B82174EA0130022A5CE /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -127,24 +90,6 @@
 				6E045B89174EF5040022A5CE /* NSURLResponse+HTTPCode.m */,
 			);
 			name = "HTTP Code";
-			sourceTree = "<group>";
-		};
-		6E08CFCE1788698600D14BCA /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				6E08CFCF1788699300D14BCA /* Loading View */,
-			);
-			name = Categories;
-			sourceTree = "<group>";
-		};
-		6E08CFCF1788699300D14BCA /* Loading View */ = {
-			isa = PBXGroup;
-			children = (
-				6E08CFD017886A2600D14BCA /* NSViewController+LoadingView.h */,
-				6E08CFD117886A2600D14BCA /* NSViewController+LoadingView.m */,
-				6E08CFD317886A4F00D14BCA /* LoadingView.xib */,
-			);
-			name = "Loading View";
 			sourceTree = "<group>";
 		};
 		6E25260C1746975900141A3F = {
@@ -214,23 +159,8 @@
 		6E252635174697F300141A3F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				6E08CFCE1788698600D14BCA /* Categories */,
-				6E0279D0174FF0B400A82BAA /* Blog Entry Editor */,
-				6EC63BE61748AF9600105121 /* Blog Entries */,
-				6E25263B174699D000141A3F /* Login */,
-				6E0279D4174FF4A700A82BAA /* Categories */,
 			);
 			name = Controllers;
-			sourceTree = "<group>";
-		};
-		6E25263B174699D000141A3F /* Login */ = {
-			isa = PBXGroup;
-			children = (
-				6E252636174699CB00141A3F /* LoginViewController.h */,
-				6E252637174699CB00141A3F /* LoginViewController.m */,
-				6E252638174699CB00141A3F /* LoginViewController.xib */,
-			);
-			name = Login;
 			sourceTree = "<group>";
 		};
 		6E25263F1746AE1C00141A3F /* API Store */ = {
@@ -266,16 +196,6 @@
 				6E25263F1746AE1C00141A3F /* API Store */,
 			);
 			name = Stores;
-			sourceTree = "<group>";
-		};
-		6EC63BE61748AF9600105121 /* Blog Entries */ = {
-			isa = PBXGroup;
-			children = (
-				6EC63BE71748AFD200105121 /* BlogEntriesViewController.h */,
-				6EC63BE81748AFD200105121 /* BlogEntriesViewController.m */,
-				6EC63BE91748AFD200105121 /* BlogEntriesViewController.xib */,
-			);
-			name = "Blog Entries";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -332,10 +252,6 @@
 				6E2526231746975900141A3F /* InfoPlist.strings in Resources */,
 				6E2526291746975900141A3F /* Credits.rtf in Resources */,
 				6E25262F1746975900141A3F /* MainMenu.xib in Resources */,
-				6E25263A174699CB00141A3F /* LoginViewController.xib in Resources */,
-				6EC63BEB1748AFD200105121 /* BlogEntriesViewController.xib in Resources */,
-				6E0279CF174FF0AD00A82BAA /* BlogEntryEditorViewController.xib in Resources */,
-				6E08CFD417886A4F00D14BCA /* LoadingView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,14 +264,10 @@
 			files = (
 				6E2526251746975900141A3F /* main.m in Sources */,
 				6E25262C1746975900141A3F /* AppDelegate.m in Sources */,
-				6E252639174699CB00141A3F /* LoginViewController.m in Sources */,
 				6E25263E1746AE1700141A3F /* APIStore.m in Sources */,
-				6EC63BEA1748AFD200105121 /* BlogEntriesViewController.m in Sources */,
 				6E045B85174EA03D0022A5CE /* BlogEntryCell.m in Sources */,
 				6E045B8A174EF5040022A5CE /* NSURLResponse+HTTPCode.m in Sources */,
-				6E0279CE174FF0AD00A82BAA /* BlogEntryEditorViewController.m in Sources */,
 				6E08CFCD1788598900D14BCA /* ColemanClient.xcdatamodeld in Sources */,
-				6E08CFD217886A2600D14BCA /* NSViewController+LoadingView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

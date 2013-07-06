@@ -13,14 +13,6 @@
 
 @property (assign) IBOutlet NSWindow *window;
 
-@property (strong) IBOutlet NSBox *box;
-
-@property NSViewController *rootViewController;
-
-#pragma mark
-
--(void)signOut;
-
 #pragma mark
 
 +(NSString *)bundleID;

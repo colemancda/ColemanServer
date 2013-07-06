@@ -438,7 +438,7 @@ static NSError *notAuthorizedError;
             return;
         }
         
-        if (!data) {
+        if (response.httpCode.integerValue != 200) {
             
             NSLog(@"Blog entry %@ has no image", indexString);
             
@@ -568,47 +568,39 @@ static NSError *notAuthorizedError;
         }
         
         // succesfully created new entry...
+        NSInteger entryIndex = self.numberOfEntries.integerValue;
         
-        // add to cache
-        [self fetchEntry:index.unsignedIntegerValue completion:^(NSError *error) {
-            
-            if (error) {
-                if (completionBlock) {
-                    completionBlock(error);
-                }
-                
-                return;
-            }
-            
-            else {
-                
-                // fetch new number of entries
-                [self fetchNumberOfEntriesWithCompletion:^(NSError *error) {
-                    
-                    if (error) {
-                        if (completionBlock) {
-                            completionBlock(error);
-                        }
-                        
-                        return;
-                    }
-                    else {
-                        
-                        NSLog(@"Successfully created new blog entry %ld", index.unsignedIntegerValue);
-                        
-                        if (completionBlock) {
-                            completionBlock(nil);
-                        }
-                        
-                        return;
-                        
-                    }
-                    
-                }];
-            }
-            
-        }];
-
+        // update numberOfEntries
+        _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue + 1];
+        
+        // get the date created
+        NSDate *date = [NSDate date];
+        
+        // save the blog entry in the core data cache...
+        NSManagedObject *blogEntry = [NSEntityDescription insertNewObjectForEntityForName:BlogEntryEntityName
+                                                                   inManagedObjectContext:_context];
+        
+        NSString *indexKey = [NSString stringWithFormat:@"%ld", (unsigned long)entryIndex];
+        
+        [_blogEntriesCache setObject:blogEntry
+                              forKey:indexKey];
+        
+        [blogEntry setValue:title
+                     forKey:@"title"];
+        [blogEntry setValue:content
+                     forKey:@"content"];
+        [blogEntry setValue:date
+                     forKey:@"date"];
+        
+        
+        NSLog(@"Successfully created new blog entry %ld", index.unsignedIntegerValue);
+        
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
+        
     }];
 }
 
@@ -813,27 +805,19 @@ static NSError *notAuthorizedError;
             
         }
         
-        // update the number of entries
-        [self fetchNumberOfEntriesWithCompletion:^(NSError *error) {
-            
-            if (error) {
-                
-                if (completionBlock) {
-                    completionBlock(error);
-                }
-                
-                return;
-            }
-            
-            NSLog(@"Successfully removed entry %@", indexString);
-            
-            if (completionBlock) {
-                completionBlock(nil);
-            }
-            
-            return;
-            
-        }];
+        // update numberOfEntries
+        _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue + 1];
+        
+        
+        NSLog(@"Successfully removed entry %@", indexString);
+        
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
+        
+        
     }];
 }
 
