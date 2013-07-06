@@ -32,8 +32,6 @@
 		6E9D60421733873F00FD292E /* LogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9D60411733873F00FD292E /* LogStore.m */; };
 		6EA60F28177A869700D72843 /* HTTPMIMEDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */; };
 		6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB726F4173D67CB00093237 /* NSString+RandomString.m */; };
-		6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7271A173F1D2200093237 /* UsersViewController.m */; };
-		6EB7271D173F1D2300093237 /* UsersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EB7271B173F1D2300093237 /* UsersViewController.xib */; };
 		6EBE321A17867AEA0095F5E7 /* MenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE321917867AEA0095F5E7 /* MenuController.m */; };
 		6ECAADFD177B5116007A8876 /* DataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECAADFC177B5116007A8876 /* DataStore.m */; };
 		6ED9E85817557AF300A3A814 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E83317557AF300A3A814 /* DDData.m */; };
@@ -115,9 +113,6 @@
 		6EA60F27177A869700D72843 /* HTTPMIMEDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPMIMEDataResponse.m; sourceTree = "<group>"; };
 		6EB726F3173D67CB00093237 /* NSString+RandomString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RandomString.h"; sourceTree = "<group>"; };
 		6EB726F4173D67CB00093237 /* NSString+RandomString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RandomString.m"; sourceTree = "<group>"; };
-		6EB72719173F1D2200093237 /* UsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsersViewController.h; sourceTree = "<group>"; };
-		6EB7271A173F1D2200093237 /* UsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsersViewController.m; sourceTree = "<group>"; };
-		6EB7271B173F1D2300093237 /* UsersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UsersViewController.xib; sourceTree = "<group>"; };
 		6EBE321817867AEA0095F5E7 /* MenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuController.h; sourceTree = "<group>"; };
 		6EBE321917867AEA0095F5E7 /* MenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuController.m; sourceTree = "<group>"; };
 		6ECAADFB177B5116007A8876 /* DataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataStore.h; sourceTree = "<group>"; };
@@ -339,7 +334,6 @@
 			children = (
 				6E481AF2178777D400A2F754 /* Preferences */,
 				6EBE321717867ABE0095F5E7 /* Menu Bar */,
-				6EB7271E173F1D2800093237 /* Users */,
 				6E9D603C1733829C00FD292E /* Main */,
 			);
 			name = Controllers;
@@ -390,16 +384,6 @@
 				6E650112177CA07000C01CF3 /* Token.m */,
 			);
 			name = Token;
-			sourceTree = "<group>";
-		};
-		6EB7271E173F1D2800093237 /* Users */ = {
-			isa = PBXGroup;
-			children = (
-				6EB72719173F1D2200093237 /* UsersViewController.h */,
-				6EB7271A173F1D2200093237 /* UsersViewController.m */,
-				6EB7271B173F1D2300093237 /* UsersViewController.xib */,
-			);
-			name = Users;
 			sourceTree = "<group>";
 		};
 		6EB7271F173F1FBA00093237 /* NSString */ = {
@@ -661,7 +645,6 @@
 				6E9D5F2A1733707000FD292E /* Credits.rtf in Resources */,
 				6E9D5F301733707100FD292E /* MainMenu.xib in Resources */,
 				6E9D603B1733829700FD292E /* MainViewController.xib in Resources */,
-				6EB7271D173F1D2300093237 /* UsersViewController.xib in Resources */,
 				6E924E8F173FF93300B1F131 /* SaveCell.xib in Resources */,
 				6E481AF71787781800A2F754 /* PreferencesWindowController.xib in Resources */,
 			);
@@ -682,7 +665,6 @@
 				6E693937173430EF00C5DFF5 /* Log.m in Sources */,
 				6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */,
 				6EB726F5173D67CB00093237 /* NSString+RandomString.m in Sources */,
-				6EB7271C173F1D2300093237 /* UsersViewController.m in Sources */,
 				6E924E8C173FF8FD00B1F131 /* SaveCell.m in Sources */,
 				6E924E92173FFB5600B1F131 /* SaveOption.m in Sources */,
 				6ED9E85817557AF300A3A814 /* DDData.m in Sources */,
