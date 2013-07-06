@@ -27,7 +27,8 @@ const NSInteger kErrorCodeServerLaunch = 101;
     NSDictionary *defaults = @{@"port": @8080,
                                @"tokenDuration" : @100000,
                                @"tokenLength" : @10,
-                               @"prettyPrintJSON" : @YES};
+                               @"prettyPrintJSON" : @YES,
+                               @"saveInterval" : @60};
     
     // register Defaults
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
@@ -61,6 +62,14 @@ const NSInteger kErrorCodeServerLaunch = 101;
     // load the main VC
     MainViewController *mainVC = [[MainViewController alloc] init];
     self.rootViewController = mainVC;
+    
+    // start saving timer
+    NSTimeInterval savingInterval = (NSTimeInterval)[[NSUserDefaults standardUserDefaults] integerForKey:@"saveInterval"];
+    _savingTimer = [NSTimer scheduledTimerWithTimeInterval:savingInterval
+                                                    target:self
+                                                  selector:@selector(timedSave)
+                                                  userInfo:nil
+                                                   repeats:NO];
 }
 
 -(void)dealloc
@@ -101,28 +110,31 @@ const NSInteger kErrorCodeServerLaunch = 101;
     // stop server
     [[ServerStore sharedStore] stopServer];
     
-    [[LogStore sharedStore] addEntry:@"Stopped server"];
-    
     // try to save data
-    BOOL saveData = [[DataStore sharedStore] save];
-    
-    if (!saveData) {
-        
-        [[LogStore sharedStore] addError:@"Could not save DataStore"];
-        
-    }
+    [[DataStore sharedStore] save];
     
     // save preferences
-    BOOL savePreferences = [[NSUserDefaults standardUserDefaults] synchronize];
-    if (!savePreferences) {
-        
-        [[LogStore sharedStore] addError:@"Could not save Preferences"];
-        
-    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     // try to save the log
     [[LogStore sharedStore] saveToURL:[NSURL fileURLWithPath:[LogStore sharedStore].defaultArchivePath]];
     
+}
+
+#pragma mark - Timed Saving
+
+-(void)timedSave
+{
+    // save
+    [[DataStore sharedStore] save];
+    
+    // set timer to fire
+    NSTimeInterval savingInterval = (NSTimeInterval)[[NSUserDefaults standardUserDefaults] integerForKey:@"saveInterval"];
+    _savingTimer = [NSTimer scheduledTimerWithTimeInterval:savingInterval
+                                                    target:self
+                                                  selector:@selector(timedSave)
+                                                  userInfo:nil
+                                                   repeats:NO];
 }
 
 @end

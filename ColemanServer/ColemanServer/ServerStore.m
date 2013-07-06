@@ -15,44 +15,6 @@
 #import "Token.h"
 #import "MyHTTPConnection.h"
 
-NSString *const kGETMethod = @"GET";
-
-NSString *const kPOSTMethod = @"POST";
-
-NSString *const kPUTMethod = @"PUT";
-
-NSString *const kDELETEMethod = @"DELETE";
-
-// UnAuthorized API
-
-static NSString *kAPILoginURL = @"/login/:username/:password"; // GET
-
-static NSString *kAPIBlogURL = @"/blog"; // GET
-
-static NSString *kAPIEntryAtIndexURL = @"/blog/:index"; // GET
-
-static NSString *kAPIImageForEntryAtIndexURL = @"/blog/:index/image"; // GET
-
-// API with token
-
-static NSString *kAPIBlogTokenURL = @"/blog/:token"; // POST
-
-static NSString *kAPIEntryAtIndexTokenURL = @"/blog/:index/:token"; // PUT, DELETE
-
-static NSString *kAPIImageForEntryAtIndexTokenURL = @"/blog/:index/image/:token"; // PUT, DELETE
-
-// String Responses
-
-static NSString *kAPIResponseServerError = @"Internal Server Error";
-
-static NSString *kAPIResponseWrongUsernamePassword = @"Wrong Username / Password combination";
-
-static NSString *kAPIResponseNoAccess = @"Access Forbidden";
-
-static NSString *kAPIResponseInvalidToken = @"Invalid Token";
-
-static NSString *kAPIResponseIndexBlogEntryIndex = @"Invalid Blog Entry Index";
-
 @implementation ServerStore
 
 + (ServerStore *)sharedStore
