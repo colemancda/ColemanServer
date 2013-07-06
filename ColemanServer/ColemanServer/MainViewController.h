@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-@class ServerStore;
+@class ServerStore, LogStore;
 
 @interface MainViewController : NSViewController
 {
@@ -25,6 +25,8 @@
 @property (strong) IBOutlet NSTextField *numberOfConnectionsLabel;
 
 @property (strong) IBOutlet NSTextField *uptimeLabel;
+
+@property (readonly) LogStore *logStore;
 
 -(void)updateUI;
 

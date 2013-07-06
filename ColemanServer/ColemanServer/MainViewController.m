@@ -41,11 +41,6 @@
 {
     [super awakeFromNib];
     
-    // KVO Log text
-    [[LogStore sharedStore] addObserver:self
-                             forKeyPath:@"self.log"
-                                options:NSKeyValueObservingOptionNew
-                                context:nil];
     // update the stats
     [self updateUI];
     
@@ -63,34 +58,10 @@
                                                           repeats:YES];
 }
 
--(void)dealloc
-{
-    // remove KVO observers
-    [[LogStore sharedStore] removeObserver:self forKeyPath:@"self.log"];
-}
-
-#pragma mark - KVO
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    // log string changed
-    if ([keyPath isEqualToString:@"self.log"] && object == [LogStore sharedStore]) {
-        
-        [self updateUI];
-        
-    }
-}
-
 #pragma mark
 
 -(void)updateUI
 {
-    // update the UI's Log
-    self.logTextView.string = [LogStore sharedStore].log;
-    
-    // scroll to bottom of log
-    // [self.logTextView scrollToEndOfDocument:self];
-    
     // update the number of connections
     self.numberOfConnectionsLabel.integerValue = [ServerStore sharedStore].numberOfConnections;
     
@@ -166,8 +137,11 @@
     }
 }
 
-#pragma mark
+#pragma mark - Properties
 
-
+-(LogStore *)logStore
+{
+    return [LogStore sharedStore];
+}
 
 @end
