@@ -5,25 +5,36 @@
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="comments" optional="YES" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="Comment" syncable="YES"/>
+        <relationship name="comments" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Comment" inverseName="blogEntry" inverseEntity="Comment" syncable="YES"/>
     </entity>
-    <entity name="Comment" representedClassName="" syncable="YES">
+    <entity name="Comment" syncable="YES">
         <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="blogEntry" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="BlogEntry" syncable="YES"/>
-        <relationship name="user" optional="YES" minCount="1" maxCount="1" deletionRule="No Action" destinationEntity="User" syncable="YES"/>
+        <relationship name="blogEntry" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="BlogEntry" inverseName="comments" inverseEntity="BlogEntry" syncable="YES"/>
+        <relationship name="user" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="comments" inverseEntity="User" syncable="YES"/>
     </entity>
-    <entity name="User" representedClassName="" syncable="YES">
+    <entity name="Token" syncable="YES">
+        <attribute name="created" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="stringValue" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="tokens" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="User" syncable="YES">
         <attribute name="created" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="permissions" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="comments" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Comment" syncable="YES"/>
+        <relationship name="comments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="user" inverseEntity="Comment" syncable="YES"/>
+        <relationship name="tokens" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Token" inverseName="user" inverseEntity="Token" syncable="YES"/>
     </entity>
     <fetchRequest name="AllEntries" entity="BlogEntry"/>
+    <fetchRequest name="AllUsers" entity="User"/>
+    <fetchRequest name="FetchAdmin" entity="User" predicateString="permissions == 100"/>
+    <fetchRequest name="FetchToken" entity="Token" predicateString="stringValue == $STRINGVALUE"/>
+    <fetchRequest name="FetchUserForUsername" entity="User" predicateString="username ==[c] $USERNAME"/>
     <elements>
-        <element name="BlogEntry" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Comment" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="User" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="BlogEntry" positionX="-144" positionY="51" width="128" height="120"/>
+        <element name="Comment" positionX="36" positionY="189" width="128" height="105"/>
+        <element name="Token" positionX="81" positionY="342" width="128" height="90"/>
+        <element name="User" positionX="241" positionY="54" width="128" height="135"/>
     </elements>
 </model>

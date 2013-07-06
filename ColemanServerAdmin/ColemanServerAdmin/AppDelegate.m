@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "LoginViewController.h"
+#import "APIStore.h"
 
 static NSString *kRootVCKeyPath = @"rootViewController";
 
@@ -22,10 +23,8 @@ static NSString *kRootVCKeyPath = @"rootViewController";
            forKeyPath:kRootVCKeyPath
               options:NSKeyValueObservingOptionOld
               context:nil];
-        
-    LoginViewController *loginVC = [[LoginViewController alloc] init];
     
-    self.rootViewController = loginVC;
+    [self signOut];
     
 }
 
@@ -84,6 +83,17 @@ static NSString *kRootVCKeyPath = @"rootViewController";
     }
     
     return errorDomain;
+}
+
+#pragma mark
+
+-(void)signOut
+{
+    LoginViewController *loginVC = [[LoginViewController alloc] init];
+    
+    self.rootViewController = loginVC;
+    
+    [[APIStore sharedStore] terminateSession];
 }
 
 

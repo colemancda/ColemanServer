@@ -11,6 +11,7 @@
 #import "APIStore.h"
 #import "BlogEntryEditorViewController.h"
 #import "AppDelegate.h"
+#import "NSViewController+LoadingView.h"
 
 static NSString *CellIdentifier = @"BlogEntryCell";
 
@@ -56,10 +57,45 @@ static NSString *CellIdentifier = @"BlogEntryCell";
                 
                 [NSApp presentError:error];
                 
+                AppDelegate *appDelegate = [NSApp delegate];
+                [appDelegate signOut];
+                
             }
             else {
                 
-                [self.tableView reloadData];
+                // fetch all the entries
+                for (NSInteger i = 0; i < [APIStore sharedStore].numberOfEntries.integerValue; i++) {
+                    
+                    // fetch all the info
+                    [[APIStore sharedStore] fetchEntry:i completion:^(NSError *error) {
+                       
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            
+                            if (error) {
+                                
+                                [NSApp presentError:error];
+                                
+                                AppDelegate *appDelegate = [NSApp delegate];
+                                [appDelegate signOut];
+                                
+                            }
+                            else {
+                                
+                                // last object
+                                if (i == [APIStore sharedStore].numberOfEntries.integerValue - 1) {
+                                    
+                                    [self.tableView reloadData];
+                                    
+                                }
+                                
+                            }
+                            
+                        }];
+                        
+                    }];
+                    
+                }
+                
             }
             
         }];
@@ -79,9 +115,18 @@ static NSString *CellIdentifier = @"BlogEntryCell";
                  row:(NSInteger)row
 {
     BlogEntryCell *cell = [tableView makeViewWithIdentifier:CellIdentifier
-                                                        owner:self];
+                                                      owner:self];
     
-    [self loadEntry:row];
+    // get the blog entry
+    NSString *indexKey = [NSString stringWithFormat:@"%ld", (long)row];
+    NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
+    
+    if (blogEntry) {
+        
+        [cell showLoadedInfoWithTitle:[blogEntry valueForKey:@"title"]
+                              content:[blogEntry valueForKey:@"content"]
+                                 date:[blogEntry valueForKey:@"date"]];
+    }
     
     return cell;
     
@@ -100,6 +145,7 @@ static NSString *CellIdentifier = @"BlogEntryCell";
     
     return YES;
 }
+
 
 #pragma mark - NSTableView Notifications
 
@@ -138,6 +184,8 @@ static NSString *CellIdentifier = @"BlogEntryCell";
                 
                 [NSApp presentError:error];
                 
+                AppDelegate *appDelegate = [NSApp delegate];
+                [appDelegate signOut];
             }
             
             else {
@@ -156,44 +204,5 @@ static NSString *CellIdentifier = @"BlogEntryCell";
     AppDelegate *appDelegate = [NSApp delegate];
     appDelegate.rootViewController = editorVC;
 }
-
-#pragma mark
-
--(void)loadEntry:(NSUInteger)index
-{
-    // fetch blog entry
-    [[APIStore sharedStore] fetchEntry:index completion:^(NSError *error) {
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            
-            if (error) {
-                
-                [NSApp presentError:error];
-            }
-            
-            else {
-                
-                // get the blog entry
-                NSString *indexKey = [NSString stringWithFormat:@"%ld", index];
-                NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
-                
-                // get tableView cell
-                BlogEntryCell *cell = [self.tableView viewAtColumn:0
-                                                               row:index
-                                                   makeIfNecessary:NO];
-                
-                [cell showLoadedInfoWithTitle:[blogEntry valueForKey:@"title"]
-                                      content:[blogEntry valueForKey:@"content"]
-                                         date:[blogEntry valueForKey:@"date"]];
-                
-                // fetch 
-                
-            }
-            
-        }];
-        
-    }];
-}
-
 
 @end

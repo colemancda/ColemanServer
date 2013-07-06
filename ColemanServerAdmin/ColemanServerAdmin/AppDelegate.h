@@ -19,6 +19,10 @@
 
 #pragma mark
 
+-(void)signOut;
+
+#pragma mark
+
 +(NSString *)bundleID;
 
 +(NSString *)errorDomain;

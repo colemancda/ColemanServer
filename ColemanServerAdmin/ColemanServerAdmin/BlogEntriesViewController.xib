@@ -142,6 +142,7 @@
 										<reference key="NSSuperview" ref="368739101"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="1033508944"/>
+										<bool key="NSViewIsLayerTreeHost">YES</bool>
 										<string key="NSReuseIdentifierKey">_NS:13</string>
 										<bool key="NSEnabled">YES</bool>
 										<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -278,6 +279,7 @@
 						<reference key="NSSuperview" ref="1005"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="368739101"/>
+						<bool key="NSViewIsLayerTreeHost">YES</bool>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="NSsFlags">133682</int>
 						<reference key="NSVScroller" ref="601012740"/>
@@ -293,6 +295,7 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="780748690"/>
+				<bool key="NSViewIsLayerTreeHost">YES</bool>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSUserDefaultsController" id="274188673">
@@ -386,6 +389,7 @@
 									<string key="NSFrame">{{3, 3}, {107, 97}}</string>
 									<reference key="NSSuperview" ref="1033508944"/>
 									<reference key="NSNextKeyView" ref="526478495"/>
+									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<string key="NSReuseIdentifierKey">_NS:11</string>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSImageCell" key="NSCell" id="232816939">
@@ -471,6 +475,7 @@
 							</array>
 							<string key="NSFrame">{{1, 1}, {449, 103}}</string>
 							<reference key="NSNextKeyView" ref="971253350"/>
+							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 						</object>
 						<reference key="destination" ref="971253350"/>
@@ -1496,7 +1501,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">365</int>
+			<int key="maxID">378</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

@@ -74,6 +74,13 @@ static NSError *notAuthorizedError;
     return self;
 }
 
+#pragma mark
+
+-(void)terminateSession
+{
+    self.init;
+}
+
 #pragma mark - Login
 
 -(void)loginWithUsername:(NSString *)username
@@ -569,18 +576,35 @@ static NSError *notAuthorizedError;
                 if (completionBlock) {
                     completionBlock(error);
                 }
+                
+                return;
             }
             
             else {
                 
-                NSLog(@"Successfully created new blog entry %ld", index.unsignedIntegerValue);
-                
-                if (completionBlock) {
-                    completionBlock(nil);
-                }
-                
-                return;
-                
+                // fetch new number of entries
+                [self fetchNumberOfEntriesWithCompletion:^(NSError *error) {
+                    
+                    if (error) {
+                        if (completionBlock) {
+                            completionBlock(error);
+                        }
+                        
+                        return;
+                    }
+                    else {
+                        
+                        NSLog(@"Successfully created new blog entry %ld", index.unsignedIntegerValue);
+                        
+                        if (completionBlock) {
+                            completionBlock(nil);
+                        }
+                        
+                        return;
+                        
+                    }
+                    
+                }];
             }
             
         }];
@@ -769,7 +793,7 @@ static NSError *notAuthorizedError;
         for (NSString *key in _blogEntriesCache.allKeys) {
             
             // decrease by 1 from all the keys that are equal or larger than the removed index
-            if (key.integerValue <= entryIndex) {
+            if (key.integerValue >= entryIndex) {
                 
                 NSUInteger oldIndex = key.integerValue;
                 NSUInteger newIndex = oldIndex - 1;
@@ -789,10 +813,28 @@ static NSError *notAuthorizedError;
             
         }
         
-        NSLog(@"Successfully removed entry %@", indexString);
-        
+        // update the number of entries
+        [self fetchNumberOfEntriesWithCompletion:^(NSError *error) {
+            
+            if (error) {
+                
+                if (completionBlock) {
+                    completionBlock(error);
+                }
+                
+                return;
+            }
+            
+            NSLog(@"Successfully removed entry %@", indexString);
+            
+            if (completionBlock) {
+                completionBlock(nil);
+            }
+            
+            return;
+            
+        }];
     }];
-    
 }
 
 

@@ -986,5 +986,17 @@ static NSString *serverHeader;
     [request appendData:postDataChunk];
 }
 
+#pragma mark - HTTPS
+
+-(BOOL)isSecureServer
+{
+    return YES;
+}
+
+-(NSArray *)sslIdentityAndCertificates
+{
+    return nil;
+    
+}
 
 @end
