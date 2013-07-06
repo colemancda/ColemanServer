@@ -7,7 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class DataStore;
 
 @interface PreferencesWindowController : NSWindowController
+
+@property (readonly) DataStore *dataStore;
 
 @end

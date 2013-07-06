@@ -11,6 +11,5 @@
 
 @interface UsersViewController : NSViewController
 
-@property (readonly) DataStore *dataStore;
 
 @end

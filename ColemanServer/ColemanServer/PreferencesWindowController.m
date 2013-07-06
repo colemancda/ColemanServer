@@ -7,6 +7,7 @@
 //
 
 #import "PreferencesWindowController.h"
+#import "DataStore.h"
 
 @interface PreferencesWindowController ()
 
@@ -39,6 +40,13 @@
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
+}
+
+#pragma mark
+
+-(DataStore *)dataStore
+{
+    return [DataStore sharedStore];
 }
 
 @end
