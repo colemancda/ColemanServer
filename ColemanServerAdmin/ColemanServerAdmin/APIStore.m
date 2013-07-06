@@ -26,7 +26,6 @@ static NSError *notAuthorizedError;
         
         // create the 401 error
         notAuthorizedError = [NSError errorWithDomain:[AppDelegate errorDomain] code:401 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(notAuthorizedErrorDescription, notAuthorizedErrorDescription), NSLocalizedRecoverySuggestionErrorKey : NSLocalizedString(notAuthorizedErrorSuggestion, notAuthorizedErrorSuggestion)}];
-        
     }
     
     
@@ -398,6 +397,69 @@ static NSError *notAuthorizedError;
     }];
 }
 
+-(void)fetchImageForEntry:(NSUInteger)indexOfEntry
+               completion:(completionBlock)completionBlock
+{    
+    // put togeather URL
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"blog"];
+    NSString *indexString = [NSString stringWithFormat:@"%ld", (unsigned long)indexOfEntry];
+    urlString = [urlString  stringByAppendingPathComponent:indexString];
+    urlString = [urlString stringByAppendingPathComponent:@"photo"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    // dont continue if there's no blog entry...
+    
+    // get blog entry
+    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
+    
+    if (!blogEntry) {
+        
+        return;
+    }
+    
+    NSLog(@"Fetching image for blog entry %ld...", indexOfEntry);
+    
+    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        if (error) {
+            
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        if (!data) {
+            
+            NSLog(@"Blog entry %@ has no image", indexString);
+            
+            [blogEntry setValue:nil
+                         forKey:@"image"];
+            
+            if (completionBlock) {
+                completionBlock(nil);
+                
+                return;
+            }
+        }
+        
+        // image data
+        [blogEntry setValue:data
+                     forKey:@"image"];
+        
+        NSLog(@"Successfully fetched image for blog entry %@", indexString);
+        
+        if (completionBlock) {
+            completionBlock(nil);
+            
+            return;
+        }
+        
+    }];
+}
+
 
 #pragma mark - Authorized API Functions
 
@@ -732,6 +794,8 @@ static NSError *notAuthorizedError;
     }];
     
 }
+
+
 
 
 @end

@@ -24,5 +24,8 @@
 
 - (IBAction)editEntry:(id)sender;
 
+#pragma mark 
+
+-(void)loadEntry:(NSUInteger)index;
 
 @end

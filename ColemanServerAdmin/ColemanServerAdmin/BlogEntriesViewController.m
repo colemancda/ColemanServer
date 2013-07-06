@@ -81,32 +81,7 @@ static NSString *CellIdentifier = @"BlogEntryCell";
     BlogEntryCell *cell = [tableView makeViewWithIdentifier:CellIdentifier
                                                         owner:self];
     
-    // fetch blog entry
-    [[APIStore sharedStore] fetchEntry:row completion:^(NSError *error) {
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            
-            if (error) {
-                
-                [NSApp presentError:error];
-            }
-            
-            else {
-                
-                // get the blog entry
-                NSString *indexKey = [NSString stringWithFormat:@"%ld", row];
-                NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
-                
-                [cell showLoadedInfoWithTitle:[blogEntry valueForKey:@"title"]
-                                      content:[blogEntry valueForKey:@"content"]
-                                         date:[blogEntry valueForKey:@"date"]];
-                
-            }
-            
-        }];
-        
-    }];
-    
+    [self loadEntry:row];
     
     return cell;
     
@@ -180,6 +155,44 @@ static NSString *CellIdentifier = @"BlogEntryCell";
     
     AppDelegate *appDelegate = [NSApp delegate];
     appDelegate.rootViewController = editorVC;
+}
+
+#pragma mark
+
+-(void)loadEntry:(NSUInteger)index
+{
+    // fetch blog entry
+    [[APIStore sharedStore] fetchEntry:index completion:^(NSError *error) {
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            
+            if (error) {
+                
+                [NSApp presentError:error];
+            }
+            
+            else {
+                
+                // get the blog entry
+                NSString *indexKey = [NSString stringWithFormat:@"%ld", index];
+                NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
+                
+                // get tableView cell
+                BlogEntryCell *cell = [self.tableView viewAtColumn:0
+                                                               row:index
+                                                   makeIfNecessary:NO];
+                
+                [cell showLoadedInfoWithTitle:[blogEntry valueForKey:@"title"]
+                                      content:[blogEntry valueForKey:@"content"]
+                                         date:[blogEntry valueForKey:@"date"]];
+                
+                // fetch 
+                
+            }
+            
+        }];
+        
+    }];
 }
 
 
