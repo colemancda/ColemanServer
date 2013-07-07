@@ -7,6 +7,7 @@
 //
 
 #import "BlogEntryCell.h"
+#import "APIStore.h"
 
 @implementation BlogEntryCell
 
@@ -14,19 +15,6 @@
 {
     [super awakeFromNib];
     
-    // initialize date formatter
-    self.dateFormatter = [[NSDateFormatter alloc] init];
-    self.dateFormatter.dateStyle = NSDateFormatterLongStyle;
-    
-}
-
--(void)editEntry:(id)sender
-{
-    
-}
-
--(void)deleteEntry:(id)sender
-{
     
     
 }

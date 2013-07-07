@@ -10,7 +10,9 @@
 #import "AppDelegate.h"
 #import "NSURLResponse+HTTPCode.h"
 
-static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
+NSString *const BlogEntryEditedNotification = @"BlogEntryEdited";
+
+NSString *const NumberOfEntriesKeyPath = @"self.numberOfEntries";
 
 static NSString *BlogEntryEntityName = @"BlogEntry";
 
@@ -282,12 +284,12 @@ static NSError *notAuthorizedError;
         // success!
         
         // KVC
-        [self willChangeValueForKey:NumberOfEntriesKVC];
+        [self willChangeValueForKey:@"numberOfEntries"];
         
         _numberOfEntries = numberOfEntries;
         
         // KVC
-        [self didChangeValueForKey:NumberOfEntriesKVC];
+        [self didChangeValueForKey:@"numberOfEntries"];
         
         NSLog(@"Successfully fetched the number of entries");
         
@@ -572,9 +574,9 @@ static NSError *notAuthorizedError;
         NSInteger entryIndex = self.numberOfEntries.integerValue;
         
         // update numberOfEntries...
-        [self willChangeValueForKey:NumberOfEntriesKVC];
+        [self willChangeValueForKey:@"numberOfEntries"];
         _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue + 1];
-        [self didChangeValueForKey:NumberOfEntriesKVC];
+        [self didChangeValueForKey:@"numberOfEntries"];
         
         // get the date created
         NSDate *date = [NSDate date];
@@ -691,6 +693,11 @@ static NSError *notAuthorizedError;
         NSManagedObject *blogEntry = [self.blogEntriesCache objectForKey:indexString];
         [blogEntry setValuesForKeysWithDictionary:changes];
         
+        // send notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryEditedNotification
+                                                            object:blogEntry
+                                                          userInfo:changes];
+        
         NSLog(@"Successfully changed entry %ld", entryIndex);
         
         if (completionBlock) {
@@ -780,8 +787,15 @@ static NSError *notAuthorizedError;
         [_context deleteObject:removedEntry];
         [_blogEntriesCache removeObjectForKey:indexString];
         
-        // update the keys
-        for (NSString *key in _blogEntriesCache.allKeys) {
+        // update the keys...
+        
+        // change keys in order
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"integerValue"
+                                                               ascending:YES];
+        
+        NSArray *orderedKeys = [_blogEntriesCache.allKeys sortedArrayUsingDescriptors:@[sort]];
+        
+        for (NSString *key in orderedKeys) {
             
             // decrease by 1 from all the keys that are equal or larger than the removed index
             if (key.integerValue >= entryIndex) {
@@ -798,16 +812,19 @@ static NSError *notAuthorizedError;
                 [_blogEntriesCache setObject:blogEntry
                                       forKey:newIndexKey];
                 
-                // delete the old key value pair
-                [_blogEntriesCache removeObjectForKey:key];
+                // if last object, remove old pair
+                if (key == orderedKeys.lastObject) {
+                    
+                    [_blogEntriesCache removeObjectForKey:key];
+                    
+                }
             }
-            
         }
         
         // update numberOfEntries
-        [self willChangeValueForKey:NumberOfEntriesKVC];
+        [self willChangeValueForKey:@"numberOfEntries"];
         _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue - 1];
-        [self didChangeValueForKey:NumberOfEntriesKVC];
+        [self didChangeValueForKey:@"numberOfEntries"];
         
         NSLog(@"Successfully removed entry %@", indexString);
         
@@ -819,8 +836,6 @@ static NSError *notAuthorizedError;
         
     }];
 }
-
-
 
 
 @end

@@ -61,6 +61,12 @@
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
+    // start observing numberOfEntries
+    [[APIStore sharedStore] addObserver:self
+                             forKeyPath:NumberOfEntriesKeyPath
+                                options:NSKeyValueObservingOptionOld
+                                context:nil];
+    
     // date
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateStyle = NSDateFormatterMediumStyle;
@@ -87,10 +93,55 @@
     }
 }
 
-- (IBAction)save:(id)sender {
+-(void)dealloc
+{
+    // close window
+    [self.window close];
     
+    // KVC
+    [[APIStore sharedStore] removeObserver:self
+                                forKeyPath:NumberOfEntriesKeyPath];
+    
+}
+
+#pragma mark - KVC
+
+-(void)observeValueForKeyPath:(NSString *)keyPath
+                     ofObject:(id)object
+                       change:(NSDictionary *)change
+                      context:(void *)context
+{
+    
+    if ([keyPath isEqualToString:NumberOfEntriesKeyPath] && object == [APIStore sharedStore]) {
+        
+        // check if any entry was removed...
+        
+        // get the old value
+        NSNumber *oldNumberOfEntries = [change objectForKey:NSKeyValueChangeOldKey];
+        
+        // if a entry was removed
+        if (oldNumberOfEntries.integerValue > [APIStore sharedStore].numberOfEntries.integerValue) {
+            
+            // check if our entry was removed
+            NSString *indexKey = [NSString stringWithFormat:@"%ld", self.blogEntryIndex];
+            NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
+            
+            if (!blogEntry) {
+                
+                [self.window close];
+            }
+        }
+    }
+    
+}
+
+#pragma mark - Save Action
+
+-(void)saveDocument:(id)sender
+{
     NSString *title = self.titleTextField.stringValue;
     NSString *content = self.contentTextView.string;
+    NSImage *image = self.imageView.image;
     
     // if new entry
     if (self.mode == NewEntry) {
@@ -101,23 +152,19 @@
                 
                 if (error) {
                     
-                    [NSApp presentError:error];
-                    
-                    return;
+                    [NSApp presentError:error
+                         modalForWindow:self.window
+                               delegate:nil
+                     didPresentSelector:nil
+                            contextInfo:nil];
                 }
-                
-                // show success
-                NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Successfully created new blog entry", @"Successfully created new blog entry")
-                                                 defaultButton:NSLocalizedString(@"OK", @"OK")
-                                               alternateButton:nil
-                                                   otherButton:nil
-                                     informativeTextWithFormat:@""];
-                
-                [alert beginSheetModalForWindow:self.window
-                                  modalDelegate:nil
-                                 didEndSelector:nil
-                                    contextInfo:nil];
-                
+                else {
+                    
+                    // change editor mode to edit
+                    _mode = ExistingEntry;
+                    _blogEntryIndex = [APIStore sharedStore].numberOfEntries.integerValue - 1;
+                    
+                }
             }];
         }];
     }
@@ -157,24 +204,17 @@
                 
                 if (error) {
                     
-                    [NSApp presentError:error];
-                    
-                    return;
+                    [NSApp presentError:error
+                         modalForWindow:self.window
+                               delegate:nil
+                     didPresentSelector:nil
+                            contextInfo:nil];
                 }
                 
                 else {
                     
-                    // show sucess modal
-                    NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Successfully saved blog entry", @"Successfully saved blog entry")
-                                                     defaultButton:NSLocalizedString(@"OK", @"OK")
-                                                   alternateButton:nil
-                                                       otherButton:nil
-                                         informativeTextWithFormat:@""];
                     
-                    [alert beginSheetModalForWindow:self.window
-                                      modalDelegate:nil
-                                     didEndSelector:nil
-                                        contextInfo:nil];
+                    
                 }
                 
             }];
@@ -182,11 +222,6 @@
         }];
         
     }
-}
-
--(void)cancel:(id)sender
-{
-    [self.window close];
 }
 
 @end

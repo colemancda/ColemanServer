@@ -14,10 +14,4 @@
 
 @property IBOutlet NSTextField *dateTextField;
 
-@property NSDateFormatter *dateFormatter;
-
--(IBAction)editEntry:(id)sender;
-
--(IBAction)deleteEntry:(id)sender;
-
 @end

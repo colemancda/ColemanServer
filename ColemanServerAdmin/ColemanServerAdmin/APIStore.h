@@ -19,6 +19,10 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
     
 };
 
+extern NSString *const BlogEntryEditedNotification;
+
+extern NSString *const NumberOfEntriesKeyPath;
+
 // this is for communicating with the API and holding Cache
 @interface APIStore : NSObject
 {

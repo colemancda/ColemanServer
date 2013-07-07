@@ -16,8 +16,14 @@
 
 @property (readonly) EntryEditorWindowController *editorWC;
 
+@property NSDateFormatter *dateFormatter;
+
 -(IBAction)createNewEntry:(id)sender;
 
 -(IBAction)signOut:(id)sender;
+
+#pragma mark - Blog Entry Changed Notification
+
+-(void)blogEntryChanged:(NSNotification *)notification;
 
 @end

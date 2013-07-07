@@ -28,9 +28,7 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
 
 @property (strong) IBOutlet NSTextField *dateTextField;
 
-- (IBAction)save:(id)sender;
-
-- (IBAction)cancel:(id)sender;
+- (IBAction)saveDocument:(id)sender;
 
 #pragma mark - Initialization
 

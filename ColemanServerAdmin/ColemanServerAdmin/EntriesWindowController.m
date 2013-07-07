@@ -14,8 +14,6 @@
 
 static NSString *CellIdentifier = @"CellIdentifier";
 
-static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
-
 @interface EntriesWindowController ()
 
 @end
@@ -34,6 +32,11 @@ static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
     self = [super initWithWindow:window];
     if (self) {
         // Initialization code here.
+        
+        // date formatter
+        self.dateFormatter = [[NSDateFormatter alloc] init];
+        self.dateFormatter.dateStyle = NSDateFormatterLongStyle;
+        
     }
     
     return self;
@@ -47,16 +50,28 @@ static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
     
     // KVC
     [[APIStore sharedStore] addObserver:self
-                             forKeyPath:NumberOfEntriesKVC
+                             forKeyPath:NumberOfEntriesKeyPath
                                 options:NSKeyValueObservingOptionOld
                                 context:nil];
+    
+    // changes notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(blogEntryChanged:)
+                                                 name:BlogEntryEditedNotification
+                                               object:nil];
+    
+    // set double click action
+    self.tableView.doubleAction = @selector(doubleClick:);
+    self.tableView.target = self;
     
 }
 
 -(void)dealloc
 {
     [[APIStore sharedStore] removeObserver:self
-                                forKeyPath:NumberOfEntriesKVC];
+                                forKeyPath:NumberOfEntriesKeyPath];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
 }
 
@@ -66,14 +81,15 @@ static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
                        change:(NSDictionary *)change
                       context:(void *)context
 {
-    if ([keyPath isEqualToString:NumberOfEntriesKVC] && object == [APIStore sharedStore]) {
+    
+    if ([keyPath isEqualToString:NumberOfEntriesKeyPath] && object == [APIStore sharedStore]) {
         
         [self.tableView reloadData];
     }
 
 }
 
-#pragma mark - NSTableView
+#pragma mark - NSTableView DataSource
 
 -(NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
@@ -84,32 +100,29 @@ static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
   viewForTableColumn:(NSTableColumn *)tableColumn
                  row:(NSInteger)row
 {
-    NSTableCellView *cell = [tableView makeViewWithIdentifier:CellIdentifier
+    BlogEntryCell *cell = [tableView makeViewWithIdentifier:CellIdentifier
                                                     owner:self];
     
     // get blog entry
     NSString *indexKey = [NSString stringWithFormat:@"%ld", row];
     NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
     
-    cell.textField.stringValue = [blogEntry valueForKey:@"title"];
-    
-    return cell;
-}
-
--(void)tableViewSelectionDidChange:(NSNotification *)notification
-{
-    if (self.tableView.selectedRow != -1) {
+    if (!blogEntry) {
         
-        // get the cell
-        BlogEntryCell *cell = [self.tableView viewAtColumn:0
-                                                       row:self.tableView.selectedRow
-                                           makeIfNecessary:NO];
-        
-        // make first responder
-        [self.window makeFirstResponder:cell];
-        
+        [NSException raise:@"Error in NSTableView DataSource Protocol"
+                    format:@"There is no object for the row requested"];
+        return nil;
     }
     
+    // set basic info
+    cell.textField.stringValue = [blogEntry valueForKey:@"title"];
+    cell.contentTextField.stringValue = [blogEntry valueForKey:@"content"];
+    
+    NSDate *date = [blogEntry valueForKey:@"date"];
+    cell.dateTextField.stringValue = [self.dateFormatter stringFromDate:date];
+    
+    
+    return cell;
 }
 
 #pragma mark - Commands
@@ -135,6 +148,73 @@ static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
     
 }
 
+-(IBAction)delete:(id)sender
+{
+    [[APIStore sharedStore] removeEntry:self.tableView.selectedRow completion:^(NSError *error) {
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            
+            if (error) {
+                
+                [NSApp presentError:error
+                     modalForWindow:self.window
+                           delegate:nil
+                 didPresentSelector:nil
+                        contextInfo:nil];
+            }
+            else {
+                
+                
+                
+            }
+            
+        }];
+    }];
+    
+}
+
+-(IBAction)doubleClick:(id)sender
+{
+    // edit entry
+    if (self.tableView.selectedRow != -1) {
+        
+        _editorWC = [[EntryEditorWindowController alloc] initWithEntry:self.tableView.selectedRow];
+        
+        [self.window addChildWindow:_editorWC.window
+                            ordered:NSWindowAbove];
+        
+        [_editorWC showWindow:sender];
+        
+    }
+}
+
+#pragma mark - Conditionally enable menu items
+
+-(BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    if (menuItem.action == @selector(delete:)) {
+        
+        // check if any row is selected
+        if (self.tableView.selectedRow == -1) {
+            
+            return NO;
+            
+        }
+        else {
+            return YES;
+        }
+        
+    }
+    
+    return YES;
+}
+
+#pragma mark - Blog Entry Changed Notification
+
+-(void)blogEntryChanged:(NSNotification *)notification
+{
+    [self.tableView reloadData];
+}
 
 
 @end
