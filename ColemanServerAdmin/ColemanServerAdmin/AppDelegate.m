@@ -9,8 +9,6 @@
 #import "AppDelegate.h"
 #import "APIStore.h"
 
-static NSString *kRootVCKeyPath = @"rootViewController";
-
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -53,6 +51,5 @@ static NSString *kRootVCKeyPath = @"rootViewController";
     
     return errorDomain;
 }
-
 
 @end

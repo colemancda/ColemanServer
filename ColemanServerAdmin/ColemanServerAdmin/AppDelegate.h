@@ -7,11 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
-@class PageViewController;
+@class PageViewController, MainMenuController;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSPageControllerDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
+
+@property (weak) IBOutlet MainMenuController *mainMenuController;
 
 #pragma mark
 

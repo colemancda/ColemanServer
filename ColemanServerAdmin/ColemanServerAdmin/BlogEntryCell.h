@@ -16,12 +16,8 @@
 
 @property NSDateFormatter *dateFormatter;
 
--(void)showLoadedInfoWithTitle:(NSString *)title
-                       content:(NSString *)content
-                          date:(NSDate *)date;
+-(IBAction)editEntry:(id)sender;
 
--(void)showLoadedImage:(NSImage *)image;
-
-
+-(IBAction)deleteEntry:(id)sender;
 
 @end

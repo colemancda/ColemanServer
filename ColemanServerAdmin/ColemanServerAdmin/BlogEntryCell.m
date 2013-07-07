@@ -20,19 +20,15 @@
     
 }
 
-#pragma mark
-
--(void)showLoadedInfoWithTitle:(NSString *)title
-                       content:(NSString *)content
-                          date:(NSDate *)date
+-(void)editEntry:(id)sender
 {
-    // show the info text fields
-    self.textField.stringValue = title;
     
-    self.contentTextField.stringValue = content;
+}
+
+-(void)deleteEntry:(id)sender
+{
     
-    NSString *dateString = [self.dateFormatter stringFromDate:date];
-    self.dateTextField.stringValue = dateString;    
+    
 }
 
 @end

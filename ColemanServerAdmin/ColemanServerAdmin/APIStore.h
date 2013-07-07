@@ -43,10 +43,6 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
 
 @property (readonly) NSDictionary *blogEntriesCache;
 
-#pragma mark
-
--(void)terminateSession;
-
 #pragma mark - Login
 
 -(void)loginWithUsername:(NSString *)username

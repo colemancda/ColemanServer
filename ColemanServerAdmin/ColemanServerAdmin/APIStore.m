@@ -10,6 +10,8 @@
 #import "AppDelegate.h"
 #import "NSURLResponse+HTTPCode.h"
 
+static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
+
 static NSString *BlogEntryEntityName = @"BlogEntry";
 
 static NSString *notAuthorizedErrorDescription = @"You are not logged in";
@@ -72,13 +74,6 @@ static NSError *notAuthorizedError;
         
     }
     return self;
-}
-
-#pragma mark
-
--(void)terminateSession
-{
-    self.init;
 }
 
 #pragma mark - Login
@@ -286,7 +281,13 @@ static NSError *notAuthorizedError;
         
         // success!
         
+        // KVC
+        [self willChangeValueForKey:NumberOfEntriesKVC];
+        
         _numberOfEntries = numberOfEntries;
+        
+        // KVC
+        [self didChangeValueForKey:NumberOfEntriesKVC];
         
         NSLog(@"Successfully fetched the number of entries");
         
@@ -570,8 +571,10 @@ static NSError *notAuthorizedError;
         // succesfully created new entry...
         NSInteger entryIndex = self.numberOfEntries.integerValue;
         
-        // update numberOfEntries
+        // update numberOfEntries...
+        [self willChangeValueForKey:NumberOfEntriesKVC];
         _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue + 1];
+        [self didChangeValueForKey:NumberOfEntriesKVC];
         
         // get the date created
         NSDate *date = [NSDate date];
@@ -745,9 +748,6 @@ static NSError *notAuthorizedError;
             return;
         }
         
-        // put togeather other error
-        
-        
         // create other error
         NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to delete blog entry", @"Unable to delete blog entry")};
         
@@ -773,7 +773,6 @@ static NSError *notAuthorizedError;
             }
             
             return;
-            
         }
         
         // successfully deleted blog entry on server, now we need to update the cache
@@ -806,8 +805,9 @@ static NSError *notAuthorizedError;
         }
         
         // update numberOfEntries
-        _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue + 1];
-        
+        [self willChangeValueForKey:NumberOfEntriesKVC];
+        _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue - 1];
+        [self didChangeValueForKey:NumberOfEntriesKVC];
         
         NSLog(@"Successfully removed entry %@", indexString);
         
@@ -816,7 +816,6 @@ static NSError *notAuthorizedError;
         }
         
         return;
-        
         
     }];
 }

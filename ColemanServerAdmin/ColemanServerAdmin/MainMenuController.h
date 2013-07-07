@@ -7,7 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
+@class EntriesWindowController;
 
-@interface MainMenuController : NSObject
+@interface MainMenuController : NSObject <NSWindowDelegate>
+
+@property (weak) IBOutlet NSTextField *usernameTextField;
+
+@property (weak) IBOutlet NSSecureTextField *passwordTextField;
+
+@property (weak) IBOutlet NSTextField *urlTextField;
+
+- (IBAction)connect:(id)sender;
+
+#pragma mark
+
+@property (readonly) EntriesWindowController *entriesWC;
+
 
 @end
