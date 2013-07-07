@@ -144,4 +144,12 @@
     return [LogStore sharedStore];
 }
 
+#pragma mark - Printing
+
+-(IBAction)print:(id)sender
+{
+    [self.logTextView print:sender];
+}
+
+
 @end

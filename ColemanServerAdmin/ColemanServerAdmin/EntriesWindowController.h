@@ -8,10 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import "APIStore.h"
+#import "EntryEditorWindowController.h"
 
 @interface EntriesWindowController : NSWindowController <NSTableViewDelegate, NSTableViewDataSource>
 
 @property (strong) IBOutlet NSTableView *tableView;
+
+@property (readonly) EntryEditorWindowController *editorWC;
 
 -(IBAction)createNewEntry:(id)sender;
 

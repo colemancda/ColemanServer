@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "MainMenuController.h"
 #import "BlogEntryCell.h"
+#import "EntryEditorWindowController.h"
 
 static NSString *CellIdentifier = @"CellIdentifier";
 
@@ -125,8 +126,12 @@ static NSString *NumberOfEntriesKVC = @"self.numberOfEntries";
 
 -(void)createNewEntry:(id)sender
 {
-    [APIStore sharedStore] createEntryWithTitle:<#(NSString *)#> content:<#(NSString *)#> withCompletion:<#^(NSError *error)completionBlock#>
+    _editorWC = [[EntryEditorWindowController alloc] initWithNewEntry];
     
+    [self.window addChildWindow:_editorWC.window
+                        ordered:NSWindowAbove];
+    
+    [_editorWC showWindow:sender];
     
 }
 

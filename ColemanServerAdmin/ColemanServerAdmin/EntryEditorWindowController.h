@@ -8,6 +8,35 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
+    
+    NewEntry,
+    ExistingEntry
+};
+
 @interface EntryEditorWindowController : NSWindowController
+
+@property (readonly) BlogEntryEditorMode mode;
+
+@property (readonly) NSInteger blogEntryIndex;
+
+@property (strong) IBOutlet NSImageView *imageView;
+
+@property (strong) IBOutlet NSTextField *titleTextField;
+
+@property (strong) IBOutlet NSTextView *contentTextView;
+
+@property (strong) IBOutlet NSTextField *dateTextField;
+
+- (IBAction)save:(id)sender;
+
+- (IBAction)cancel:(id)sender;
+
+#pragma mark - Initialization
+
+- (id)initWithEntry:(NSUInteger)index;
+
+- (id)initWithNewEntry;
+
 
 @end
