@@ -11,6 +11,8 @@
 @interface LogStore : NSObject
 {
     NSMutableArray *_logEntries;
+    
+    NSDate *_date;
 }
 
 + (LogStore *)sharedStore;

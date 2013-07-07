@@ -9,6 +9,8 @@
 #import "LogStore.h"
 #import "Log.h"
 
+NSString *LogKVCPath = @"self.log";
+
 @implementation LogStore
 
 + (LogStore *)sharedStore
@@ -33,9 +35,18 @@
         // initialize variable
         _logEntries = [[NSMutableArray alloc] init];
         
+        // set the date for the log
+        _date = [NSDate date];
+        
         // set the default date format
         self.dateStyle = NSDateFormatterMediumStyle;
         self.timeStyle = NSDateFormatterLongStyle;
+        
+        // start KVC
+        [self addObserver:self
+               forKeyPath:LogKVCPath
+                  options:NSKeyValueObservingOptionOld
+                  context:nil];
         
     }
     return self;
@@ -157,7 +168,7 @@
     
     // get a string for the current date
     
-    NSString *fileName = [NSString stringWithFormat:@"log %@.txt", [NSDate date]];
+    NSString *fileName = [NSString stringWithFormat:@"log %@.txt", _date];
         
     NSString *filePath = [logsFolderPath stringByAppendingPathComponent:fileName];
     
@@ -180,6 +191,30 @@
     }
     
     return success;
+}
+
+#pragma mark - KVC
+
+-(void)dealloc
+{
+    [self removeObserver:self
+              forKeyPath:LogKVCPath];
+    
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath
+                     ofObject:(id)object
+                       change:(NSDictionary *)change
+                      context:(void *)context
+{
+    if ([keyPath isEqualToString:LogKVCPath] && object == self) {
+        
+        // save log to file
+        
+        [self saveToURL:[NSURL fileURLWithPath:self.defaultArchivePath]];
+        
+    }
+    
 }
 
 @end

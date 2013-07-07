@@ -10,6 +10,7 @@
 		6E045B85174EA03D0022A5CE /* BlogEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E045B84174EA03D0022A5CE /* BlogEntryCell.m */; };
 		6E045B8A174EF5040022A5CE /* NSURLResponse+HTTPCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E045B89174EF5040022A5CE /* NSURLResponse+HTTPCode.m */; };
 		6E08CFCD1788598900D14BCA /* ColemanClient.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6E08CFCB1788598900D14BCA /* ColemanClient.xcdatamodeld */; };
+		6E08CFD71788E19600D14BCA /* MainMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E08CFD61788E19600D14BCA /* MainMenuController.m */; };
 		6E1DE89817481081003728D9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E25261C1746975900141A3F /* CoreData.framework */; };
 		6E2526191746975900141A3F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E2526181746975900141A3F /* Cocoa.framework */; };
 		6E2526231746975900141A3F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6E2526211746975900141A3F /* InfoPlist.strings */; };
@@ -26,6 +27,8 @@
 		6E045B88174EF5040022A5CE /* NSURLResponse+HTTPCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLResponse+HTTPCode.h"; sourceTree = "<group>"; };
 		6E045B89174EF5040022A5CE /* NSURLResponse+HTTPCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLResponse+HTTPCode.m"; sourceTree = "<group>"; };
 		6E08CFCC1788598900D14BCA /* ColemanClient.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ColemanClient.xcdatamodel; sourceTree = "<group>"; };
+		6E08CFD51788E19600D14BCA /* MainMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuController.h; sourceTree = "<group>"; };
+		6E08CFD61788E19600D14BCA /* MainMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuController.m; sourceTree = "<group>"; };
 		6E2526151746975900141A3F /* ColemanServerAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColemanServerAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E2526181746975900141A3F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6E25261B1746975900141A3F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -90,6 +93,15 @@
 				6E045B89174EF5040022A5CE /* NSURLResponse+HTTPCode.m */,
 			);
 			name = "HTTP Code";
+			sourceTree = "<group>";
+		};
+		6E08CFD81788E19E00D14BCA /* Main Menu */ = {
+			isa = PBXGroup;
+			children = (
+				6E08CFD51788E19600D14BCA /* MainMenuController.h */,
+				6E08CFD61788E19600D14BCA /* MainMenuController.m */,
+			);
+			name = "Main Menu";
 			sourceTree = "<group>";
 		};
 		6E25260C1746975900141A3F = {
@@ -159,6 +171,7 @@
 		6E252635174697F300141A3F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				6E08CFD81788E19E00D14BCA /* Main Menu */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -268,6 +281,7 @@
 				6E045B85174EA03D0022A5CE /* BlogEntryCell.m in Sources */,
 				6E045B8A174EF5040022A5CE /* NSURLResponse+HTTPCode.m in Sources */,
 				6E08CFCD1788598900D14BCA /* ColemanClient.xcdatamodeld in Sources */,
+				6E08CFD71788E19600D14BCA /* MainMenuController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
