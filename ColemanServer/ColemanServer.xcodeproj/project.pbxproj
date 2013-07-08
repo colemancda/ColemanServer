@@ -61,6 +61,7 @@
 		6ED9E88917557B1100A3A814 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87E17557B1100A3A814 /* DispatchQueueLogFormatter.m */; };
 		6EE811BB1736069700433687 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9D5F1D1733707000FD292E /* CoreData.framework */; };
 		6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811CC17370F2600433687 /* NSString+Counter.m */; };
+		6EEF3C7D178A766F00FD4B63 /* Server Logo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6EEF3C7C178A766F00FD4B63 /* Server Logo.icns */; };
 		6EF4F1321757DBAC00052864 /* ColemanServer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EF4F1301757DBAC00052864 /* ColemanServer.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -174,6 +175,7 @@
 		6ED9E87F17557B1100A3A814 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		6EE811CB17370F2600433687 /* NSString+Counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Counter.h"; sourceTree = "<group>"; };
 		6EE811CC17370F2600433687 /* NSString+Counter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Counter.m"; sourceTree = "<group>"; };
+		6EEF3C7C178A766F00FD4B63 /* Server Logo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "Server Logo.icns"; sourceTree = "<group>"; };
 		6EF4F1311757DBAC00052864 /* ColemanServer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ColemanServer.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -325,6 +327,7 @@
 				6E9D5F251733707000FD292E /* main.m */,
 				6E9D5F271733707000FD292E /* ColemanServer-Prefix.pch */,
 				6E9D5F281733707000FD292E /* Credits.rtf */,
+				6EEF3C7C178A766F00FD4B63 /* Server Logo.icns */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -647,6 +650,7 @@
 				6E9D603B1733829700FD292E /* MainViewController.xib in Resources */,
 				6E924E8F173FF93300B1F131 /* SaveCell.xib in Resources */,
 				6E481AF71787781800A2F754 /* PreferencesWindowController.xib in Resources */,
+				6EEF3C7D178A766F00FD4B63 /* Server Logo.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
