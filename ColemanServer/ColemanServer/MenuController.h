@@ -20,4 +20,6 @@
 
 -(IBAction)openLogs:(id)sender;
 
+-(IBAction)print:(id)sender;
+
 @end

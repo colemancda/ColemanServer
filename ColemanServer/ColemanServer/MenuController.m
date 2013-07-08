@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "DataStore.h"
 #import "LogStore.h"
+#import "MainViewController.h"
 
 @implementation MenuController
 
@@ -80,6 +81,13 @@
     
     // open it 
     [[NSWorkspace sharedWorkspace] openURL:url];
+}
+
+-(void)print:(id)sender
+{
+    AppDelegate *appDelegate = [NSApp delegate];
+    MainViewController *mainVC = (MainViewController *)appDelegate.rootViewController;
+    [mainVC.logTextView print:sender];
 }
 
 @end
