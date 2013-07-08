@@ -31,8 +31,6 @@ static NSError *notAuthorizedError;
         // create the 401 error
         notAuthorizedError = [NSError errorWithDomain:[AppDelegate errorDomain] code:401 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(notAuthorizedErrorDescription, notAuthorizedErrorDescription), NSLocalizedRecoverySuggestionErrorKey : NSLocalizedString(notAuthorizedErrorSuggestion, notAuthorizedErrorSuggestion)}];
     }
-    
-    
 }
 
 @end
@@ -837,5 +835,112 @@ static NSError *notAuthorizedError;
     }];
 }
 
+
+#pragma mark - Manipulate Images
+
+-(void)setImageData:(NSData *)imageData
+           forEntry:(NSUInteger)indexOfEntry
+         completion:(completionBlock)completionBlock
+{
+    if (!self.token) {
+        if (completionBlock) {
+            completionBlock(notAuthorizedError);
+        }
+        
+        return;
+    }
+    
+    // put togeather url
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"blog"];
+    NSString *indexString = [NSString stringWithFormat:@"%ld", indexOfEntry];
+    urlString = [urlString stringByAppendingPathComponent:indexString];
+    urlString = [urlString stringByAppendingPathComponent:@"photo"];
+    
+    // dont continue if there's no blog entry...
+    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
+    
+    if (!blogEntry) {
+        
+        [NSException raise:@"Invalid Argument"
+                    format:@"Blog entry %@ doesn't exist in cache", indexString];
+    }
+    
+    
+    // put togeather request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    request.HTTPMethod = @"PUT";
+    request.HTTPBody = imageData;
+    request.allHTTPHeaderFields = @{@"Authorization" : self.token};
+    
+    NSLog(@"Uploading image data for entry %@...", indexString);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+     {
+        
+         if (error) {
+             
+             // 401 error - Not Authorized
+             if (error.code == NSURLErrorUserCancelledAuthentication) {
+                 
+                 if (completionBlock) {
+                     completionBlock(notAuthorizedError);
+                 }
+                 
+                 return;
+             }
+             
+             if (completionBlock) {
+                 completionBlock(error);
+             }
+             
+             return;
+         }
+         
+         // create other error
+         NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to upload image for blog entry", @"Unable to upload image for blog entry")};
+         
+         NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                   code:4000
+                                               userInfo:otherErrorUserInfo];
+         
+         if (response.httpCode.integerValue != 200) {
+             
+             if (completionBlock) {
+                 completionBlock(otherError);
+             }
+             
+             return;
+         }
+         
+         // successfully uploaded image data to server...
+         
+         // update cache
+         [blogEntry setValue:imageData
+                      forKey:@"image"];
+         
+         // send notification
+         [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryEditedNotification
+                                                             object:blogEntry
+                                                           userInfo:@{@"image": imageData}];
+         
+         NSLog(@"Successfully uploaded image data for entry %@", indexString);
+         
+         if (completionBlock) {
+             completionBlock(nil);
+         }
+         
+         return;
+        
+    }];
+    
+}
+
+-(void)removeImageFromEntry:(NSUInteger)entryIndex
+                 completion:(completionBlock)completionBlock
+{
+    
+    
+}
 
 @end

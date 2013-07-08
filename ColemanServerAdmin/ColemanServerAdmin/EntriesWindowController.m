@@ -100,6 +100,11 @@ static NSString *CellIdentifier = @"CellIdentifier";
   viewForTableColumn:(NSTableColumn *)tableColumn
                  row:(NSInteger)row
 {
+    // invert row number
+    NSInteger count = [APIStore sharedStore].numberOfEntries.integerValue;
+    
+    
+    
     BlogEntryCell *cell = [tableView makeViewWithIdentifier:CellIdentifier
                                                     owner:self];
     
@@ -110,7 +115,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
     if (!blogEntry) {
         
         [NSException raise:@"Error in NSTableView DataSource Protocol"
-                    format:@"There is no object for the row requested"];
+                    format:@"There is no blogEntry object for the row requested"];
         return nil;
     }
     
@@ -121,6 +126,15 @@ static NSString *CellIdentifier = @"CellIdentifier";
     NSDate *date = [blogEntry valueForKey:@"date"];
     cell.dateTextField.stringValue = [self.dateFormatter stringFromDate:date];
     
+    // set image
+    NSData *imageData = [blogEntry valueForKey:@"image"];
+    if (imageData) {
+        
+        cell.imageView.image = [[NSImage alloc] initWithData:imageData];
+    }
+    else {
+        cell.imageView.image = nil;
+    }
     
     return cell;
 }
@@ -135,14 +149,14 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     // close this window
     [self.window close];
+    
+    // reset API Store
+    [[APIStore sharedStore] init];
 }
 
 -(void)createNewEntry:(id)sender
 {
     _editorWC = [[EntryEditorWindowController alloc] initWithNewEntry];
-    
-    [self.window addChildWindow:_editorWC.window
-                        ordered:NSWindowAbove];
     
     [_editorWC showWindow:sender];
     
@@ -179,9 +193,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
     if (self.tableView.selectedRow != -1) {
         
         _editorWC = [[EntryEditorWindowController alloc] initWithEntry:self.tableView.selectedRow];
-        
-        [self.window addChildWindow:_editorWC.window
-                            ordered:NSWindowAbove];
         
         [_editorWC showWindow:sender];
         

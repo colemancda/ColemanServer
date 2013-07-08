@@ -78,9 +78,9 @@ extern NSString *const NumberOfEntriesKeyPath;
 
 #pragma mark - Manipulate Images
 
--(void)setImage:(NSImage *)image
-       forEntry:(NSUInteger)indexOfEntry
-     completion:(completionBlock)completionBlock;
+-(void)setImageData:(NSData *)imageData
+           forEntry:(NSUInteger)indexOfEntry
+         completion:(completionBlock)completionBlock;
 
 -(void)removeImageFromEntry:(NSUInteger)entryIndex
                  completion:(completionBlock)completionBlock;

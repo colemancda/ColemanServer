@@ -8,6 +8,7 @@
 
 #import "EntryEditorWindowController.h"
 #import "APIStore.h"
+#import "AppDelegate.h"
 
 @interface EntryEditorWindowController ()
 
@@ -71,6 +72,7 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateStyle = NSDateFormatterMediumStyle;
     
+    // existing entry mode
     if (_mode == ExistingEntry) {
         
         // get the entry from the store
@@ -83,8 +85,21 @@
         
         NSString *dateString = [dateFormatter stringFromDate:[blogEntry valueForKey:@"date"]];
         self.dateTextField.stringValue = dateString;
+        
+        // get image data
+        NSData *imageData = [blogEntry valueForKey:@"image"];
+        
+        // if the entry has an image
+        if (imageData) {
+            
+            // set existing image
+            _initialImage = [[NSImage alloc] initWithData:imageData];
+            
+            self.imageView.image = _initialImage;
+        }
     }
     
+    // New Entry Mode
     else {
         
         NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
@@ -164,11 +179,20 @@
                     _mode = ExistingEntry;
                     _blogEntryIndex = [APIStore sharedStore].numberOfEntries.integerValue - 1;
                     
+                    if (image) {
+                        
+                        // try to upload image
+                        // [APIStore sharedStore] uploadImage
+                        
+                    }
+                
+                    
                 }
             }];
         }];
     }
     
+    // if exisitng entry is being saved
     else {
         
         // get the blogEntry
@@ -193,33 +217,98 @@
         }
         
         // if no changes occurred
-        if (changes.allKeys.count == 0) {
+        if (changes.allKeys.count != 0) {
             
-            return;
-        }
-        
-        [[APIStore sharedStore] editEntry:self.blogEntryIndex changes:changes completion:^(NSError *error) {
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [[APIStore sharedStore] editEntry:self.blogEntryIndex changes:changes completion:^(NSError *error) {
                 
-                if (error) {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     
-                    [NSApp presentError:error
-                         modalForWindow:self.window
-                               delegate:nil
-                     didPresentSelector:nil
-                            contextInfo:nil];
-                }
-                
-                else {
+                    if (error) {
+                        
+                        [NSApp presentError:error
+                             modalForWindow:self.window
+                                   delegate:nil
+                         didPresentSelector:nil
+                                contextInfo:nil];
+                    }
                     
+                    else {
+                        
+                        // successfully uploaded changes
+                        
+                    }
                     
-                    
-                }
+                }];
                 
             }];
             
-        }];
+        }
+        
+        // if the image was changed
+        if (image && image != _initialImage) {
+            
+            // get image data
+            NSBitmapImageRep *imageRepresentation = image.representations[0];
+            
+            if (!imageRepresentation) {
+                                
+                NSString *description = NSLocalizedString(@"Cannot upload image",
+                                                          @"Cannot upload image");
+                
+                NSString *reason = NSLocalizedString(@"Image format is not Bitmap",
+                                                     @"Image format is not Bitmap");
+                
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
+                                           NSLocalizedFailureReasonErrorKey : reason};
+                
+                NSError *invalidImageFormatError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                                       code:50005
+                                                                   userInfo:userInfo];
+                [NSApp presentError:invalidImageFormatError
+                     modalForWindow:self.window
+                           delegate:nil
+                 didPresentSelector:nil
+                        contextInfo:nil];
+                
+                return;
+            }
+            
+            NSData *imageData = [imageRepresentation representationUsingType:NSPNGFileType
+                                                                   properties:nil];
+            
+            // upload new image
+            [[APIStore sharedStore] setImageData:imageData forEntry:self.blogEntryIndex completion:^(NSError *error) {
+                
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    
+                    if (error) {
+                        
+                        [NSApp presentError:error
+                             modalForWindow:self.window
+                                   delegate:nil
+                         didPresentSelector:nil
+                                contextInfo:nil];
+                    }
+                    else {
+                        
+                        // successfully uploaded imaged data
+                        
+                        
+                    }
+                    
+                }];
+                
+            }];
+            
+        }
+        
+        // if image was erased
+        if (_initialImage && !image) {
+            
+            // delete image
+            
+            
+        }
         
     }
 }

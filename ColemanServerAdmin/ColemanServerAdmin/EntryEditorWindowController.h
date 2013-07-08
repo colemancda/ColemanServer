@@ -15,6 +15,9 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
 };
 
 @interface EntryEditorWindowController : NSWindowController
+{
+    NSImage *_initialImage;
+}
 
 @property (readonly) BlogEntryEditorMode mode;
 

@@ -90,6 +90,36 @@
                                             
                                             [_entriesWC showWindow:sender];
                                             [_entriesWC.tableView reloadData];
+                                            
+                                            // fetch photos for blog entries
+                                            
+                                            for (int i = 0; i < count; i++) {
+                                                
+                                                [[APIStore sharedStore] fetchImageForEntry:i completion:^(NSError *error) {
+                                                    
+                                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                                       
+                                                        if (previousError) {
+                                                            
+                                                            return;
+                                                        }
+                                                        
+                                                        if (error) {
+                                                            
+                                                            previousError = error;
+                                                            
+                                                            [NSApp presentError:error];
+                                                            
+                                                            return;
+                                                        }
+                                                        
+                                                        [_entriesWC.tableView reloadData];
+                                                        
+                                                    }];
+                                                    
+                                                }];
+                                                
+                                            }
                                         }
                                         
                                     }];
