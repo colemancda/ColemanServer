@@ -939,8 +939,94 @@ static NSError *notAuthorizedError;
 -(void)removeImageFromEntry:(NSUInteger)entryIndex
                  completion:(completionBlock)completionBlock
 {
+    if (!self.token) {
+        if (completionBlock) {
+            completionBlock(notAuthorizedError);
+        }
+        
+        return;
+    }
+    
+    // put togeather url
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"blog"];
+    NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
+    urlString = [urlString stringByAppendingPathComponent:indexString];
+    urlString = [urlString stringByAppendingPathComponent:@"photo"];
+    
+    // dont continue if there's no blog entry...
+    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
+    
+    if (!blogEntry) {
+        
+        [NSException raise:@"Invalid Argument"
+                    format:@"Blog entry %@ doesn't exist in cache", indexString];
+    }
+    
+    // put togeather request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    request.HTTPMethod = @"DELETE";
+    request.allHTTPHeaderFields = @{@"Authorization" : self.token};
     
     
+    NSLog(@"Requesting to delete image for entry %@...", indexString);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        if (error) {
+            
+            // 401 error - Not Authorized
+            if (error.code == NSURLErrorUserCancelledAuthentication) {
+                
+                if (completionBlock) {
+                    completionBlock(notAuthorizedError);
+                }
+                
+                return;
+            }
+            
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        // create other error
+        NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to delete image for blog entry", @"Unable to delete image for blog entry")};
+        
+        NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                  code:4000
+                                              userInfo:otherErrorUserInfo];
+        
+        if (response.httpCode.integerValue != 200) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        // successfully deleted image on server...
+        
+        // update cache
+        [blogEntry setValue:nil
+                     forKey:@"image"];
+                
+        // send notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryEditedNotification
+                                                            object:blogEntry
+                                                          userInfo:@{@"image": [NSNull null]}];
+        
+        NSLog(@"Successfully deleted image for entry %@", indexString);
+        
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
+    }];
 }
 
 @end

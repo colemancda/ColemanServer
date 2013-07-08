@@ -182,11 +182,8 @@
                     if (image) {
                         
                         // try to upload image
-                        // [APIStore sharedStore] uploadImage
-                        
+                        [self uploadImage:image];
                     }
-                
-                    
                 }
             }];
         }];
@@ -234,7 +231,7 @@
                     
                     else {
                         
-                        // successfully uploaded changes
+                        // successfully entry changes
                         
                     }
                     
@@ -247,40 +244,17 @@
         // if the image was changed
         if (image && image != _initialImage) {
             
-            // get image data
-            NSBitmapImageRep *imageRepresentation = image.representations[0];
+            [self uploadImage:image];
+        }
+        
+        // if image was erased
+        if (_initialImage && !image) {
             
-            if (!imageRepresentation) {
-                                
-                NSString *description = NSLocalizedString(@"Cannot upload image",
-                                                          @"Cannot upload image");
-                
-                NSString *reason = NSLocalizedString(@"Image format is not Bitmap",
-                                                     @"Image format is not Bitmap");
-                
-                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                                           NSLocalizedFailureReasonErrorKey : reason};
-                
-                NSError *invalidImageFormatError = [NSError errorWithDomain:[AppDelegate errorDomain]
-                                                                       code:50005
-                                                                   userInfo:userInfo];
-                [NSApp presentError:invalidImageFormatError
-                     modalForWindow:self.window
-                           delegate:nil
-                 didPresentSelector:nil
-                        contextInfo:nil];
-                
-                return;
-            }
-            
-            NSData *imageData = [imageRepresentation representationUsingType:NSPNGFileType
-                                                                   properties:nil];
-            
-            // upload new image
-            [[APIStore sharedStore] setImageData:imageData forEntry:self.blogEntryIndex completion:^(NSError *error) {
+            // delete image
+            [[APIStore sharedStore] removeImageFromEntry:self.blogEntryIndex completion:^(NSError *error) {
                 
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    
+                   
                     if (error) {
                         
                         [NSApp presentError:error
@@ -288,13 +262,14 @@
                                    delegate:nil
                          didPresentSelector:nil
                                 contextInfo:nil];
-                    }
-                    else {
-                        
-                        // successfully uploaded imaged data
-                        
                         
                     }
+                    
+                 else {
+                     
+                     // successfully deleted image
+                     
+                 }
                     
                 }];
                 
@@ -302,15 +277,66 @@
             
         }
         
-        // if image was erased
-        if (_initialImage && !image) {
-            
-            // delete image
-            
-            
-        }
-        
     }
+}
+
+-(void)uploadImage:(NSImage *)image
+{
+    NSAssert(image, @"nil argument");
+    
+    // get image data
+    NSBitmapImageRep *imageRepresentation = image.representations[0];
+    
+    if (!imageRepresentation) {
+        
+        NSString *description = NSLocalizedString(@"Cannot upload image",
+                                                  @"Cannot upload image");
+        
+        NSString *reason = NSLocalizedString(@"Image format is not Bitmap",
+                                             @"Image format is not Bitmap");
+        
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
+                                   NSLocalizedFailureReasonErrorKey : reason};
+        
+        NSError *invalidImageFormatError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                               code:50005
+                                                           userInfo:userInfo];
+        [NSApp presentError:invalidImageFormatError
+             modalForWindow:self.window
+                   delegate:nil
+         didPresentSelector:nil
+                contextInfo:nil];
+        
+        return;
+    }
+    
+    NSData *imageData = [imageRepresentation representationUsingType:NSPNGFileType
+                                                          properties:nil];
+    
+    // upload new image
+    [[APIStore sharedStore] setImageData:imageData forEntry:self.blogEntryIndex completion:^(NSError *error) {
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            
+            if (error) {
+                
+                [NSApp presentError:error
+                     modalForWindow:self.window
+                           delegate:nil
+                 didPresentSelector:nil
+                        contextInfo:nil];
+            }
+            else {
+                
+                // successfully uploaded imaged data
+                
+                
+            }
+            
+        }];
+        
+    }];
+    
 }
 
 @end

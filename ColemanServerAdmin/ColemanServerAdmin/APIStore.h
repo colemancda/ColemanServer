@@ -57,10 +57,10 @@ extern NSString *const NumberOfEntriesKeyPath;
 
 -(void)fetchNumberOfEntriesWithCompletion:(completionBlock)completionBlock;
 
--(void)fetchEntry:(NSUInteger)indexOfEntry
+-(void)fetchEntry:(NSUInteger)entryIndex
        completion:(completionBlock)completionBlock;
 
--(void)fetchImageForEntry:(NSUInteger)indexOfEntry
+-(void)fetchImageForEntry:(NSUInteger)entryIndex
                completion:(completionBlock)completionBlock;
 
 #pragma mark - Manipulate Entries
@@ -79,7 +79,7 @@ extern NSString *const NumberOfEntriesKeyPath;
 #pragma mark - Manipulate Images
 
 -(void)setImageData:(NSData *)imageData
-           forEntry:(NSUInteger)indexOfEntry
+           forEntry:(NSUInteger)entryIndex
          completion:(completionBlock)completionBlock;
 
 -(void)removeImageFromEntry:(NSUInteger)entryIndex

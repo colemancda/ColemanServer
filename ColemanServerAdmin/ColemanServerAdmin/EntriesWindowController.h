@@ -20,7 +20,9 @@
 
 -(IBAction)createNewEntry:(id)sender;
 
--(IBAction)signOut:(id)sender;
+#pragma mark - Get model object
+
+-(NSInteger)blogEntryIndexForRow:(NSInteger)row;
 
 #pragma mark - Blog Entry Changed Notification
 

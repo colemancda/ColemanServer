@@ -19,6 +19,8 @@
 
 - (IBAction)connect:(id)sender;
 
+- (IBAction)signOut:(id)sender;
+
 #pragma mark
 
 @property (readonly) EntriesWindowController *entriesWC;

@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-@class PageViewController, MainMenuController;
+@class PageViewController, MainMenuController, EntriesWindowController;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSPageControllerDelegate>
 
@@ -20,7 +20,6 @@
 +(NSString *)bundleID;
 
 +(NSString *)errorDomain;
-
 
 
 @end

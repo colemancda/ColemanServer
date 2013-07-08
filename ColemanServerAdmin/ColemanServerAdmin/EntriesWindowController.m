@@ -73,6 +73,10 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+    [self.window close];
+    
+    [_editorWC.window close];
+    
 }
 
 #pragma mark - KVC
@@ -89,6 +93,17 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 }
 
+#pragma mark - Get Model Objects
+
+-(NSInteger)blogEntryIndexForRow:(NSInteger)row
+{
+    // invert row number
+    NSInteger maxValue = [APIStore sharedStore].numberOfEntries.integerValue - 1;
+    NSInteger entryIndex = maxValue - row;
+    
+    return entryIndex;
+}
+
 #pragma mark - NSTableView DataSource
 
 -(NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -100,16 +115,10 @@ static NSString *CellIdentifier = @"CellIdentifier";
   viewForTableColumn:(NSTableColumn *)tableColumn
                  row:(NSInteger)row
 {
-    // invert row number
-    NSInteger count = [APIStore sharedStore].numberOfEntries.integerValue;
-    
-    
-    
     BlogEntryCell *cell = [tableView makeViewWithIdentifier:CellIdentifier
                                                     owner:self];
-    
-    // get blog entry
-    NSString *indexKey = [NSString stringWithFormat:@"%ld", row];
+
+    NSString *indexKey = [NSString stringWithFormat:@"%ld", [self blogEntryIndexForRow:row]];
     NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
     
     if (!blogEntry) {
@@ -141,19 +150,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 #pragma mark - Commands
 
--(IBAction)signOut:(id)sender
-{
-    // show login window
-    AppDelegate *appDelegate = [NSApp delegate];
-    [appDelegate.window makeKeyAndOrderFront:nil];
-    
-    // close this window
-    [self.window close];
-    
-    // reset API Store
-    [[APIStore sharedStore] init];
-}
-
 -(void)createNewEntry:(id)sender
 {
     _editorWC = [[EntryEditorWindowController alloc] initWithNewEntry];
@@ -164,7 +160,8 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(IBAction)delete:(id)sender
 {
-    [[APIStore sharedStore] removeEntry:self.tableView.selectedRow completion:^(NSError *error) {
+    NSInteger index = [self blogEntryIndexForRow:self.tableView.selectedRow];
+    [[APIStore sharedStore] removeEntry:index completion:^(NSError *error) {
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
@@ -192,7 +189,8 @@ static NSString *CellIdentifier = @"CellIdentifier";
     // edit entry
     if (self.tableView.selectedRow != -1) {
         
-        _editorWC = [[EntryEditorWindowController alloc] initWithEntry:self.tableView.selectedRow];
+        NSInteger index = [self blogEntryIndexForRow:self.tableView.selectedRow];
+        _editorWC = [[EntryEditorWindowController alloc] initWithEntry:index];
         
         [_editorWC showWindow:sender];
         

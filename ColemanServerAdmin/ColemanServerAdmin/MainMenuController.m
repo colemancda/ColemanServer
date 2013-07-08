@@ -138,4 +138,37 @@
     }];
 }
 
+#pragma mark - Commands
+
+-(IBAction)signOut:(id)sender
+{
+    // show login window
+    AppDelegate *appDelegate = [NSApp delegate];
+    [appDelegate.window makeKeyAndOrderFront:nil];
+    
+    // close this window
+    _entriesWC = nil;
+    
+    // reset API Store
+    [[APIStore sharedStore] init];
+    
+}
+
+#pragma mark - First Responder
+
+-(BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    if (menuItem.action == @selector(signOut:)) {
+        
+        if (!_entriesWC) {
+            return NO;
+        }
+        
+    }
+    
+    return YES;
+    
+}
+
+
 @end

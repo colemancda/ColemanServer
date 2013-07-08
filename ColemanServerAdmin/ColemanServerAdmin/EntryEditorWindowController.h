@@ -33,6 +33,10 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
 
 - (IBAction)saveDocument:(id)sender;
 
+#pragma mark - Actions
+
+-(void)uploadImage:(NSImage *)image;
+
 #pragma mark - Initialization
 
 - (id)initWithEntry:(NSUInteger)index;

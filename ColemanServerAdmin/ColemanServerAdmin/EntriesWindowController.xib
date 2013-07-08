@@ -72,6 +72,7 @@
 											<reference key="NSSuperview" ref="371271962"/>
 											<reference key="NSWindow"/>
 											<reference key="NSNextKeyView" ref="177174426"/>
+											<bool key="NSViewIsLayerTreeHost">YES</bool>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -209,6 +210,7 @@
 							<reference key="NSSuperview" ref="1006"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="371271962"/>
+							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<int key="NSsFlags">150066</int>
 							<reference key="NSVScroller" ref="392677713"/>
@@ -224,6 +226,7 @@
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="16828102"/>
+					<bool key="NSViewIsLayerTreeHost">YES</bool>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 800}}</string>
 				<string key="NSMinSize">{390, 362}</string>
@@ -296,6 +299,7 @@
 									<string key="NSFrame">{{3, 3}, {76, 81}}</string>
 									<reference key="NSSuperview" ref="177174426"/>
 									<reference key="NSNextKeyView" ref="283623058"/>
+									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<string key="NSReuseIdentifierKey">_NS:11</string>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSImageCell" key="NSCell" id="232966974">
@@ -392,6 +396,7 @@
 							</array>
 							<string key="NSFrame">{{1, 1}, {387, 87}}</string>
 							<reference key="NSNextKeyView" ref="952143389"/>
+							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 						</object>
 						<reference key="destination" ref="952143389"/>
@@ -1065,30 +1070,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">EntriesWindowController</string>
 					<string key="superclassName">NSWindowController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="createNewEntry:">id</string>
-						<string key="delete:">id</string>
-						<string key="doubleClick:">id</string>
-						<string key="signOut:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="createNewEntry:">
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">createNewEntry:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">createNewEntry:</string>
+						<object class="IBActionInfo" key="NS.object.0">
 							<string key="name">createNewEntry:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="delete:">
-							<string key="name">delete:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="doubleClick:">
-							<string key="name">doubleClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="signOut:">
-							<string key="name">signOut:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">tableView</string>
 						<string key="NS.object.0">NSTableView</string>
