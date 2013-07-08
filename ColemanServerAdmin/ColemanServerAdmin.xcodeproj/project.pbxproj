@@ -23,6 +23,7 @@
 		6E25262C1746975900141A3F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E25262B1746975900141A3F /* AppDelegate.m */; };
 		6E25262F1746975900141A3F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E25262D1746975900141A3F /* MainMenu.xib */; };
 		6E25263E1746AE1700141A3F /* APIStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E25263D1746AE1700141A3F /* APIStore.m */; };
+		6EEF3C7F178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6EEF3C7E178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		6E25263C1746AE1700141A3F /* APIStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIStore.h; sourceTree = "<group>"; };
 		6E25263D1746AE1700141A3F /* APIStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIStore.m; sourceTree = "<group>"; };
 		6E2526401746B4DC00141A3F /* NSObject+CompletionBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CompletionBlock.h"; sourceTree = "<group>"; };
+		6EEF3C7E178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "ColemanServerAdmin Logo.icns"; sourceTree = "<group>"; };
 		6EF4F12F175587F500052864 /* ColemanServerAdmin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ColemanServerAdmin.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -194,6 +196,7 @@
 				6E2526241746975900141A3F /* main.m */,
 				6E2526261746975900141A3F /* ColemanServerAdmin-Prefix.pch */,
 				6E2526271746975900141A3F /* Credits.rtf */,
+				6EEF3C7E178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				6E25262F1746975900141A3F /* MainMenu.xib in Resources */,
 				6E08CFDE1788F2AC00D14BCA /* EntriesWindowController.xib in Resources */,
 				6E08CFE317893F5000D14BCA /* EntryEditorWindowController.xib in Resources */,
+				6EEF3C7F178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
