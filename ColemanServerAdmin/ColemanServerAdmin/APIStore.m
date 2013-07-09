@@ -80,6 +80,25 @@ static NSError *notAuthorizedError;
     return self;
 }
 
+-(void)reset
+{
+    [_context reset];
+    
+    _blogEntriesCache = [[NSMutableDictionary alloc] init];
+    
+    [self willChangeValueForKey:@"numberOfEntries"];
+    _numberOfEntries = nil;
+    [self didChangeValueForKey:@"numberOfEntries"];
+    
+    self.baseURL = nil;
+    
+    [self willChangeValueForKey:@"token"];
+    _token = nil;
+    [self didChangeValueForKey:@"token"];
+    
+    NSLog(@"Resetted API Store");
+}
+
 #pragma mark - Login
 
 -(void)loginWithUsername:(NSString *)username
@@ -199,9 +218,12 @@ static NSError *notAuthorizedError;
         
         // successfully got token
         
+        [self willChangeValueForKey:@"token"];
         _token = token;
         
         NSLog(@"Successfully got authentication token");
+        
+        [self didChangeValueForKey:@"token"];
         
         if (completionBlock) {
             completionBlock(nil);

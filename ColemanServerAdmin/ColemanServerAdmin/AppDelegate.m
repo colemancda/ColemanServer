@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "APIStore.h"
+#import "MainMenuController.h"
 
 @implementation AppDelegate
 
@@ -15,7 +16,27 @@
 {
     // Insert code here to initialize your application
     
+    // KVC token
+    [[APIStore sharedStore] addObserver:self
+                             forKeyPath:@"self.token"
+                                options:NSKeyValueObservingOptionOld
+                                context:nil];
     
+    // try to get token from preferences
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
+    
+    if (token) {
+        
+        NSLog(@"Logging in using saved token...");
+        
+        // connect using saved token
+        NSString *urlString = [[NSUserDefaults standardUserDefaults] objectForKey:@"url"];
+        
+        [APIStore sharedStore].baseURL = urlString;
+        [APIStore sharedStore].token = token;
+        
+        [_mainMenuController showEntriesWC];
+    }
 }
 
 -(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
@@ -50,6 +71,22 @@
     }
     
     return errorDomain;
+}
+
+#pragma mark - KVC
+
+-(void)observeValueForKeyPath:(NSString *)keyPath
+                     ofObject:(id)object
+                       change:(NSDictionary *)change
+                      context:(void *)context
+{
+    if ([keyPath isEqualToString:@"self.token"] && object == [APIStore sharedStore]) {
+        
+        // save token in preferences
+        [[NSUserDefaults standardUserDefaults] setObject:[APIStore sharedStore].token forKey:@"token"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
 }
 
 

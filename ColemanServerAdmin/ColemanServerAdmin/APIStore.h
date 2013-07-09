@@ -41,11 +41,13 @@ extern NSString *const NumberOfEntriesKeyPath;
 
 + (APIStore *)sharedStore;
 
+-(void)reset;
+
 #pragma mark - Properties
 
 @property NSString *baseURL;
 
-@property (readonly) NSString *token;
+@property NSString *token;
 
 @property (readonly) NSNumber *numberOfEntries;
 
@@ -56,6 +58,10 @@ extern NSString *const NumberOfEntriesKeyPath;
 -(void)loginWithUsername:(NSString *)username
                 password:(NSString *)password
               completion:(completionBlock)completionBlock;
+
+-(void)registerWithUsername:(NSString *)username
+                   password:(NSString *)password
+                 completion:(completionBlock)completionBlock;
 
 #pragma mark - Public Access
 

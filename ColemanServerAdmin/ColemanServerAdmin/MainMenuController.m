@@ -19,6 +19,7 @@
     if (self) {
         
         
+        
     }
     return self;
 }
@@ -66,7 +67,7 @@
                          animate:NO];
     
     // reset API Store
-    [[APIStore sharedStore] init];
+    [[APIStore sharedStore] reset];
 }
 
 #pragma mark - First Responder
@@ -105,6 +106,5 @@
     
     [_entriesWC showWindow:nil];
 }
-
 
 @end
