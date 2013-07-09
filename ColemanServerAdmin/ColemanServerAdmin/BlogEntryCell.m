@@ -19,4 +19,11 @@
     
 }
 
+-(void)setNumberOfComments:(NSNumber *)numberOfComments
+{
+    NSString *commentString = [NSString stringWithFormat:NSLocalizedString(@"%@ Comments", @"<number of comments> Comments"), numberOfComments];
+    
+    self.commentsButton.title = commentString;
+}
+
 @end

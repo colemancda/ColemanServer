@@ -14,4 +14,8 @@
 
 @property IBOutlet NSTextField *dateTextField;
 
+@property IBOutlet NSButton *commentsButton;
+
+-(void)setNumberOfComments:(NSNumber *)numberOfComments;
+
 @end

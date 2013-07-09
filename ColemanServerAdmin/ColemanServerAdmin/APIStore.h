@@ -37,6 +37,8 @@ extern NSString *const NumberOfEntriesKeyPath;
     NSManagedObjectModel *_model;
     
     NSMutableDictionary *_blogEntriesCache;
+    
+    NSMutableDictionary *_numberOfCommentsCache;
 }
 
 + (APIStore *)sharedStore;
@@ -52,6 +54,8 @@ extern NSString *const NumberOfEntriesKeyPath;
 @property (readonly) NSNumber *numberOfEntries;
 
 @property (readonly) NSDictionary *blogEntriesCache;
+
+@property (readonly) NSDictionary *numberOfCommentsCache;
 
 #pragma mark - Login
 

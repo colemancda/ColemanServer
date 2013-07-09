@@ -74,6 +74,7 @@ static NSError *notAuthorizedError;
         _context.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
         
         _blogEntriesCache = [[NSMutableDictionary alloc] init];
+        _numberOfCommentsCache = [[NSMutableDictionary alloc] init];
         
         
     }
@@ -82,19 +83,18 @@ static NSError *notAuthorizedError;
 
 -(void)reset
 {
+    // reset values
     [_context reset];
     
     _blogEntriesCache = [[NSMutableDictionary alloc] init];
+    _numberOfCommentsCache = [[NSMutableDictionary alloc] init];
     
     [self willChangeValueForKey:@"numberOfEntries"];
     _numberOfEntries = nil;
     [self didChangeValueForKey:@"numberOfEntries"];
     
     self.baseURL = nil;
-    
-    [self willChangeValueForKey:@"token"];
-    _token = nil;
-    [self didChangeValueForKey:@"token"];
+    self.token = nil;
     
     NSLog(@"Resetted API Store");
 }
@@ -501,6 +501,191 @@ static NSError *notAuthorizedError;
     }];
 }
 
+-(void)fetchNumberOfCommentsForEntry:(NSUInteger)entryIndex
+                      withCompletion:(completionBlock)completionBlock
+{
+    // check if entry exists in cache
+    NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
+    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
+    
+    if (!blogEntry) {
+        
+        [NSException raise:@"Invalid Argument"
+                    format:@"Blog entry %@ doesn't exist in cache", indexString];
+    }
+    
+    // put togeather URL
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"blog"];
+    urlString = [urlString stringByAppendingPathComponent:indexString];
+    urlString = [urlString stringByAppendingPathComponent:@"comment"];
+    
+    // make request
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    
+    NSLog(@"Fetching number of comments for entry %@...", indexString);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        if (error) {
+            
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        // create other error
+        NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to fetch number of comments for blog entry", @"Unable to fetch number of comments for blog entry")};
+        
+        NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                  code:4000
+                                              userInfo:otherErrorUserInfo];
+        
+        // check for http status errors
+        if (response.httpCode.integerValue != 200) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data
+                                                                   options:NSJSONReadingAllowFragments error:nil];
+        // check for errors
+        if (!jsonObject || ![jsonObject isKindOfClass:[NSDictionary class]]) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        NSNumber *numberOfComments = [jsonObject objectForKey:@"numberOfComments"];
+        
+        if (!numberOfComments) {
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        // successfully got number of comments for entry from server...
+        
+        // add to cache under blog entry index key
+        [_numberOfCommentsCache setObject:numberOfComments
+                                   forKey:indexString];
+        
+        NSLog(@"Successfully fetched number of comments for blog entry %@", indexString);
+        
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
+    }];
+}
+
+-(void)fetchComment:(NSUInteger)commentIndex
+           forEntry:(NSUInteger)entryIndex
+     withCompletion:(completionBlock)completionBlock
+{
+    // check if entry exists in cache
+    NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
+    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
+    
+    if (!blogEntry) {
+        
+        [NSException raise:@"Invalid Argument"
+                    format:@"Blog entry %@ doesn't exist in cache", indexString];
+    }
+    
+    // put togeather URL
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"blog"];
+    urlString = [urlString stringByAppendingPathComponent:indexString];
+    urlString = [urlString stringByAppendingPathComponent:@"comment"];
+    NSString *commentIndexString = [NSString stringWithFormat:@"%ld", commentIndex];
+    urlString = [urlString stringByAppendingPathComponent:commentIndexString];
+    
+    // make request
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    
+    NSLog(@"Fetching comment %@ for entry %@...", commentIndexString, indexString);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+       
+        if (error) {
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        // create other error
+        NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to fetch comment for blog entry", @"Unable to fetch comment for blog entry")};
+        
+        NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                  code:4000
+                                              userInfo:otherErrorUserInfo];
+        
+        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data
+                                                                   options:NSJSONReadingAllowFragments
+                                                                     error:nil];
+        
+        // check for http status errors
+        if (response.httpCode.integerValue != 200) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        // check for errors
+        if (!jsonObject || ![jsonObject isKindOfClass:[NSDictionary class]]) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        // get values from JSON object
+        NSString *content = [jsonObject valueForKey:@"content"];
+        NSString *date = [jsonObject valueForKey:@"date"];
+        NSString *username = [jsonObject valueForKey:@"user"];
+        
+        // check for errors
+        if (!content || !date || !username) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        // successfully fetch comment from server...
+        
+        // get user
+        
+        // update cache...
+        
+        // create comment
+        
+        
+    }];
+    
+}
 
 #pragma mark - Authorized API Functions
 
@@ -1070,8 +1255,113 @@ static NSError *notAuthorizedError;
             forEntry:(NSUInteger)entryIndex
           completion:(completionBlock)completionBlock
 {
+    if (!self.token) {
+        if (completionBlock) {
+            completionBlock(notAuthorizedError);
+        }
+        
+        return;
+    }
+    
+    // put togeather URL
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"blog"];
+    NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
+    urlString = [urlString stringByAppendingPathComponent:indexString];
+    urlString = [urlString stringByAppendingPathComponent:@"comment"];
+    
+    // dont continue if there's no blog entry...
+    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
+    
+    if (!blogEntry) {
+        
+        [NSException raise:@"Invalid Argument"
+                    format:@"Blog entry %@ doesn't exist in cache", indexString];
+    }
+    
+    // put togeather request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    request.HTTPMethod = @"POST";
+    request.allHTTPHeaderFields = @{@"Authorization": self.token};
+    
+    // create JSON data to send
+    NSDictionary *postJsonObject = @{@"content": content};
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:postJsonObject
+                                                       options:0
+                                                         error:nil];
+    request.HTTPBody = postData;
     
     
+    NSLog(@"Requesting new comment for entry %@...", indexString);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        if (error) {
+            
+            // 401 error - Not Authorized
+            if (error.code == NSURLErrorUserCancelledAuthentication) {
+                
+                if (completionBlock) {
+                    completionBlock(notAuthorizedError);
+                }
+                
+                return;
+            }
+            
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        // create other error
+        NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to create new comment for blog entry", @"Unable to create new comment for blog entry")};
+        
+        NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                  code:4000
+                                              userInfo:otherErrorUserInfo];
+        
+        if (response.httpCode.integerValue != 200) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+       
+        // successfully created new comment on blog server
+        
+        // update cache...
+        
+        // create new comment object
+        NSManagedObject *comment = [NSEntityDescription insertNewObjectForEntityForName:@"comment"
+                                                                 inManagedObjectContext:_context];
+        
+        [comment setValue:content
+                   forKey:@"content"];
+        [comment setValue:[NSDate date]
+                   forKey:@"date"];
+        
+        // get user for our username
+        
+        
+        // [comment setValue: forKey:<#(NSString *)#>]
+        
+        // add comment to blog entry
+        NSMutableSet *comments = [blogEntry mutableSetValueForKey:@"comments"];
+        [comments addObject:comment];
+        
+        NSLog(@"Successfully created new comment for blog entry %@", indexString);
+        
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
+        
+    }];
 }
 
 -(void)editComment:(NSUInteger)commentIndex

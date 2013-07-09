@@ -130,8 +130,8 @@ static NSString *CellIdentifier = @"CellIdentifier";
     NSManagedObject *blogEntry = _blogEntries[row];
     
     // get key
-    NSString *key = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
-    NSInteger index = key.integerValue;
+    NSString *entryKey = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
+    NSInteger entryIndex = entryKey.integerValue;
     
     // set basic info
     cell.textField.stringValue = [blogEntry valueForKey:@"title"];
@@ -151,7 +151,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
         cell.imageView.image = nil;
         
         // lazy load image...
-        [[APIStore sharedStore] fetchImageForEntry:index completion:^(NSError *error) {
+        [[APIStore sharedStore] fetchImageForEntry:entryIndex completion:^(NSError *error) {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                
@@ -177,6 +177,46 @@ static NSString *CellIdentifier = @"CellIdentifier";
             
         }];
     }
+    
+    // number of comments...
+    
+    // get number of comments
+    NSNumber *numberOfComments = [[APIStore sharedStore].numberOfCommentsCache objectForKey:entryKey];
+    
+    if (numberOfComments) {
+        
+        [cell setNumberOfComments:numberOfComments];
+    }
+    // lazy load number of comments
+    else {
+        
+        cell.commentsButton.title = NSLocalizedString(@"Loading...", @"Loading...");
+        [cell.commentsButton setEnabled:NO];
+        
+        [[APIStore sharedStore] fetchNumberOfCommentsForEntry:entryIndex withCompletion:^(NSError *error) {
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+               
+                if (error) {
+                    
+                    [NSApp presentError:error];
+                }
+                else {
+                    
+                    // get number of comments
+                    NSNumber *numberOfComments = [[APIStore sharedStore].numberOfCommentsCache objectForKey:entryKey];
+                    
+                    [cell setNumberOfComments:numberOfComments];
+                    
+                    [cell.commentsButton setEnabled:YES];
+                }
+                
+            }];
+            
+        }];
+    }
+    
+    
     
     return cell;
 }
