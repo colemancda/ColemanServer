@@ -43,95 +43,8 @@
             }
             else {
                 
-                // fetch number of entries
-                [[APIStore sharedStore] fetchNumberOfEntriesWithCompletion:^(NSError *error) {
-                    
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                       
-                        if (error) {
-                            [NSApp presentError:error];
-                        }
-                        
-                        else {
-                            
-                            // download every entry
-                            NSInteger count = [APIStore sharedStore].numberOfEntries.integerValue;
-                            __block NSError *previousError;
-                            for (int i = 0; i < count; i++) {
-                                
-                                [[APIStore sharedStore] fetchEntry:i completion:^(NSError *fetchError) {
-                                    
-                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                        
-                                        if (previousError) {
-                                            
-                                            return;
-                                        }
-                                        
-                                        if (fetchError) {
-                                            
-                                            previousError = fetchError;
-                                            
-                                            [NSApp presentError:fetchError];
-                                            
-                                            return;
-                                        }
-                                        
-                                        // if last entry downloaded successfully
-                                        if (i == count - 1) {
-                                            
-                                            // open entries window controller
-                                            if (!_entriesWC) {
-                                                _entriesWC = [[EntriesWindowController alloc] init];
-                                            }
-                                            
-                                            AppDelegate *appDelegate = [NSApp delegate];
-                                            [appDelegate.window close];
-                                            
-                                            [_entriesWC showWindow:sender];
-                                            [_entriesWC.tableView reloadData];
-                                            
-                                            // fetch photos for blog entries
-                                            
-                                            for (int i = 0; i < count; i++) {
-                                                
-                                                [[APIStore sharedStore] fetchImageForEntry:i completion:^(NSError *error) {
-                                                    
-                                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                                       
-                                                        if (previousError) {
-                                                            
-                                                            return;
-                                                        }
-                                                        
-                                                        if (error) {
-                                                            
-                                                            previousError = error;
-                                                            
-                                                            [NSApp presentError:error];
-                                                            
-                                                            return;
-                                                        }
-                                                        
-                                                        [_entriesWC.tableView reloadData];
-                                                        
-                                                    }];
-                                                    
-                                                }];
-                                                
-                                            }
-                                        }
-                                        
-                                    }];
-                                    
-                                }];
-                                
-                            }
-                        }
-                        
-                    }];
-                    
-                }];
+                [self showEntriesWC];
+                
             }
         }];
         
@@ -146,7 +59,7 @@
     AppDelegate *appDelegate = [NSApp delegate];
     [appDelegate.window makeKeyAndOrderFront:nil];
     
-    // close this window
+    // close entries window
     _entriesWC = nil;
     
     // reset API Store
@@ -168,6 +81,17 @@
     
     return YES;
     
+}
+
+-(void)showEntriesWC
+{
+    // open entries window controller
+    _entriesWC = [[EntriesWindowController alloc] init];
+    
+    AppDelegate *appDelegate = [NSApp delegate];
+    [appDelegate.window close];
+    
+    [_entriesWC showWindow:nil];
 }
 
 

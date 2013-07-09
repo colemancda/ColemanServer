@@ -268,7 +268,7 @@
                  else {
                      
                      // successfully deleted image
-                     
+                     _initialImage = nil;
                  }
                     
                 }];
@@ -329,7 +329,7 @@
             else {
                 
                 // successfully uploaded imaged data
-                
+                _initialImage = image;
                 
             }
             

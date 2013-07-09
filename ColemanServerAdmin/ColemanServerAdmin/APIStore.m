@@ -10,6 +10,10 @@
 #import "AppDelegate.h"
 #import "NSURLResponse+HTTPCode.h"
 
+NSString *const BlogEntryImageFetchedNotification = @"BlogEntryImageFetched";
+
+NSString *const BlogEntryFetchedNotification = @"BlogEntryFetched";
+
 NSString *const BlogEntryEditedNotification = @"BlogEntryEdited";
 
 NSString *const NumberOfEntriesKeyPath = @"self.numberOfEntries";
@@ -281,15 +285,12 @@ static NSError *notAuthorizedError;
         
         // success!
         
-        // KVC
         [self willChangeValueForKey:@"numberOfEntries"];
-        
         _numberOfEntries = numberOfEntries;
         
-        // KVC
-        [self didChangeValueForKey:@"numberOfEntries"];
-        
         NSLog(@"Successfully fetched the number of entries");
+        
+        [self didChangeValueForKey:@"numberOfEntries"];
         
         if (completionBlock) {
             completionBlock(nil);
@@ -396,6 +397,11 @@ static NSError *notAuthorizedError;
         
         NSLog(@"Successfully fetched blog entry %@", indexKey);
         
+        // send notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryFetchedNotification
+                                                            object:blogEntry
+                                                          userInfo:@{@"indexKey" : indexKey}];
+        
         if (completionBlock) {
             completionBlock(nil);
         }
@@ -459,11 +465,16 @@ static NSError *notAuthorizedError;
         
         NSLog(@"Successfully fetched image for blog entry %@", indexString);
         
+        // send notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryImageFetchedNotification
+                                                            object:blogEntry
+                                                          userInfo:@{@"indexKey" : indexString}];
+                
         if (completionBlock) {
             completionBlock(nil);
-            
-            return;
         }
+        
+        return;
         
     }];
 }
@@ -571,11 +582,6 @@ static NSError *notAuthorizedError;
         // succesfully created new entry...
         NSInteger entryIndex = self.numberOfEntries.integerValue;
         
-        // update numberOfEntries...
-        [self willChangeValueForKey:@"numberOfEntries"];
-        _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue + 1];
-        [self didChangeValueForKey:@"numberOfEntries"];
-        
         // get the date created
         NSDate *date = [NSDate date];
         
@@ -595,8 +601,13 @@ static NSError *notAuthorizedError;
         [blogEntry setValue:date
                      forKey:@"date"];
         
+        // update numberOfEntries...
+        [self willChangeValueForKey:@"numberOfEntries"];
+        _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue + 1];
         
         NSLog(@"Successfully created new blog entry %ld", index.unsignedIntegerValue);
+        
+        [self didChangeValueForKey:@"numberOfEntries"];
         
         if (completionBlock) {
             completionBlock(nil);
@@ -691,13 +702,13 @@ static NSError *notAuthorizedError;
         NSManagedObject *blogEntry = [self.blogEntriesCache objectForKey:indexString];
         [blogEntry setValuesForKeysWithDictionary:changes];
         
+        NSLog(@"Successfully changed entry %ld", entryIndex);
+        
         // send notification
         [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryEditedNotification
                                                             object:blogEntry
                                                           userInfo:changes];
-        
-        NSLog(@"Successfully changed entry %ld", entryIndex);
-        
+                
         if (completionBlock) {
             completionBlock(nil);
         }
@@ -822,9 +833,11 @@ static NSError *notAuthorizedError;
         // update numberOfEntries
         [self willChangeValueForKey:@"numberOfEntries"];
         _numberOfEntries = [NSNumber numberWithInteger:self.numberOfEntries.integerValue - 1];
-        [self didChangeValueForKey:@"numberOfEntries"];
         
         NSLog(@"Successfully removed entry %@", indexString);
+        
+        // KVC
+        [self didChangeValueForKey:@"numberOfEntries"];
         
         if (completionBlock) {
             completionBlock(nil);
@@ -919,13 +932,13 @@ static NSError *notAuthorizedError;
          [blogEntry setValue:imageData
                       forKey:@"image"];
          
+         NSLog(@"Successfully uploaded image data for entry %@", indexString);
+         
          // send notification
          [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryEditedNotification
                                                              object:blogEntry
                                                            userInfo:@{@"image": imageData}];
-         
-         NSLog(@"Successfully uploaded image data for entry %@", indexString);
-         
+                  
          if (completionBlock) {
              completionBlock(nil);
          }
@@ -1013,13 +1026,13 @@ static NSError *notAuthorizedError;
         // update cache
         [blogEntry setValue:nil
                      forKey:@"image"];
-                
+        
+        NSLog(@"Successfully deleted image for entry %@", indexString);
+        
         // send notification
         [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryEditedNotification
                                                             object:blogEntry
                                                           userInfo:@{@"image": [NSNull null]}];
-        
-        NSLog(@"Successfully deleted image for entry %@", indexString);
         
         if (completionBlock) {
             completionBlock(nil);
@@ -1027,6 +1040,34 @@ static NSError *notAuthorizedError;
         
         return;
     }];
+}
+
+#pragma mark - Manipulate Comments
+
+-(void)createComment:(NSString *)content
+            forEntry:(NSUInteger)entryIndex
+          completion:(completionBlock)completionBlock
+{
+    
+    
+}
+
+-(void)editComment:(NSUInteger)commentIndex
+          forEntry:(NSUInteger)entryIndex
+           changes:(NSString *)content
+        completion:(completionBlock)completionBlock
+{
+    
+    
+}
+
+-(void)removeComment:(NSUInteger)commentIndex
+            forEntry:(NSUInteger)entryIndex
+          completion:(completionBlock)completionBlock
+{
+    
+    
+    
 }
 
 @end

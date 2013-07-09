@@ -19,6 +19,10 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
     
 };
 
+extern NSString *const BlogEntryImageFetchedNotification;
+
+extern NSString *const BlogEntryFetchedNotification;
+
 extern NSString *const BlogEntryEditedNotification;
 
 extern NSString *const NumberOfEntriesKeyPath;
@@ -55,13 +59,26 @@ extern NSString *const NumberOfEntriesKeyPath;
 
 #pragma mark - Public Access
 
+#pragma mark Blog Entries
+
 -(void)fetchNumberOfEntriesWithCompletion:(completionBlock)completionBlock;
 
 -(void)fetchEntry:(NSUInteger)entryIndex
        completion:(completionBlock)completionBlock;
 
+#pragma mark Blog Entry Image
+
 -(void)fetchImageForEntry:(NSUInteger)entryIndex
                completion:(completionBlock)completionBlock;
+
+#pragma mark Comments
+
+-(void)fetchNumberOfCommentsForEntry:(NSUInteger)entryIndex
+                      withCompletion:(completionBlock)completionBlock;
+
+-(void)fetchComment:(NSUInteger)commentIndex
+           forEntry:(NSUInteger)entryIndex
+     withCompletion:(completionBlock)completionBlock;
 
 #pragma mark - Manipulate Entries
 
@@ -85,5 +102,19 @@ extern NSString *const NumberOfEntriesKeyPath;
 -(void)removeImageFromEntry:(NSUInteger)entryIndex
                  completion:(completionBlock)completionBlock;
 
+#pragma mark - Manipulate Comments
+
+-(void)createComment:(NSString *)content
+            forEntry:(NSUInteger)entryIndex
+          completion:(completionBlock)completionBlock;
+
+-(void)editComment:(NSUInteger)commentIndex
+          forEntry:(NSUInteger)entryIndex
+           changes:(NSString *)content
+        completion:(completionBlock)completionBlock;
+
+-(void)removeComment:(NSUInteger)commentIndex
+            forEntry:(NSUInteger)entryIndex
+          completion:(completionBlock)completionBlock;
 
 @end

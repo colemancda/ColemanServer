@@ -21,6 +21,8 @@
 
 - (IBAction)signOut:(id)sender;
 
+-(void)showEntriesWC;
+
 #pragma mark
 
 @property (readonly) EntriesWindowController *entriesWC;
