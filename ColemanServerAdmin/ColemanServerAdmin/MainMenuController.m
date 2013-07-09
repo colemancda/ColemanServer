@@ -55,16 +55,18 @@
 
 -(IBAction)signOut:(id)sender
 {
-    // show login window
-    AppDelegate *appDelegate = [NSApp delegate];
-    [appDelegate.window makeKeyAndOrderFront:nil];
-    
     // close entries window
     _entriesWC = nil;
     
+    // show login window
+    AppDelegate *appDelegate = [NSApp delegate];
+    [appDelegate.window makeKeyAndOrderFront:nil];
+    [appDelegate.window setFrame:_oldRect
+                         display:YES
+                         animate:NO];
+    
     // reset API Store
     [[APIStore sharedStore] init];
-    
 }
 
 #pragma mark - First Responder
@@ -89,6 +91,16 @@
     _entriesWC = [[EntriesWindowController alloc] init];
     
     AppDelegate *appDelegate = [NSApp delegate];
+    
+    _oldRect = appDelegate.window.frame;
+    NSRect newRect = NSRectFromCGRect(CGRectMake(_oldRect.origin.x,
+                                                 -_oldRect.size.height,
+                                                 _oldRect.size.width,
+                                                 _oldRect.size.height));
+    [appDelegate.window setFrame:newRect
+                         display:YES
+                         animate:YES];
+    
     [appDelegate.window close];
     
     [_entriesWC showWindow:nil];

@@ -76,7 +76,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
     self.tableView.target = self;
     
     // download all the entries data but lazily load image data...
-    [self.tableView setHidden:YES];
+    self.window.alphaValue = 0.0;
     
     // fetch numberOfEntries
     [[APIStore sharedStore] fetchNumberOfEntriesWithCompletion:^(NSError *error) {
@@ -85,11 +85,8 @@ static NSString *CellIdentifier = @"CellIdentifier";
            
             if (error) {
                 
-                [NSApp presentError:error
-                     modalForWindow:self.window
-                           delegate:nil
-                 didPresentSelector:nil
-                        contextInfo:nil];
+                [NSApp presentError:error];
+                
             }
             else {
                 
@@ -109,10 +106,10 @@ static NSString *CellIdentifier = @"CellIdentifier";
                                 forKeyPath:NumberOfEntriesKeyPath];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+        
+    _editorWC = nil;
     
     [self.window close];
-    
-    _editorWC = nil;
     
 }
 
@@ -260,7 +257,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(void)blogEntryDownloaded:(NSNotification *)notification
 {
-    
     [self addCacheToTableView];
     
     // check if its the last one downloaded
@@ -272,11 +268,35 @@ static NSString *CellIdentifier = @"CellIdentifier";
     // if last object that need to be downloaded
     if (index == 0) {
         
-        // show table view
-        [self.tableView setHidden:NO];
-        
-        [self.tableView reloadData];
-        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+           
+            // show table view
+            [self.tableView reloadData];
+            
+            [NSAnimationContext beginGrouping];
+            [[NSAnimationContext currentContext] setDuration:0.1];
+            
+            [self.window.animator setAlphaValue:1.0];
+            
+            [NSAnimationContext endGrouping];
+            
+            // animate window frame
+            NSRect originalFrame = self.window.frame;
+            
+            NSRect newFrame;
+            newFrame.origin.x = originalFrame.origin.x;
+            newFrame.origin.y = -originalFrame.size.height;
+            newFrame.size = originalFrame.size;
+            
+            [self.window setFrame:newFrame
+                          display:YES
+                          animate:NO];
+            
+            [self.window setFrame:originalFrame
+                          display:YES
+                          animate:YES];
+            
+        }];
     }
 }
 

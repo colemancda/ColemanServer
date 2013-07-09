@@ -10,6 +10,9 @@
 @class EntriesWindowController;
 
 @interface MainMenuController : NSObject <NSWindowDelegate>
+{
+    NSRect _oldRect;
+}
 
 @property (weak) IBOutlet NSTextField *usernameTextField;
 
@@ -26,6 +29,5 @@
 #pragma mark
 
 @property (readonly) EntriesWindowController *entriesWC;
-
 
 @end

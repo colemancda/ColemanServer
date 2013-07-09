@@ -18,6 +18,8 @@
 
 @property (strong) IBOutlet NSTableView *tableView;
 
+@property (strong) IBOutlet NSScrollView *tableViewScrollView;
+
 @property (readonly) EntryEditorWindowController *editorWC;
 
 @property NSDateFormatter *dateFormatter;
