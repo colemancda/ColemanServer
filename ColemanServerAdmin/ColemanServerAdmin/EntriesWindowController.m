@@ -274,7 +274,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
             [self.tableView reloadData];
             
             [NSAnimationContext beginGrouping];
-            [[NSAnimationContext currentContext] setDuration:0.1];
+            [[NSAnimationContext currentContext] setDuration:0.9];
             
             [self.window.animator setAlphaValue:1.0];
             
