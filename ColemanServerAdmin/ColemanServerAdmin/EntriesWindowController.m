@@ -129,6 +129,10 @@ static NSString *CellIdentifier = @"CellIdentifier";
     // get blogEntry
     NSManagedObject *blogEntry = _blogEntries[row];
     
+    // get key
+    NSString *key = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
+    NSInteger index = key.integerValue;
+    
     // set basic info
     cell.textField.stringValue = [blogEntry valueForKey:@"title"];
     cell.contentTextField.stringValue = [blogEntry valueForKey:@"content"];
@@ -145,6 +149,33 @@ static NSString *CellIdentifier = @"CellIdentifier";
     else {
         
         cell.imageView.image = nil;
+        
+        // lazy load image...
+        [[APIStore sharedStore] fetchImageForEntry:index completion:^(NSError *error) {
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+               
+                if (error) {
+                    
+                    [NSApp presentError:error
+                         modalForWindow:self.window
+                               delegate:nil
+                     didPresentSelector:nil
+                            contextInfo:nil];
+                    
+                }
+                else {
+                    
+                    NSData *imageData = [blogEntry valueForKey:@"image"];
+                    
+                    if (imageData) {
+                        cell.imageView.image = [[NSImage alloc] initWithData:imageData];
+                    }
+                }
+                
+            }];
+            
+        }];
     }
     
     return cell;
@@ -250,9 +281,42 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(void)blogEntryChanged:(NSNotification *)notification
 {
-    
-    
-    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        
+        // get blogEntry
+        NSManagedObject *blogEntry = notification.object;
+        
+        // get row
+        NSUInteger row = [_blogEntries indexOfObject:blogEntry];
+        
+        BlogEntryCell *cell = [self.tableView viewAtColumn:0
+                                                       row:row
+                                           makeIfNecessary:NO];
+        
+        if (cell) {
+            
+            // set basic info
+            cell.textField.stringValue = [blogEntry valueForKey:@"title"];
+            cell.contentTextField.stringValue = [blogEntry valueForKey:@"content"];
+            
+            NSDate *date = [blogEntry valueForKey:@"date"];
+            cell.dateTextField.stringValue = [self.dateFormatter stringFromDate:date];
+            
+            // set image
+            NSData *imageData = [blogEntry valueForKey:@"image"];
+            if (imageData) {
+                
+                cell.imageView.image = [[NSImage alloc] initWithData:imageData];
+            }
+            else {
+                
+                cell.imageView.image = nil;
+                
+            }
+            
+        }
+        
+    }];
 }
 
 -(void)blogEntryDownloaded:(NSNotification *)notification
@@ -311,6 +375,8 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(void)addCacheToTableView
 {
+    _blogEntries = [[NSMutableArray alloc] init];
+    
     NSUInteger count = [APIStore sharedStore].numberOfEntries.integerValue;
     
     // add each blogEntry to our array in reverse order
@@ -327,8 +393,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
         
         // if not in cache, we download it
         else {
-            
-            _blogEntries = [[NSMutableArray alloc] init];
             
             [[APIStore sharedStore] fetchEntry:i completion:^(NSError *error) {
                 
@@ -353,6 +417,12 @@ static NSString *CellIdentifier = @"CellIdentifier";
             return;
         }
     }
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        
+        [self.tableView reloadData];
+        
+    }];
 }
 
 @end
