@@ -10,6 +10,8 @@
 
 @interface BlogEntryCell : NSTableCellView
 
++(NSDateFormatter *)dateFormatter;
+
 @property IBOutlet NSTextField *contentTextField;
 
 @property IBOutlet NSTextField *dateTextField;
@@ -17,5 +19,7 @@
 @property IBOutlet NSButton *commentsButton;
 
 -(void)setNumberOfComments:(NSNumber *)numberOfComments;
+
+-(void)setBlogEntry:(NSManagedObject *)blogEntry;
 
 @end

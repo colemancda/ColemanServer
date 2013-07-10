@@ -33,11 +33,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
     if (self) {
         // Initialization code here.
         
-        // date formatter
-        self.dateFormatter = [[NSDateFormatter alloc] init];
-        self.dateFormatter.dateStyle = NSDateFormatterLongStyle;
         
-        _blogEntries = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -77,7 +73,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
     self.tableView.doubleAction = @selector(doubleClick:);
     self.tableView.target = self;
     
-    // download all the entries data but lazily load image data...
+    // download number of entries data but lazily load info & image data...
     self.window.alphaValue = 0.0;
     
     // fetch numberOfEntries
@@ -92,12 +88,10 @@ static NSString *CellIdentifier = @"CellIdentifier";
             }
             else {
                 
-                
+                [self showWindowAnimated];
                 
             }
-            
         }];
-        
     }];
     
 }
@@ -115,7 +109,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return _blogEntries.count;
+    return _blogEntryKeys.count;
 }
 
 -(NSView *)tableView:(NSTableView *)tableView
@@ -124,19 +118,38 @@ static NSString *CellIdentifier = @"CellIdentifier";
 {
     BlogEntryCell *cell = [tableView makeViewWithIdentifier:CellIdentifier
                                                     owner:self];
-    // get blogEntry
-    NSManagedObject *blogEntry = _blogEntries[row];
     
     // get key
-    NSString *entryKey = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
-    NSInteger entryIndex = entryKey.integerValue;
+    NSString *entryKey = _blogEntryKeys[row];
     
-    // set basic info
-    cell.textField.stringValue = [blogEntry valueForKey:@"title"];
-    cell.contentTextField.stringValue = [blogEntry valueForKey:@"content"];
+    // get blogEntry
+    NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:entryKey];
     
-    NSDate *date = [blogEntry valueForKey:@"date"];
-    cell.dateTextField.stringValue = [self.dateFormatter stringFromDate:date];
+    if (blogEntry) {
+        
+        [cell setBlogEntry:blogEntry];
+        
+    }
+    else {
+        
+        [[APIStore sharedStore] fetchEntry:entryKey.integerValue completion:^(NSError *error) {
+           
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+               
+                if (error) {
+                    [NSApp presentError:error];
+                }
+                else {
+                    
+                    NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:entryKey];
+                    
+                    [cell setBlogEntry:blogEntry];
+                }
+            }];
+        }];
+    }
+    
+    // image...
     
     // set image
     NSData *imageData = [blogEntry valueForKey:@"image"];
@@ -149,17 +162,13 @@ static NSString *CellIdentifier = @"CellIdentifier";
         cell.imageView.image = nil;
         
         // lazy load image...
-        [[APIStore sharedStore] fetchImageForEntry:entryIndex completion:^(NSError *error) {
+        [[APIStore sharedStore] fetchImageForEntry:entryKey.integerValue completion:^(NSError *error) {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                
                 if (error) {
                     
-                    [NSApp presentError:error
-                         modalForWindow:self.window
-                               delegate:nil
-                     didPresentSelector:nil
-                            contextInfo:nil];
+                    [NSApp presentError:error];
                     
                 }
                 else {
@@ -191,7 +200,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
         cell.commentsButton.title = NSLocalizedString(@"Loading...", @"Loading...");
         [cell.commentsButton setEnabled:NO];
         
-        [[APIStore sharedStore] fetchNumberOfCommentsForEntry:entryIndex withCompletion:^(NSError *error) {
+        [[APIStore sharedStore] fetchNumberOfCommentsForEntry:entryKey.integerValue withCompletion:^(NSError *error) {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                
@@ -214,8 +223,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
         }];
     }
     
-    
-    
     return cell;
 }
 
@@ -231,7 +238,9 @@ static NSString *CellIdentifier = @"CellIdentifier";
     // edit entry
     if (self.tableView.selectedRow != -1) {
         
-        NSManagedObject *blogEntry = _blogEntries[self.tableView.selectedRow];
+        NSString *entryKey = _blogEntryKeys[self.tableView.selectedRow];
+        
+        NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:entryKey];
         
         [_editorWC loadBlogEntry:blogEntry];
         
@@ -240,14 +249,9 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(IBAction)delete:(id)sender
 {
-    NSManagedObject *blogEntry = _blogEntries[self.tableView.selectedRow];
+    NSString *entryKey = _blogEntryKeys[self.tableView.selectedRow];
     
-    // get key
-    NSString *key = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
-    
-    NSInteger index = key.integerValue;
-    
-    [[APIStore sharedStore] removeEntry:index completion:^(NSError *error) {
+    [[APIStore sharedStore] removeEntry:entryKey.integerValue completion:^(NSError *error) {
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
@@ -260,7 +264,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
                         contextInfo:nil];
             }
             else {
-                
                 
                 
             }
@@ -300,10 +303,14 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     if ([keyPath isEqualToString:NumberOfEntriesKeyPath] && object == [APIStore sharedStore]) {
                 
-        [self addCacheToTableView];
+        [self loadEntryKeys];
         
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+           
+            [self.tableView reloadData];
+            
+        }];
     }
-    
 }
 
 #pragma mark - Blog Entry Notifications
@@ -315,8 +322,11 @@ static NSString *CellIdentifier = @"CellIdentifier";
         // get blogEntry
         NSManagedObject *blogEntry = notification.object;
         
+        // entry key
+        NSString *entryKey = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
+        
         // get row
-        NSUInteger row = [_blogEntries indexOfObject:blogEntry];
+        NSUInteger row = [_blogEntryKeys indexOfObject:entryKey];
         
         BlogEntryCell *cell = [self.tableView viewAtColumn:0
                                                        row:row
@@ -324,73 +334,14 @@ static NSString *CellIdentifier = @"CellIdentifier";
         
         if (cell) {
             
-            // set basic info
-            cell.textField.stringValue = [blogEntry valueForKey:@"title"];
-            cell.contentTextField.stringValue = [blogEntry valueForKey:@"content"];
-            
-            NSDate *date = [blogEntry valueForKey:@"date"];
-            cell.dateTextField.stringValue = [self.dateFormatter stringFromDate:date];
-            
-            // set image
-            NSData *imageData = [blogEntry valueForKey:@"image"];
-            if (imageData) {
-                
-                cell.imageView.image = [[NSImage alloc] initWithData:imageData];
-            }
-            else {
-                
-                cell.imageView.image = nil;
-                
-            }
-            
+            [cell setBlogEntry:blogEntry];
         }
-        
     }];
 }
 
 -(void)blogEntryDownloaded:(NSNotification *)notification
 {
-    [self addCacheToTableView];
     
-    // check if its the last one downloaded
-    NSManagedObject *blogEntry = notification.object;
-    
-    NSString *key = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
-    NSInteger index = key.integerValue;
-    
-    // if last object that need to be downloaded
-    if (index == 0) {
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-           
-            // show table view
-            [self.tableView reloadData];
-            
-            [NSAnimationContext beginGrouping];
-            [[NSAnimationContext currentContext] setDuration:0.9];
-            
-            [self.window.animator setAlphaValue:1.0];
-            
-            [NSAnimationContext endGrouping];
-            
-            // animate window frame
-            NSRect originalFrame = self.window.frame;
-            
-            NSRect newFrame;
-            newFrame.origin.x = originalFrame.origin.x;
-            newFrame.origin.y = -originalFrame.size.height;
-            newFrame.size = originalFrame.size;
-            
-            [self.window setFrame:newFrame
-                          display:YES
-                          animate:NO];
-            
-            [self.window setFrame:originalFrame
-                          display:YES
-                          animate:YES];
-            
-        }];
-    }
 }
 
 -(void)blogEntryImageDownloaded:(NSNotification *)notification
@@ -402,56 +353,55 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 #pragma mark
 
--(void)addCacheToTableView
+-(void)loadEntryKeys
 {
-    _blogEntries = [[NSMutableArray alloc] init];
-    
+    // get the numberOfEntries
     NSUInteger count = [APIStore sharedStore].numberOfEntries.integerValue;
     
-    // add each blogEntry to our array in reverse order
+    // add each key to array
+    NSMutableArray *blogEntryKeys = [[NSMutableArray alloc] init];
+    
     for (NSInteger i = count - 1; i >= 0; i--) {
         
-        // get blogEntry
         NSString *indexKey = [NSString stringWithFormat:@"%ld", i];
-        NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache valueForKey:indexKey];
         
-        if (blogEntry) {
-            
-            [_blogEntries addObject:blogEntry];
-        }
+        [blogEntryKeys addObject:indexKey];
         
-        // if not in cache, we download it
-        else {
-            
-            [[APIStore sharedStore] fetchEntry:i completion:^(NSError *error) {
-                
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    
-                    if (error) {
-                        
-                        [NSApp presentError:error];
-                        
-                    }
-                    else {
-                        
-                        
-                        
-                    }
-                    
-                }];
-                
-            }];
-            
-            // end method
-            return;
-        }
     }
     
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        
-        [self.tableView reloadData];
-        
-    }];
+    _blogEntryKeys = blogEntryKeys;
+}
+
+-(void)showWindowAnimated
+{    
+    // show table view
+    [self.tableView reloadData];
+    
+    [NSAnimationContext beginGrouping];
+    [[NSAnimationContext currentContext] setDuration:0.9];
+    
+    [self.window.animator setAlphaValue:1.0];
+    
+    [NSAnimationContext endGrouping];
+    
+    // animate window frame
+    NSRect originalFrame = self.window.frame;
+    
+    NSRect newFrame;
+    newFrame.origin.x = originalFrame.origin.x;
+    newFrame.origin.y = -originalFrame.size.height;
+    newFrame.size = originalFrame.size;
+    
+    // set offscreen without animation
+    [self.window setFrame:newFrame
+                  display:YES
+                  animate:NO];
+    
+    // animate
+    [self.window setFrame:originalFrame
+                  display:YES
+                  animate:YES];
+    
 }
 
 @end

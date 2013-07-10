@@ -13,7 +13,7 @@
 
 @interface EntriesWindowController : NSWindowController <NSTableViewDelegate, NSTableViewDataSource>
 {
-    NSMutableArray *_blogEntries;
+    NSArray *_blogEntryKeys;
 }
 
 @property (strong) IBOutlet NSTableView *tableView;
@@ -29,6 +29,10 @@
 #pragma mark
 
 -(void)addCacheToTableView;
+
+-(void)loadEntryKeys;
+
+-(void)showWindowAnimated;
 
 #pragma mark - Blog Entry Changed Notification
 
