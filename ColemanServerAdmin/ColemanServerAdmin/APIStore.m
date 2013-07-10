@@ -418,6 +418,7 @@ static NSError *notAuthorizedError;
         // success!
         
         [self willChangeValueForKey:@"numberOfEntries"];
+        
         _numberOfEntries = numberOfEntries;
         
         NSLog(@"Successfully fetched the number of entries");

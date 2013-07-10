@@ -109,7 +109,7 @@
     
     [appDelegate.window close];
     
-    [_entriesWC showWindow:nil];
+    [_entriesWC showWindow:self];
 }
 
 @end

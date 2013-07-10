@@ -16,6 +16,19 @@
          landmarkName = "-processBodyData:"
          landmarkType = "5">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "ColemanServerAdmin/ColemanServerAdmin/APIStore.m"
+         timestampString = "395168984.836725"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "419"
+         endingLineNumber = "419"
+         landmarkName = "-fetchNumberOfEntriesWithCompletion:"
+         landmarkType = "5">
+      </FileBreakpoint>
    </FileBreakpoints>
    <SymbolicBreakpoints>
       <AddressBreakpoint
