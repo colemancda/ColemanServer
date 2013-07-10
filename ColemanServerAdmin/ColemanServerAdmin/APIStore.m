@@ -956,7 +956,30 @@ static NSError *notAuthorizedError;
     request.HTTPMethod = @"PUT";
     request.allHTTPHeaderFields = @{@"Authorization": self.token};
     
-    // convert changes dictionary to JSON data
+    // get changes
+    NSString *title = [changes objectForKey:@"title"];
+    NSString *content = [changes objectForKey:@"content"];
+    
+    NSMutableDictionary *jsonObject = [[NSMutableDictionary alloc] init];
+    
+    if (!title && !content) {
+        [NSException raise:@"Invalid changes NSDictionary"
+                    format:@"Your changes dictionary should have at least one valid key"];
+        
+        return;
+    }
+    
+    // add values to JSON object
+    if (title) {
+        [jsonObject setValue:title
+                      forKey:@"title"];
+    }
+    
+    if (content) {
+        [jsonObject setValue:content
+                      forKey:@"content"];
+    }
+    
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:changes
                                                        options:0
                                                          error:nil];
@@ -964,7 +987,7 @@ static NSError *notAuthorizedError;
     // attach the data to the HTTP body
     request.HTTPBody = jsonData;
     
-    NSLog(@"Sending changes request...");
+    NSLog(@"Uploading changes for entry %@...", indexString);
     
     // send the reuqest to the server
     [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
@@ -1000,11 +1023,22 @@ static NSError *notAuthorizedError;
             
         }
         
-        // changes successfully accepted
+        // changes successfully uploaded
+        
+        // get objects to update cache
+        
         
         // update cache
         NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
-        [blogEntry setValuesForKeysWithDictionary:changes];
+        if (title) {
+            [blogEntry setValue:title
+                          forKey:@"title"];
+        }
+        
+        if (content) {
+            [blogEntry setValue:content
+                          forKey:@"content"];
+        }
         
         NSLog(@"Successfully changed entry %ld", entryIndex);
         

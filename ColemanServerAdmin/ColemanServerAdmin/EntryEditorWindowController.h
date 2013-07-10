@@ -19,9 +19,9 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
     NSImage *_initialImage;
 }
 
-@property (readonly) BlogEntryEditorMode mode;
+@property BlogEntryEditorMode mode;
 
-@property (readonly) NSInteger blogEntryIndex;
+@property NSUInteger blogEntryIndex;
 
 @property (strong) IBOutlet NSImageView *imageView;
 

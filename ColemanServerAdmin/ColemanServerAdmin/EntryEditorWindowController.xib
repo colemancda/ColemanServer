@@ -150,7 +150,13 @@
 													<integer value="1" key="NSUnderline"/>
 												</dictionary>
 												<nil key="NSDefaultParagraphStyle"/>
-												<nil key="NSTextFinder"/>
+												<object class="NSTextFinder" key="NSTextFinder">
+													<reference key="NSTextFinderClient" ref="514799606"/>
+													<reference key="NSFindBarContainer" ref="553633978"/>
+													<int key="NSTextFinderStyle">2</int>
+													<bool key="NSIncrementalSearchingEnabled">NO</bool>
+													<bool key="NSIncrementalSearchingShouldDimContentView">YES</bool>
+												</object>
 												<int key="NSPreferredTextFinderStyle">2</int>
 											</object>
 											<int key="NSTVFlags">6</int>
@@ -271,6 +277,7 @@
 							<string key="NSFrame">{{164, 13}, {92, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="943153484">
@@ -1055,6 +1062,7 @@
 				<string key="111.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="112.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="113.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<boolean value="NO" key="113.usesInspectorBar"/>
 				<string key="121.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="124.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="125.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

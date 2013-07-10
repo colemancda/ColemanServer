@@ -193,7 +193,7 @@
     else {
         
         // get the blogEntry
-        NSString *indexKey = [NSString stringWithFormat:@"%lu", self.blogEntryIndex];
+        NSString *indexKey = [NSString stringWithFormat:@"%ld", self.blogEntryIndex];
         NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
         
         // check what changed...
