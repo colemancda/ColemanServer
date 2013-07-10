@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
 
 @property (readonly) BlogEntryEditorMode mode;
 
-@property (readonly) NSUInteger blogEntryIndex;
+@property (readonly) NSManagedObject *blogEntry;
 
 @property (strong) IBOutlet NSImageView *imageView;
 
@@ -41,7 +41,7 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
 
 #pragma mark - Load WC
 
--(void)loadBlogEntry:(NSUInteger)entryIndex;
+-(void)loadBlogEntry:(NSManagedObject *)blogEntry;
 
 -(void)loadNewBlogEntry;
 

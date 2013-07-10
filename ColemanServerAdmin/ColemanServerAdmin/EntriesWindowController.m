@@ -233,12 +233,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
         
         NSManagedObject *blogEntry = _blogEntries[self.tableView.selectedRow];
         
-        // get key
-        NSString *key = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
-        
-        NSInteger index = key.integerValue;
-        
-        [_editorWC loadBlogEntry:index];
+        [_editorWC loadBlogEntry:blogEntry];
         
     }
 }

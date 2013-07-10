@@ -69,18 +69,13 @@
 
 #pragma mark - Load WC
 
--(void)loadBlogEntry:(NSUInteger)entryIndex
+-(void)loadBlogEntry:(NSManagedObject *)blogEntry
 {
-    
     [self showWindow:nil];
     self.window.alphaValue = 0;
     
-    _blogEntryIndex = entryIndex;
+    _blogEntry = blogEntry;
     _mode = ExistingEntry;
-    
-    // get the entry from the store
-    NSString *indexKey = [NSString stringWithFormat:@"%ld", (long)self.blogEntryIndex];
-    NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
     
     // set the UI
     self.titleTextField.stringValue = [blogEntry valueForKey:@"title"];
@@ -120,6 +115,7 @@
     self.window.alphaValue = 0;
     
     _mode = NewEntry;
+    _blogEntry = nil;
     
     NSString *dateString = [_dateFormatter stringFromDate:[NSDate date]];
     self.dateTextField.stringValue = dateString;
@@ -145,22 +141,13 @@
         
         // check if any entry was removed...
         
-        // get the old value
-        NSNumber *oldNumberOfEntries = [change objectForKey:NSKeyValueChangeOldKey];
-        if ([oldNumberOfEntries isKindOfClass:[NSNull class]]) {
-            oldNumberOfEntries = @0;
-        }
-        
-        // if a entry was removed
-        if (oldNumberOfEntries.integerValue > [APIStore sharedStore].numberOfEntries.integerValue) {
+        if (self.blogEntry) {
             
-            // check if our entry was removed
-            NSString *indexKey = [NSString stringWithFormat:@"%ld", self.blogEntryIndex];
-            NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
+            NSArray *keys = [[APIStore sharedStore].blogEntriesCache allKeysForObject:self.blogEntry];
             
-            if (!blogEntry) {
+            if (!keys.count) {
                 
-                [self.window close];
+                [self close];
             }
         }
     }
@@ -195,7 +182,10 @@
                     
                     // change editor mode to edit
                     _mode = ExistingEntry;
-                    _blogEntryIndex = [APIStore sharedStore].numberOfEntries.integerValue - 1;
+                    
+                    // get blogEntry
+                    NSUInteger lastIndex = [APIStore sharedStore].numberOfEntries.integerValue - 1;
+                    _blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:[NSString stringWithFormat:@"%ld", lastIndex]];
                     
                     if (image) {
                         
@@ -210,31 +200,30 @@
     // if exisitng entry is being saved
     else {
         
-        // get the blogEntry
-        NSString *indexKey = [NSString stringWithFormat:@"%ld", self.blogEntryIndex];
-        NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
+        NSArray *keys = [[APIStore sharedStore].blogEntriesCache allKeysForObject:_blogEntry];
+        NSString *key = keys[0];
         
         // check what changed...
         NSMutableDictionary *changes = [[NSMutableDictionary alloc] init];
         
-        if (![[blogEntry valueForKey:@"title"] isEqualToString:title]) {
+        if (![[_blogEntry valueForKey:@"title"] isEqualToString:title]) {
             
             [changes setObject:title
                         forKey:@"title"];
             
         }
         
-        if (![[blogEntry valueForKey:@"content"] isEqualToString:content]) {
+        if (![[_blogEntry valueForKey:@"content"] isEqualToString:content]) {
             
             [changes setObject:content
                         forKey:@"content"];
             
         }
         
-        // if no changes occurred
+        // if changes occurred
         if (changes.allKeys.count != 0) {
             
-            [[APIStore sharedStore] editEntry:self.blogEntryIndex changes:changes completion:^(NSError *error) {
+            [[APIStore sharedStore] editEntry:key.integerValue changes:changes completion:^(NSError *error) {
                 
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     
@@ -269,7 +258,7 @@
         if (_initialImage && !image) {
             
             // delete image
-            [[APIStore sharedStore] removeImageFromEntry:self.blogEntryIndex completion:^(NSError *error) {
+            [[APIStore sharedStore] removeImageFromEntry:key.integerValue completion:^(NSError *error) {
                 
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                    
@@ -331,8 +320,11 @@
     NSData *imageData = [imageRepresentation representationUsingType:NSPNGFileType
                                                           properties:nil];
     
+    NSArray *keys = [[APIStore sharedStore].blogEntriesCache allKeysForObject:_blogEntry];
+    NSString *key = keys[0];
+    
     // upload new image
-    [[APIStore sharedStore] setImageData:imageData forEntry:self.blogEntryIndex completion:^(NSError *error) {
+    [[APIStore sharedStore] setImageData:imageData forEntry:key.integerValue completion:^(NSError *error) {
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
