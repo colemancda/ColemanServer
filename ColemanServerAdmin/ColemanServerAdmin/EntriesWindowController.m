@@ -45,8 +45,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
-    _editorWC = [[EntryEditorWindowController alloc] init];
-    
     // KVC
     [[APIStore sharedStore] addObserver:self
                              forKeyPath:NumberOfEntriesKeyPath
@@ -97,7 +95,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 }
 
 -(void)dealloc
-{
+{    
     [[APIStore sharedStore] removeObserver:self
                                 forKeyPath:NumberOfEntriesKeyPath];
     
@@ -230,7 +228,15 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(void)newDocument:(id)sender
 {
+    if (!_editorWC) {
+        _editorWC = [[EntryEditorWindowController alloc] init];
+        
+        [_editorWC showWindow:nil];
+    }
+    
     [_editorWC loadNewBlogEntry];
+    
+    
 }
 
 -(IBAction)doubleClick:(id)sender
@@ -241,6 +247,12 @@ static NSString *CellIdentifier = @"CellIdentifier";
         NSString *entryKey = _blogEntryKeys[self.tableView.selectedRow];
         
         NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:entryKey];
+        
+        if (!_editorWC) {
+            _editorWC = [[EntryEditorWindowController alloc] init];
+            
+            [_editorWC showWindow:nil];
+        }
         
         [_editorWC loadBlogEntry:blogEntry];
         

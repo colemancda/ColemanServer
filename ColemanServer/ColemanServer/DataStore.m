@@ -321,7 +321,7 @@
 
 -(BOOL)save
 {
-    [[LogStore sharedStore] addEntry:@"Saving DataStore..."];
+    NSLog(@"Saving DataStore");
     
     NSError *error;
     
@@ -336,7 +336,7 @@
     }
     else {
         
-        [[LogStore sharedStore] addEntry:@"Successfully saved DataStore"];
+        NSLog(@"Successfully saved DataStore");
         
     }
     

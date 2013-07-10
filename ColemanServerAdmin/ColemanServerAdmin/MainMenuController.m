@@ -59,7 +59,8 @@
 -(IBAction)signOut:(id)sender
 {
     // close entries window
-    [_entriesWC.window close];
+    [_entriesWC close];
+    [_entriesWC.editorWC close];
     
     // reset API Store
     [[APIStore sharedStore] reset];
