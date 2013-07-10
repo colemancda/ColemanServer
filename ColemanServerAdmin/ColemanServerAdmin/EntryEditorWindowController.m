@@ -101,8 +101,14 @@
         // set existing image
         _initialImage = [[NSImage alloc] initWithData:imageData];
         
-        self.imageView.image = _initialImage;
     }
+    else {
+        
+        _initialImage = nil;
+        
+    }
+    
+    self.imageView.image = _initialImage;
     
     self.window.alphaValue = 1;
 
@@ -117,6 +123,12 @@
     
     NSString *dateString = [_dateFormatter stringFromDate:[NSDate date]];
     self.dateTextField.stringValue = dateString;
+    
+    self.titleTextField.stringValue = @"";
+    self.contentTextView.string = @"";
+    
+    _initialImage = nil;
+    self.imageView.image = nil;
     
     self.window.alphaValue = 1;
 }
