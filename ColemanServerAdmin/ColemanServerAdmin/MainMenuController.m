@@ -59,7 +59,10 @@
 -(IBAction)signOut:(id)sender
 {
     // close entries window
-    _entriesWC = nil;
+    [_entriesWC.window close];
+    
+    // reset API Store
+    [[APIStore sharedStore] reset];
     
     // show login window
     AppDelegate *appDelegate = [NSApp delegate];
@@ -68,8 +71,6 @@
                          display:YES
                          animate:NO];
     
-    // reset API Store
-    [[APIStore sharedStore] reset];
 }
 
 #pragma mark - First Responder
@@ -78,7 +79,9 @@
 {
     if (menuItem.action == @selector(signOut:)) {
         
-        if (!_entriesWC) {
+        AppDelegate *appDelegate = [NSApp delegate];
+        
+        if (appDelegate.window.isMainWindow) {
             return NO;
         }
         

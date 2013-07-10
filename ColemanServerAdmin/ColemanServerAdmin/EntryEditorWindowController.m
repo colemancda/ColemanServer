@@ -16,34 +16,16 @@
 
 @implementation EntryEditorWindowController
 
-- (id)initWithEntry:(NSUInteger)index
-{
-    self = [self initWithWindowNibName:NSStringFromClass([self class])
-                                 owner:self];
-    if (self) {
-        
-        _blogEntryIndex = index;
-        _mode = ExistingEntry;
-        
-    }
-    return self;
-}
-
--(id)initWithNewEntry
-{
-    self = [self initWithWindowNibName:NSStringFromClass([self class])
-                                 owner:self];
-    if (self) {
-        
-        _mode = NewEntry;
-        
-    }
-    return self;
-}
-
 -(id)init
 {
-    return self.initWithNewEntry;
+    self = [self initWithWindowNibName:NSStringFromClass([self class])
+                                 owner:self];
+    if (self) {
+        
+        
+        
+    }
+    return self;
 }
 
 - (id)initWithWindow:(NSWindow *)window
@@ -51,6 +33,16 @@
     self = [super initWithWindow:window];
     if (self) {
         // Initialization code here.
+        
+        // start observing numberOfEntries
+        [[APIStore sharedStore] addObserver:self
+                                 forKeyPath:NumberOfEntriesKeyPath
+                                    options:NSKeyValueObservingOptionOld
+                                    context:nil];
+        
+        // date formatter
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        _dateFormatter.dateStyle = NSDateFormatterMediumStyle;
     }
     
     return self;
@@ -62,51 +54,7 @@
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
-    // start observing numberOfEntries
-    [[APIStore sharedStore] addObserver:self
-                             forKeyPath:NumberOfEntriesKeyPath
-                                options:NSKeyValueObservingOptionOld
-                                context:nil];
     
-    // date
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
-    
-    // existing entry mode
-    if (_mode == ExistingEntry) {
-        
-        // get the entry from the store
-        NSString *indexKey = [NSString stringWithFormat:@"%ld", (long)self.blogEntryIndex];
-        NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
-        
-        // set the UI
-        self.titleTextField.stringValue = [blogEntry valueForKey:@"title"];
-        NSString *content = [blogEntry valueForKey:@"content"];
-        self.contentTextView.string = content.copy;
-        
-        NSString *dateString = [dateFormatter stringFromDate:[blogEntry valueForKey:@"date"]];
-        self.dateTextField.stringValue = dateString;
-        
-        // get image data
-        NSData *imageData = [blogEntry valueForKey:@"image"];
-        
-        // if the entry has an image
-        if (imageData) {
-            
-            // set existing image
-            _initialImage = [[NSImage alloc] initWithData:imageData];
-            
-            self.imageView.image = _initialImage;
-        }
-    }
-    
-    // New Entry Mode
-    else {
-        
-        NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
-        self.dateTextField.stringValue = dateString;
-        
-    }
 }
 
 -(void)dealloc
@@ -117,7 +65,60 @@
     // KVC
     [[APIStore sharedStore] removeObserver:self
                                 forKeyPath:NumberOfEntriesKeyPath];
+}
+
+#pragma mark - Load WC
+
+-(void)loadBlogEntry:(NSUInteger)entryIndex
+{
     
+    [self showWindow:nil];
+    self.window.alphaValue = 0;
+    
+    _blogEntryIndex = entryIndex;
+    _mode = ExistingEntry;
+    
+    // get the entry from the store
+    NSString *indexKey = [NSString stringWithFormat:@"%ld", (long)self.blogEntryIndex];
+    NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:indexKey];
+    
+    // set the UI
+    self.titleTextField.stringValue = [blogEntry valueForKey:@"title"];
+    NSString *content = [blogEntry valueForKey:@"content"];
+    
+    // a copy becuase NSTextView tracks changes
+    self.contentTextView.string = content.copy;
+    
+    NSString *dateString = [_dateFormatter stringFromDate:[blogEntry valueForKey:@"date"]];
+    self.dateTextField.stringValue = dateString;
+    
+    // get image data
+    NSData *imageData = [blogEntry valueForKey:@"image"];
+    
+    // if the entry has an image
+    if (imageData) {
+        
+        // set existing image
+        _initialImage = [[NSImage alloc] initWithData:imageData];
+        
+        self.imageView.image = _initialImage;
+    }
+    
+    self.window.alphaValue = 1;
+
+}
+
+-(void)loadNewBlogEntry
+{
+    [self showWindow:nil];
+    self.window.alphaValue = 0;
+    
+    _mode = NewEntry;
+    
+    NSString *dateString = [_dateFormatter stringFromDate:[NSDate date]];
+    self.dateTextField.stringValue = dateString;
+    
+    self.window.alphaValue = 1;
 }
 
 #pragma mark - KVC
@@ -134,6 +135,9 @@
         
         // get the old value
         NSNumber *oldNumberOfEntries = [change objectForKey:NSKeyValueChangeOldKey];
+        if ([oldNumberOfEntries isKindOfClass:[NSNull class]]) {
+            oldNumberOfEntries = @0;
+        }
         
         // if a entry was removed
         if (oldNumberOfEntries.integerValue > [APIStore sharedStore].numberOfEntries.integerValue) {
@@ -148,7 +152,6 @@
             }
         }
     }
-    
 }
 
 #pragma mark - Save Action

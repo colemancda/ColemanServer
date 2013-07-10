@@ -49,6 +49,8 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
+    _editorWC = [[EntryEditorWindowController alloc] init];
+    
     // KVC
     [[APIStore sharedStore] addObserver:self
                              forKeyPath:NumberOfEntriesKeyPath
@@ -106,10 +108,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
                                 forKeyPath:NumberOfEntriesKeyPath];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-        
-    _editorWC = nil;
-    
-    [self.window close];
     
 }
 
@@ -225,9 +223,24 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(void)newDocument:(id)sender
 {
-    _editorWC = [[EntryEditorWindowController alloc] initWithNewEntry];
-    
-    [_editorWC showWindow:sender];
+    [_editorWC loadNewBlogEntry];
+}
+
+-(IBAction)doubleClick:(id)sender
+{
+    // edit entry
+    if (self.tableView.selectedRow != -1) {
+        
+        NSManagedObject *blogEntry = _blogEntries[self.tableView.selectedRow];
+        
+        // get key
+        NSString *key = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
+        
+        NSInteger index = key.integerValue;
+        
+        [_editorWC loadBlogEntry:index];
+        
+    }
 }
 
 -(IBAction)delete:(id)sender
@@ -260,25 +273,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
         }];
     }];
     
-}
-
--(IBAction)doubleClick:(id)sender
-{
-    // edit entry
-    if (self.tableView.selectedRow != -1) {
-        
-        NSManagedObject *blogEntry = _blogEntries[self.tableView.selectedRow];
-        
-        // get key
-        NSString *key = [[APIStore sharedStore].blogEntriesCache allKeysForObject:blogEntry][0];
-        
-        NSInteger index = key.integerValue;
-        
-        _editorWC = [[EntryEditorWindowController alloc] initWithEntry:index];
-        
-        [_editorWC showWindow:sender];
-        
-    }
 }
 
 #pragma mark - Conditionally enable menu items

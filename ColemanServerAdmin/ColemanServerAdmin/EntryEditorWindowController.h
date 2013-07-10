@@ -17,11 +17,13 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
 @interface EntryEditorWindowController : NSWindowController
 {
     NSImage *_initialImage;
+    
+    NSDateFormatter *_dateFormatter;
 }
 
-@property BlogEntryEditorMode mode;
+@property (readonly) BlogEntryEditorMode mode;
 
-@property NSUInteger blogEntryIndex;
+@property (readonly) NSUInteger blogEntryIndex;
 
 @property (strong) IBOutlet NSImageView *imageView;
 
@@ -37,11 +39,10 @@ typedef NS_ENUM(NSInteger, BlogEntryEditorMode) {
 
 -(void)uploadImage:(NSImage *)image;
 
-#pragma mark - Initialization
+#pragma mark - Load WC
 
-- (id)initWithEntry:(NSUInteger)index;
+-(void)loadBlogEntry:(NSUInteger)entryIndex;
 
-- (id)initWithNewEntry;
-
+-(void)loadNewBlogEntry;
 
 @end
