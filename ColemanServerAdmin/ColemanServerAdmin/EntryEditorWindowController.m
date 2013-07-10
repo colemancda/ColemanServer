@@ -231,7 +231,7 @@
                     
                     else {
                         
-                        // successfully entry changes
+                        // successfully uploaded entry changes
                         
                     }
                     

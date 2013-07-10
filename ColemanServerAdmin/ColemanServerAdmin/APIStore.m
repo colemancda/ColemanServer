@@ -39,6 +39,119 @@ static NSError *notAuthorizedError;
 
 @end
 
+// will always give you an object. Will create a new instance if one is not found in cache
+@implementation APIStore (ForceGetManagedObject)
+
+-(NSManagedObject *)blogEntryForIndex:(NSUInteger)index
+{
+    // check if this entry has already been downloaded
+    NSString *indexKey = [NSString stringWithFormat:@"%ld", index];
+    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexKey];
+    
+    // create new one if one is not found
+    if (!blogEntry) {
+        
+        blogEntry = [NSEntityDescription insertNewObjectForEntityForName:BlogEntryEntityName
+                                                  inManagedObjectContext:_context];
+        
+        [_blogEntriesCache setObject:blogEntry
+                              forKey:indexKey];
+    }
+    
+    return blogEntry;
+}
+
+-(NSManagedObject *)userForUsername:(NSString *)username
+{
+    // get user...
+    NSFetchRequest *fetchRequest = [_model fetchRequestFromTemplateWithName:@"FetchUserForUsername"
+                                                      substitutionVariables:@{@"USERNAME": username}];
+    
+    NSError *fetchError;
+    
+    NSArray *results = [_context executeFetchRequest:fetchRequest
+                                               error:&fetchError];
+    
+    if (fetchError) {
+        
+        [NSException raise:@"Core Data Fetch Request Error"
+                    format:@"%@", fetchError.localizedDescription];
+        
+    }
+    
+    if (results.count > 1) {
+        NSLog(@"There are %ld users in cache with '%@' username!", results.count, username);
+    }
+    
+    // get user object...
+    
+    // if no users with that username are in cache, then create a new user
+    NSManagedObject *user;
+    if (!results.count) {
+        
+        user = [NSEntityDescription insertNewObjectForEntityForName:@"User"
+                                             inManagedObjectContext:_context];
+    }
+    
+    else {
+        
+        user = results[0];
+    }
+    
+    return user;
+}
+
+-(NSManagedObject *)commentAtIndex:(NSUInteger)commentIndex
+                          forEntry:(NSUInteger)entryIndex
+{
+    // get blog entry
+    NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
+    
+    // fetch comment...
+    NSFetchRequest *fetchRequest = [_model fetchRequestFromTemplateWithName:@"FetchAllCommentsForBlogEntry"
+                                                      substitutionVariables:@{@"INDEX": [NSNumber numberWithInteger:entryIndex]}];
+    
+    NSError *fetchError;
+    
+    NSArray *results = [_context executeFetchRequest:fetchRequest
+                                               error:&fetchError];
+    
+    if (fetchError) {
+        
+        [NSException raise:@"Core Data Fetch Request Error"
+                    format:@"%@", fetchError.localizedDescription];
+        
+    }
+    
+    for (NSManagedObject *comment in results) {
+        
+        NSNumber *index = [comment valueForKey:@"index"];
+        
+        if (index.integerValue == commentIndex) {
+            
+            return comment;
+        }
+        
+    }
+    
+    // if none was found, then create new one
+    NSManagedObject *comment = [NSEntityDescription insertNewObjectForEntityForName:@"Comment"
+                                                             inManagedObjectContext:_context];
+    
+    // set blogEntry relationship
+    [comment setValue:blogEntry
+               forKey:@"blogEntry"];
+    
+    // set index
+    NSNumber *index = [NSNumber numberWithInteger:commentIndex];
+    [comment setValue:index
+               forKey:@"index"];
+    
+    return comment;
+}
+
+@end
+
 @implementation APIStore
 
 + (APIStore *)sharedStore
@@ -101,8 +214,7 @@ static NSError *notAuthorizedError;
 
 #pragma mark - Login
 
--(void)loginWithUsername:(NSString *)username
-                password:(NSString *)password
+-(void)loginWithPassword:(NSString *)password
               completion:(completionBlock)completionBlock
 {
     // put togeather the url
@@ -111,7 +223,7 @@ static NSError *notAuthorizedError;
     NSURL *url = [NSURL URLWithString:urlString];
     
     // make the JSON credentials
-    NSDictionary *credentials = @{@"username": username, @"password" : password};
+    NSDictionary *credentials = @{@"username": self.username, @"password" : password};
     
     NSData *credentialsJSONData = [NSJSONSerialization dataWithJSONObject:credentials
                                                                   options:0
@@ -218,12 +330,9 @@ static NSError *notAuthorizedError;
         
         // successfully got token
         
-        [self willChangeValueForKey:@"token"];
-        _token = token;
-        
         NSLog(@"Successfully got authentication token");
         
-        [self didChangeValueForKey:@"token"];
+        self.token = token;
         
         if (completionBlock) {
             completionBlock(nil);
@@ -402,13 +511,8 @@ static NSError *notAuthorizedError;
         NSDate *date = [NSDate dateWithString:dateString];
         
         // save the blog entry in the core data cache...
-        NSManagedObject *blogEntry = [NSEntityDescription insertNewObjectForEntityForName:BlogEntryEntityName
-                                                                   inManagedObjectContext:_context];
         
-        NSString *indexKey = [NSString stringWithFormat:@"%ld", (unsigned long)indexOfEntry];
-        
-        [_blogEntriesCache setObject:blogEntry
-                              forKey:indexKey];
+        NSManagedObject *blogEntry = [self blogEntryForIndex:indexOfEntry];
         
         [blogEntry setValue:title
                      forKey:@"title"];
@@ -417,12 +521,12 @@ static NSError *notAuthorizedError;
         [blogEntry setValue:date
                      forKey:@"date"];
         
-        NSLog(@"Successfully fetched blog entry %@", indexKey);
+        NSLog(@"Successfully fetched blog entry %@", indexString);
         
         // send notification
         [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryFetchedNotification
                                                             object:blogEntry
-                                                          userInfo:@{@"indexKey" : indexKey}];
+                                                          userInfo:@{@"indexKey" : indexString}];
         
         if (completionBlock) {
             completionBlock(nil);
@@ -444,16 +548,6 @@ static NSError *notAuthorizedError;
     urlString = [urlString stringByAppendingPathComponent:@"photo"];
     NSURL *url = [NSURL URLWithString:urlString];
     
-    // dont continue if there's no blog entry...
-    
-    // get blog entry
-    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
-    
-    if (!blogEntry) {
-        
-        return;
-    }
-    
     NSLog(@"Fetching image for blog entry %ld...", indexOfEntry);
     
     [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
@@ -466,6 +560,9 @@ static NSError *notAuthorizedError;
             
             return;
         }
+        
+        // get blog entry
+        NSManagedObject *blogEntry = [self blogEntryForIndex:indexOfEntry];
         
         if (response.httpCode.integerValue != 200) {
             
@@ -504,15 +601,8 @@ static NSError *notAuthorizedError;
 -(void)fetchNumberOfCommentsForEntry:(NSUInteger)entryIndex
                       withCompletion:(completionBlock)completionBlock
 {
-    // check if entry exists in cache
+    // index key
     NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
-    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
-    
-    if (!blogEntry) {
-        
-        [NSException raise:@"Invalid Argument"
-                    format:@"Blog entry %@ doesn't exist in cache", indexString];
-    }
     
     // put togeather URL
     NSString *urlString = self.baseURL;
@@ -565,6 +655,8 @@ static NSError *notAuthorizedError;
             return;
         }
         
+        // successfully got number of comments
+        
         NSNumber *numberOfComments = [jsonObject objectForKey:@"numberOfComments"];
         
         if (!numberOfComments) {
@@ -595,15 +687,8 @@ static NSError *notAuthorizedError;
            forEntry:(NSUInteger)entryIndex
      withCompletion:(completionBlock)completionBlock
 {
-    // check if entry exists in cache
+    // index key
     NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
-    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
-    
-    if (!blogEntry) {
-        
-        [NSException raise:@"Invalid Argument"
-                    format:@"Blog entry %@ doesn't exist in cache", indexString];
-    }
     
     // put togeather URL
     NSString *urlString = self.baseURL;
@@ -674,14 +759,32 @@ static NSError *notAuthorizedError;
             return;
         }
         
-        // successfully fetch comment from server...
+        // successfully fetched comment from server...
+        
+        // get comment
+        NSManagedObject *comment = [self commentAtIndex:commentIndex
+                                               forEntry:entryIndex];
         
         // get user
+        NSManagedObject *user = [self userForUsername:username];
         
-        // update cache...
+        // set values
+        [comment setValue:date
+                   forKey:@"date"];
+        [comment setValue:content
+                   forKey:@"content"];
+        [comment setValue:user
+                   forKey:@"user"];
         
-        // create comment
+        // the blogEntry relationship was already set with -commentAtIndex:forEntry:
         
+        NSLog(@"Successfully fetched comment %@ for entry %@", commentIndexString, indexString);
+        
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
         
     }];
     
@@ -793,13 +896,7 @@ static NSError *notAuthorizedError;
         NSDate *date = [NSDate date];
         
         // save the blog entry in the core data cache...
-        NSManagedObject *blogEntry = [NSEntityDescription insertNewObjectForEntityForName:BlogEntryEntityName
-                                                                   inManagedObjectContext:_context];
-        
-        NSString *indexKey = [NSString stringWithFormat:@"%ld", (unsigned long)entryIndex];
-        
-        [_blogEntriesCache setObject:blogEntry
-                              forKey:indexKey];
+        NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
         
         [blogEntry setValue:title
                      forKey:@"title"];
@@ -906,7 +1003,7 @@ static NSError *notAuthorizedError;
         // changes successfully accepted
         
         // update cache
-        NSManagedObject *blogEntry = [self.blogEntriesCache objectForKey:indexString];
+        NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
         [blogEntry setValuesForKeysWithDictionary:changes];
         
         NSLog(@"Successfully changed entry %ld", entryIndex);
@@ -1059,7 +1156,7 @@ static NSError *notAuthorizedError;
 #pragma mark - Manipulate Images
 
 -(void)setImageData:(NSData *)imageData
-           forEntry:(NSUInteger)indexOfEntry
+           forEntry:(NSUInteger)entryIndex
          completion:(completionBlock)completionBlock
 {
     if (!self.token) {
@@ -1073,19 +1170,9 @@ static NSError *notAuthorizedError;
     // put togeather url
     NSString *urlString = self.baseURL;
     urlString = [urlString stringByAppendingPathComponent:@"blog"];
-    NSString *indexString = [NSString stringWithFormat:@"%ld", indexOfEntry];
+    NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
     urlString = [urlString stringByAppendingPathComponent:indexString];
     urlString = [urlString stringByAppendingPathComponent:@"photo"];
-    
-    // dont continue if there's no blog entry...
-    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
-    
-    if (!blogEntry) {
-        
-        [NSException raise:@"Invalid Argument"
-                    format:@"Blog entry %@ doesn't exist in cache", indexString];
-    }
-    
     
     // put togeather request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -1135,6 +1222,9 @@ static NSError *notAuthorizedError;
          
          // successfully uploaded image data to server...
          
+         // get blog entry
+         NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
+         
          // update cache
          [blogEntry setValue:imageData
                       forKey:@"image"];
@@ -1173,15 +1263,6 @@ static NSError *notAuthorizedError;
     NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
     urlString = [urlString stringByAppendingPathComponent:indexString];
     urlString = [urlString stringByAppendingPathComponent:@"photo"];
-    
-    // dont continue if there's no blog entry...
-    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
-    
-    if (!blogEntry) {
-        
-        [NSException raise:@"Invalid Argument"
-                    format:@"Blog entry %@ doesn't exist in cache", indexString];
-    }
     
     // put togeather request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -1230,6 +1311,9 @@ static NSError *notAuthorizedError;
         
         // successfully deleted image on server...
         
+        // get blogEntry
+        NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
+        
         // update cache
         [blogEntry setValue:nil
                      forKey:@"image"];
@@ -1269,15 +1353,6 @@ static NSError *notAuthorizedError;
     NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
     urlString = [urlString stringByAppendingPathComponent:indexString];
     urlString = [urlString stringByAppendingPathComponent:@"comment"];
-    
-    // dont continue if there's no blog entry...
-    NSManagedObject *blogEntry = [_blogEntriesCache objectForKey:indexString];
-    
-    if (!blogEntry) {
-        
-        [NSException raise:@"Invalid Argument"
-                    format:@"Blog entry %@ doesn't exist in cache", indexString];
-    }
     
     // put togeather request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -1333,25 +1408,26 @@ static NSError *notAuthorizedError;
        
         // successfully created new comment on blog server
         
-        // update cache...
-        
         // create new comment object
-        NSManagedObject *comment = [NSEntityDescription insertNewObjectForEntityForName:@"comment"
-                                                                 inManagedObjectContext:_context];
+        NSNumber *numberOfComments = [_numberOfCommentsCache objectForKey:indexString];
+        
+        NSManagedObject *comment = [self commentAtIndex:numberOfComments.integerValue
+                                               forEntry:entryIndex];
         
         [comment setValue:content
                    forKey:@"content"];
         [comment setValue:[NSDate date]
                    forKey:@"date"];
         
-        // get user for our username
+        // get user
+        NSManagedObject *user = [self userForUsername:self.username];
+        [comment setValue:user
+                   forKey:@"user"];
         
-        
-        // [comment setValue: forKey:<#(NSString *)#>]
-        
-        // add comment to blog entry
-        NSMutableSet *comments = [blogEntry mutableSetValueForKey:@"comments"];
-        [comments addObject:comment];
+        // update number of comments
+        NSNumber *newNumberOfComments = [NSNumber numberWithInteger:numberOfComments.integerValue + 1];
+        [_numberOfCommentsCache setValue:newNumberOfComments
+                                  forKey:indexString];
         
         NSLog(@"Successfully created new comment for blog entry %@", indexString);
         

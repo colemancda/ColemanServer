@@ -32,8 +32,9 @@
     NSString *urlString = self.urlTextField.stringValue;
     
     [APIStore sharedStore].baseURL = urlString;
+    [APIStore sharedStore].username = username;
     
-    [[APIStore sharedStore] loginWithUsername:username password:password completion:^(NSError *error) {
+    [[APIStore sharedStore] loginWithPassword:password completion:^(NSError *error) {
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
@@ -47,9 +48,10 @@
                 [self showEntriesWC];
                 
             }
+            
         }];
-        
     }];
+        
 }
 
 #pragma mark - Commands

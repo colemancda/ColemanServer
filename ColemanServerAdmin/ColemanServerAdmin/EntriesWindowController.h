@@ -24,7 +24,7 @@
 
 @property NSDateFormatter *dateFormatter;
 
--(IBAction)createNewEntry:(id)sender;
+-(IBAction)newDocument:(id)sender;
 
 #pragma mark
 

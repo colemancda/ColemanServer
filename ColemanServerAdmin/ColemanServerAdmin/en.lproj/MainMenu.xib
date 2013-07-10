@@ -200,6 +200,15 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
+								<object class="NSMenuItem" id="497534656">
+									<reference key="NSMenu" ref="691091320"/>
+									<string key="NSTitle">New</string>
+									<string key="NSKeyEquiv">n</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
 								<object class="NSMenuItem" id="424234201">
 									<reference key="NSMenu" ref="691091320"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -223,15 +232,6 @@
 									<reference key="NSMenu" ref="691091320"/>
 									<string key="NSTitle">Save</string>
 									<string key="NSKeyEquiv">s</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="35465992"/>
-									<reference key="NSMixedImage" ref="502551668"/>
-								</object>
-								<object class="NSMenuItem" id="497534656">
-									<reference key="NSMenu" ref="691091320"/>
-									<string key="NSTitle">New Blog Entry</string>
-									<string key="NSKeyEquiv">n</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -1406,6 +1406,7 @@
 											<string key="NSFrame">{{147, 7}, {103, 32}}</string>
 											<reference key="NSSuperview" ref="949284115"/>
 											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="22213878">
@@ -2056,14 +2057,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">createNewEntry:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="497534656"/>
-					</object>
-					<int key="connectionID">889</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">performClose:</string>
 						<reference key="source" ref="1014"/>
 						<reference key="destination" ref="928115001"/>
@@ -2093,6 +2086,14 @@
 						<reference key="destination" ref="152967125"/>
 					</object>
 					<int key="connectionID">1036</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">newDocument:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="497534656"/>
+					</object>
+					<int key="connectionID">1096</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -3612,9 +3613,9 @@
 							<reference ref="526493504"/>
 							<reference ref="596269542"/>
 							<reference ref="433907338"/>
-							<reference ref="497534656"/>
 							<reference ref="424234201"/>
 							<reference ref="524698932"/>
+							<reference ref="497534656"/>
 							<reference ref="152967125"/>
 						</array>
 						<reference key="parent" ref="303198223"/>
@@ -3943,7 +3944,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1047</int>
+			<int key="maxID">1096</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3978,21 +3979,21 @@
 					<string key="className">EntriesWindowController</string>
 					<string key="superclassName">NSWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="createNewEntry:">id</string>
 						<string key="delete:">id</string>
 						<string key="doubleClick:">id</string>
+						<string key="newDocument:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="createNewEntry:">
-							<string key="name">createNewEntry:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="delete:">
 							<string key="name">delete:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="doubleClick:">
 							<string key="name">doubleClick:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="newDocument:">
+							<string key="name">newDocument:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>

@@ -51,6 +51,8 @@ extern NSString *const NumberOfEntriesKeyPath;
 
 @property NSString *token;
 
+@property NSString *username;
+
 @property (readonly) NSNumber *numberOfEntries;
 
 @property (readonly) NSDictionary *blogEntriesCache;
@@ -59,13 +61,11 @@ extern NSString *const NumberOfEntriesKeyPath;
 
 #pragma mark - Login
 
--(void)loginWithUsername:(NSString *)username
-                password:(NSString *)password
+-(void)loginWithPassword:(NSString *)password
               completion:(completionBlock)completionBlock;
 
--(void)registerWithUsername:(NSString *)username
-                   password:(NSString *)password
-                 completion:(completionBlock)completionBlock;
+-(void)registerPassword:(NSString *)password
+             completion:(completionBlock)completionBlock;
 
 #pragma mark - Public Access
 

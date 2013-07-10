@@ -223,7 +223,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 #pragma mark - Commands
 
--(void)createNewEntry:(id)sender
+-(void)newDocument:(id)sender
 {
     _editorWC = [[EntryEditorWindowController alloc] initWithNewEntry];
     

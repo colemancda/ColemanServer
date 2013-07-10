@@ -22,10 +22,17 @@
                                 options:NSKeyValueObservingOptionOld
                                 context:nil];
     
+    // KVC username
+    [[APIStore sharedStore] addObserver:self
+                             forKeyPath:@"self.username"
+                                options:NSKeyValueObservingOptionOld
+                                context:nil];
+    
     // try to get token from preferences
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
+    NSString *username = [[NSUserDefaults standardUserDefaults] objectForKey:@"username"];
     
-    if (token) {
+    if (token && username) {
         
         NSLog(@"Logging in using saved token...");
         
@@ -34,6 +41,7 @@
         
         [APIStore sharedStore].baseURL = urlString;
         [APIStore sharedStore].token = token;
+        [APIStore sharedStore].username = username;
         
         [_mainMenuController showEntriesWC];
     }
@@ -84,6 +92,12 @@
         
         // save token in preferences
         [[NSUserDefaults standardUserDefaults] setObject:[APIStore sharedStore].token forKey:@"token"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    if ([keyPath isEqualToString:@"self.username"] && object == [APIStore sharedStore]) {
+        
+        // save token in preferences
+        [[NSUserDefaults standardUserDefaults] setObject:[APIStore sharedStore].username forKey:@"username"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
