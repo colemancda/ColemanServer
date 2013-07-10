@@ -81,7 +81,8 @@
         
         // set the UI
         self.titleTextField.stringValue = [blogEntry valueForKey:@"title"];
-        self.contentTextView.string = [blogEntry valueForKey:@"content"];
+        NSString *content = [blogEntry valueForKey:@"content"];
+        self.contentTextView.string = content.copy;
         
         NSString *dateString = [dateFormatter stringFromDate:[blogEntry valueForKey:@"date"]];
         self.dateTextField.stringValue = dateString;
@@ -155,8 +156,10 @@
 -(void)saveDocument:(id)sender
 {
     NSString *title = self.titleTextField.stringValue;
-    NSString *content = self.contentTextView.string;
     NSImage *image = self.imageView.image;
+    
+    // we give it a copy of the content string becuase NSTextView will track the changes
+    NSString *content = self.contentTextView.string.copy;
     
     // if new entry
     if (self.mode == NewEntry) {

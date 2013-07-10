@@ -185,6 +185,7 @@ static NSError *notAuthorizedError;
         _model = [NSManagedObjectModel mergedModelFromBundles:nil];
         _context = [[NSManagedObjectContext alloc] init];
         _context.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
+        _context.undoManager = nil;
         
         _blogEntriesCache = [[NSMutableDictionary alloc] init];
         _numberOfCommentsCache = [[NSMutableDictionary alloc] init];
