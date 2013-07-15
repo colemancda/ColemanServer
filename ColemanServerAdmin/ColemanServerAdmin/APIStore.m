@@ -12,10 +12,6 @@
 
 NSString *const CommentChangedNotification = @"CommentChanged";
 
-NSString *const BlogEntryImageFetchedNotification = @"BlogEntryImageFetched";
-
-NSString *const BlogEntryFetchedNotification = @"BlogEntryFetched";
-
 NSString *const BlogEntryEditedNotification = @"BlogEntryEdited";
 
 NSString *const NumberOfEntriesKeyPath = @"self.numberOfEntries";
@@ -200,6 +196,14 @@ static NSError *notAuthorizedError;
     NSLog(@"Resetted API Store");
 }
 
+
+#pragma mark - Common Errors
+
++(NSError *)notAuthorizedError
+{
+    return notAuthorizedError;
+}
+
 #pragma mark - Search Cache
 
 -(NSManagedObject *)cachedComment:(NSUInteger)commentIndex
@@ -344,6 +348,93 @@ static NSError *notAuthorizedError;
         NSLog(@"Successfully got authentication token");
         
         self.token = token;
+        
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
+        
+    }];
+}
+
+-(void)registerWithPassword:(NSString *)password
+                 completion:(completionBlock)completionBlock
+{
+    // put togeather the url
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"login"];
+    
+    // make JSON data to send
+    NSDictionary *jsonObject = @{@"username" : self.username,
+                               @"password" : password};
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                       options:0
+                                                         error:nil];
+    
+    // make request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody = jsonData;
+    
+    NSLog(@"Registering user '%@'...", self.username);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        // create common error description
+        NSString *commonErrorDescription = NSLocalizedString(@"Failed to register",
+                                                             @"Failed to register");
+        
+        // create other error
+        NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                  code:4003
+                                              userInfo:@{NSLocalizedDescriptionKey : commonErrorDescription}];
+        
+        if (error) {
+            
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        
+        // check for other HTTP status codes
+        if (response.httpCode.integerValue != 200) {
+            
+            // username is already taken
+            if (response.httpCode.integerValue == Forbidden) {
+                
+                NSString *errorReason = NSLocalizedString(@"That username is already taken",
+                                                          @"That username is already taken");
+                
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: commonErrorDescription,
+                                           NSLocalizedRecoverySuggestionErrorKey : errorReason};
+                
+                NSError *takenError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                          code:Forbidden
+                                                      userInfo:userInfo];
+                
+                if (completionBlock) {
+                    completionBlock(takenError);
+                }
+                
+                return;
+                
+            }
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        // successfully created new user
+        
+        NSLog(@"Successfully registered new user");
         
         if (completionBlock) {
             completionBlock(nil);
@@ -535,11 +626,6 @@ static NSError *notAuthorizedError;
         
         NSLog(@"Successfully fetched blog entry %@", indexString);
         
-        // send notification
-        [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryFetchedNotification
-                                                            object:blogEntry
-                                                          userInfo:@{@"indexKey" : indexString}];
-        
         if (completionBlock) {
             completionBlock(nil);
         }
@@ -595,11 +681,6 @@ static NSError *notAuthorizedError;
                      forKey:@"image"];
         
         NSLog(@"Successfully fetched image for blog entry %@", indexString);
-        
-        // send notification
-        [[NSNotificationCenter defaultCenter] postNotificationName:BlogEntryImageFetchedNotification
-                                                            object:blogEntry
-                                                          userInfo:@{@"indexKey" : indexString}];
                 
         if (completionBlock) {
             completionBlock(nil);
@@ -1662,10 +1743,35 @@ static NSError *notAuthorizedError;
         
         // get comment
         NSManagedObject *comment = [self forceGetCommentAtIndex:commentIndex
-                                                          forEntry:entryIndex];
+                                                       forEntry:entryIndex];
         
         // delete
         [_context deleteObject:comment];
+        
+        // update indexes...
+        NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
+        
+        NSOrderedSet *commentSet = [blogEntry valueForKey:@"comments"];
+        
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"index"
+                                                               ascending:YES];
+        
+        NSArray *comments = [commentSet.array sortedArrayUsingDescriptors:@[sort]];
+        
+        // update the indexes
+        for (NSManagedObject *comment in comments) {
+            
+            NSNumber *index = [comment valueForKey:@"index"];
+            
+            if (index.integerValue >= commentIndex) {
+                
+                NSUInteger oldIndex = index.integerValue;
+                NSUInteger newIndex = oldIndex - 1;
+                
+                [comment setValue:[NSNumber numberWithInteger:newIndex]
+                           forKey:@"index"];
+            }
+        }
         
         // update number of comments
         NSNumber *oldNumberofComments = [_numberOfCommentsCache objectForKey:indexString];

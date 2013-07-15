@@ -303,7 +303,7 @@
                                              @"Image format is not Bitmap");
         
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                                   NSLocalizedFailureReasonErrorKey : reason};
+                                   NSLocalizedRecoverySuggestionErrorKey : reason};
         
         NSError *invalidImageFormatError = [NSError errorWithDomain:[AppDelegate errorDomain]
                                                                code:50005

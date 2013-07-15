@@ -457,4 +457,12 @@
     return comment;
 }
 
+#pragma mark - Comments
+
+-(void)removeComment:(EntryComment *)comment
+{
+    [_context deleteObject:comment];
+    
+}
+
 @end

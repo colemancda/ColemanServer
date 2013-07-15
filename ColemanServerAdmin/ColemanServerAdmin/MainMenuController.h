@@ -26,6 +26,8 @@
 
 -(void)showEntriesWC;
 
+-(IBAction)registerNewUser:(id)sender;
+
 #pragma mark
 
 @property (readonly) EntriesWindowController *entriesWC;

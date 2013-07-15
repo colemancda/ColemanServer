@@ -42,8 +42,4 @@
 
 -(void)blogEntryChanged:(NSNotification *)notification;
 
--(void)blogEntryDownloaded:(NSNotification *)notification;
-
--(void)blogEntryImageDownloaded:(NSNotification *)notification;
-
 @end

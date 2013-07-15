@@ -56,6 +56,50 @@
         
 }
 
+-(void)registerNewUser:(id)sender
+{
+    
+    // get values
+    NSString *username = self.usernameTextField.stringValue;
+    NSString *password = self.passwordTextField.stringValue;
+    NSString *urlString = self.urlTextField.stringValue;
+    
+    [APIStore sharedStore].baseURL = urlString;
+    [APIStore sharedStore].username = username;
+    
+    [[APIStore sharedStore] registerWithPassword:password completion:^(NSError *error) {
+        
+        if (error) {
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                
+                [NSApp presentError:error];
+                
+            }];
+        }
+        else {
+            
+            [[APIStore sharedStore] loginWithPassword:password completion:^(NSError *error) {
+                
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    
+                    if (error) {
+                        
+                        [NSApp presentError:error];
+
+                    }
+                    else {
+                        
+                        [self showEntriesWC];
+                        
+                    }
+                }];
+            }];
+        }
+        
+    }];
+}
+
 #pragma mark - Commands
 
 -(IBAction)signOut:(id)sender

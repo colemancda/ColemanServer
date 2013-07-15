@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		6E0A46C9177B2B7500074FC2 /* NSString+isNonNegativeInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */; };
+		6E101C1D1793AA14003DC6F6 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E101C1C1793AA14003DC6F6 /* BlogEntry.m */; };
 		6E3FF8FB1777AA1700DDA324 /* MyHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */; };
 		6E481AF61787781800A2F754 /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E481AF41787781800A2F754 /* PreferencesWindowController.m */; };
 		6E481AF71787781800A2F754 /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E481AF51787781800A2F754 /* PreferencesWindowController.xib */; };
-		6E650110177CA05C00C01CF3 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E65010F177CA05C00C01CF3 /* BlogEntry.m */; };
 		6E650113177CA07000C01CF3 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E650112177CA07000C01CF3 /* Token.m */; };
 		6E650116177CA07000C01CF3 /* EntryComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E650115177CA07000C01CF3 /* EntryComment.m */; };
 		6E650119177CA07000C01CF3 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E650118177CA07000C01CF3 /* User.m */; };
@@ -68,13 +68,13 @@
 /* Begin PBXFileReference section */
 		6E0A46C7177B2B7500074FC2 /* NSString+isNonNegativeInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+isNonNegativeInteger.h"; sourceTree = "<group>"; };
 		6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+isNonNegativeInteger.m"; sourceTree = "<group>"; };
+		6E101C1B1793AA14003DC6F6 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
+		6E101C1C1793AA14003DC6F6 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
 		6E3FF8F91777AA1700DDA324 /* MyHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHTTPConnection.h; sourceTree = "<group>"; };
 		6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyHTTPConnection.m; sourceTree = "<group>"; };
 		6E481AF31787781800A2F754 /* PreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesWindowController.h; sourceTree = "<group>"; };
 		6E481AF41787781800A2F754 /* PreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesWindowController.m; sourceTree = "<group>"; };
 		6E481AF51787781800A2F754 /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindowController.xib; sourceTree = "<group>"; };
-		6E65010E177CA05C00C01CF3 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
-		6E65010F177CA05C00C01CF3 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
 		6E650111177CA07000C01CF3 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		6E650112177CA07000C01CF3 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6E650114177CA07000C01CF3 /* EntryComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntryComment.h; sourceTree = "<group>"; };
@@ -551,8 +551,8 @@
 		6EE811BF1736245E00433687 /* Blog Entry */ = {
 			isa = PBXGroup;
 			children = (
-				6E65010E177CA05C00C01CF3 /* BlogEntry.h */,
-				6E65010F177CA05C00C01CF3 /* BlogEntry.m */,
+				6E101C1B1793AA14003DC6F6 /* BlogEntry.h */,
+				6E101C1C1793AA14003DC6F6 /* BlogEntry.m */,
 			);
 			name = "Blog Entry";
 			sourceTree = "<group>";
@@ -701,12 +701,12 @@
 				6EA60F28177A869700D72843 /* HTTPMIMEDataResponse.m in Sources */,
 				6E0A46C9177B2B7500074FC2 /* NSString+isNonNegativeInteger.m in Sources */,
 				6ECAADFD177B5116007A8876 /* DataStore.m in Sources */,
-				6E650110177CA05C00C01CF3 /* BlogEntry.m in Sources */,
 				6E650113177CA07000C01CF3 /* Token.m in Sources */,
 				6E650116177CA07000C01CF3 /* EntryComment.m in Sources */,
 				6E650119177CA07000C01CF3 /* User.m in Sources */,
 				6EBE321A17867AEA0095F5E7 /* MenuController.m in Sources */,
 				6E481AF61787781800A2F754 /* PreferencesWindowController.m in Sources */,
+				6E101C1D1793AA14003DC6F6 /* BlogEntry.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

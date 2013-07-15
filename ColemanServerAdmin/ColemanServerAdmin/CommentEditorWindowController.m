@@ -42,9 +42,7 @@
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
-    
 }
-
 
 #pragma mark - Loading
 
@@ -119,6 +117,7 @@
                     
                     // successfully uploaded changes
                     
+                    
                 }
                 
             }];
@@ -144,9 +143,29 @@
                 else {
                     
                     // successfully created new comment
+                    _mode = ExistingCommment;
                     
+                    // get comment...
+                    NSString *entryKey = [[APIStore sharedStore].blogEntriesCache allKeysForObject:self.blogEntry][0];
+                    
+                    NSNumber *numberOfComments = [[APIStore sharedStore].numberOfCommentsCache objectForKey:entryKey];
+                    
+                    NSUInteger commentIndex = numberOfComments.integerValue - 1;
+                    
+                    NSOrderedSet *comments = [self.blogEntry valueForKey:@"comments"];
+                    
+                    for (NSManagedObject *comment in comments) {
+                        
+                        NSNumber *index = [comment valueForKey:@"index"];
+                        
+                        if (index.integerValue == commentIndex) {
+                            
+                            _comment = comment;
+                            
+                            return;
+                        }
+                    }
                 }
-                
             }];
             
         }];

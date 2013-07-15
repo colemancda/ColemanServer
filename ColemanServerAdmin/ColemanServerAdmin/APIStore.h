@@ -19,10 +19,6 @@ typedef NS_ENUM(NSInteger, ServerErrorCodes) {
     
 };
 
-extern NSString *const BlogEntryImageFetchedNotification;
-
-extern NSString *const BlogEntryFetchedNotification;
-
 extern NSString *const BlogEntryEditedNotification;
 
 extern NSString *const NumberOfEntriesKeyPath;
@@ -49,6 +45,10 @@ extern NSString *const CommentChangedNotification;
 
 -(void)reset;
 
+#pragma mark - Common Errors
+
++(NSError *)notAuthorizedError;
+
 #pragma mark - Properties
 
 @property NSString *baseURL;
@@ -73,8 +73,8 @@ extern NSString *const CommentChangedNotification;
 -(void)loginWithPassword:(NSString *)password
               completion:(completionBlock)completionBlock;
 
--(void)registerPassword:(NSString *)password
-             completion:(completionBlock)completionBlock;
+-(void)registerWithPassword:(NSString *)password
+                 completion:(completionBlock)completionBlock;
 
 #pragma mark - Public Access
 

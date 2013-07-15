@@ -740,8 +740,7 @@ static NSString *serverHeader;
                     // get comment
                     EntryComment *comment = comments[commentIndex];
                     
-                    
-                    
+
 #pragma mark GET /blog/#/comment/#
                     
                     // GET
@@ -824,7 +823,7 @@ static NSString *serverHeader;
                     if ([method isEqualToString:HTTP_METHOD_DELETE]) {
                         
                         // delete comment
-                        [entry removeCommentsObject:comment];
+                        [[DataStore sharedStore] removeComment:comment];
                         
                         // return success message
                         NSString *message = [NSString stringWithFormat:@"Successfully deleted comment\n%@", [self.class serverHeader]];

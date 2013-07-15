@@ -40,4 +40,8 @@
 
 -(IBAction)doubleClick:(id)sender;
 
+#pragma mark - Notifications
+
+-(void)commentChanged:(NSNotification *)notification;
+
 @end

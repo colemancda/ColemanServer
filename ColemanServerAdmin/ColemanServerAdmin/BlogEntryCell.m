@@ -58,7 +58,7 @@ static NSDateFormatter *dateFormatter;
     }
     if (imageData == nil) {
         
-        // image need to be downloaded
+        // image needs to be downloaded
         self.imageView.image = nil;
     }
     

@@ -57,16 +57,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
                                              selector:@selector(blogEntryChanged:)
                                                  name:BlogEntryEditedNotification
                                                object:nil];
-    // download notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(blogEntryDownloaded:)
-                                                 name:BlogEntryFetchedNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(blogEntryImageDownloaded:)
-                                                 name:BlogEntryImageFetchedNotification
-                                               object:nil];
     
     // set double click action
     self.tableView.doubleAction = @selector(doubleClick:);
@@ -364,18 +354,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
             [cell setBlogEntry:blogEntry];
         }
     }];
-}
-
--(void)blogEntryDownloaded:(NSNotification *)notification
-{
-    
-}
-
--(void)blogEntryImageDownloaded:(NSNotification *)notification
-{
-    
-    
-    
 }
 
 #pragma mark

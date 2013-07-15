@@ -10,6 +10,7 @@
 #import "CommentCell.h"
 #import "APIStore.h"
 #import "CommentEditorWindowController.h"
+#import "BlogEntryCell.h"
 
 NSString *CellIdentifier = @"CommentCell";
 
@@ -46,10 +47,22 @@ NSString *CellIdentifier = @"CommentCell";
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
+    // KVC
     [[APIStore sharedStore] addObserver:self
                              forKeyPath:NumberOfCommentsCacheKeyPath
                                 options:NSKeyValueObservingOptionOld
                                 context:nil];
+    
+    [[APIStore sharedStore] addObserver:self
+                             forKeyPath:NumberOfEntriesKeyPath
+                                options:NSKeyValueObservingOptionOld
+                                context:nil];
+    
+    // register for notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(commentChanged:)
+                                                 name:CommentChangedNotification
+                                               object:nil];
     
     // set table view clicking action
     [self.tableView setDoubleAction:@selector(doubleClick:)];
@@ -60,6 +73,11 @@ NSString *CellIdentifier = @"CommentCell";
 {
     [[APIStore sharedStore] removeObserver:self
                                 forKeyPath:NumberOfCommentsCacheKeyPath];
+    
+    [[APIStore sharedStore] removeObserver:self
+                                forKeyPath:NumberOfEntriesKeyPath];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
 }
 
@@ -291,8 +309,10 @@ NSString *CellIdentifier = @"CommentCell";
 
 -(void)observeValueForKeyPath:(NSString *)keyPath
                      ofObject:(id)object
-                       change:(NSDictionary *)change context:(void *)context
+                       change:(NSDictionary *)change
+                      context:(void *)context
 {
+    // reload tableView if number of comments changes
     if ([keyPath isEqualToString:NumberOfCommentsCacheKeyPath] && object == [APIStore sharedStore]) {
         
         [self loadCommentKeys];
@@ -302,6 +322,48 @@ NSString *CellIdentifier = @"CommentCell";
             [self.tableView reloadData];
             
         }];
+    }
+    
+    // check if blogEntry was deleted
+    if ([keyPath isEqualToString:NumberOfEntriesKeyPath] && object == [APIStore sharedStore]) {
+        
+        NSArray *keys = [[APIStore sharedStore].blogEntriesCache allKeysForObject:self.blogEntry];
+        
+        if (!keys.count) {
+            
+            [self close];
+        }
+        
+    }
+}
+
+#pragma mark - Notifications
+
+-(void)commentChanged:(NSNotification *)notification
+{
+    // check to see if the comment changed belongs to our blog entry
+    NSManagedObject *comment = notification.object;
+    
+    if ([comment valueForKey:@"blogEntry"] == self.blogEntry) {
+        
+        NSNumber *commentIndex = [comment valueForKey:@"index"];
+        
+        // get the cell
+        NSUInteger row = [_commentKeys indexOfObject:[NSString stringWithFormat:@"%@", commentIndex]];
+        CommentCell *cell = [self.tableView viewAtColumn:0
+                                                       row:row
+                                           makeIfNecessary:NO];
+        
+        if (cell) {
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                
+                // update content
+                cell.textField.stringValue = [comment valueForKey:@"content"];
+                
+            }];
+        }
+        
     }
 }
 

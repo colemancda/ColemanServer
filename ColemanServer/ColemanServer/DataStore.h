@@ -50,6 +50,10 @@
 
 -(void)removeUser:(User *)user;
 
+#pragma mark - Comments
+
+-(void)removeComment:(EntryComment *)comment;
+
 #pragma mark - Searches
 
 -(User *)userForUsername:(NSString *)username;
@@ -60,6 +64,7 @@
 
 -(Token *)createTokenForUser:(User *)user;
 
--(EntryComment *)createCommentForUser:(User *)user blogEntry:(BlogEntry *)entry;
+-(EntryComment *)createCommentForUser:(User *)user
+                            blogEntry:(BlogEntry *)entry;
 
 @end
