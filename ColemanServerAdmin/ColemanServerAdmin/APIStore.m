@@ -1751,12 +1751,7 @@ static NSError *notAuthorizedError;
         // update indexes...
         NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
         
-        NSOrderedSet *commentSet = [blogEntry valueForKey:@"comments"];
-        
-        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"index"
-                                                               ascending:YES];
-        
-        NSArray *comments = [commentSet.array sortedArrayUsingDescriptors:@[sort]];
+        NSOrderedSet *comments = [blogEntry valueForKey:@"comments"];
         
         // update the indexes
         for (NSManagedObject *comment in comments) {
@@ -1776,7 +1771,7 @@ static NSError *notAuthorizedError;
         // update number of comments
         NSNumber *oldNumberofComments = [_numberOfCommentsCache objectForKey:indexString];
         
-        NSUInteger newValue = oldNumberofComments.integerValue + 1;
+        NSUInteger newValue = oldNumberofComments.integerValue - 1;
         
         NSNumber *newNumberOfComments = [NSNumber numberWithInteger:newValue];
         
