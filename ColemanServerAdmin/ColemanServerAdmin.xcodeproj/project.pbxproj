@@ -15,6 +15,8 @@
 		6E08CFDE1788F2AC00D14BCA /* EntriesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E08CFDC1788F2AC00D14BCA /* EntriesWindowController.xib */; };
 		6E08CFE217893F5000D14BCA /* EntryEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E08CFE017893F4F00D14BCA /* EntryEditorWindowController.m */; };
 		6E08CFE317893F5000D14BCA /* EntryEditorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E08CFE117893F5000D14BCA /* EntryEditorWindowController.xib */; };
+		6E101C1917932AA0003DC6F6 /* CommentEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E101C1717932AA0003DC6F6 /* CommentEditorWindowController.m */; };
+		6E101C1A17932AA0003DC6F6 /* CommentEditorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E101C1817932AA0003DC6F6 /* CommentEditorWindowController.xib */; };
 		6E1DE89817481081003728D9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E25261C1746975900141A3F /* CoreData.framework */; };
 		6E2526191746975900141A3F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E2526181746975900141A3F /* Cocoa.framework */; };
 		6E2526231746975900141A3F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6E2526211746975900141A3F /* InfoPlist.strings */; };
@@ -23,6 +25,9 @@
 		6E25262C1746975900141A3F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E25262B1746975900141A3F /* AppDelegate.m */; };
 		6E25262F1746975900141A3F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E25262D1746975900141A3F /* MainMenu.xib */; };
 		6E25263E1746AE1700141A3F /* APIStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E25263D1746AE1700141A3F /* APIStore.m */; };
+		6E4222B01791F2D9001B6609 /* CommentsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4222AE1791F2D9001B6609 /* CommentsWindowController.m */; };
+		6E4222B11791F2D9001B6609 /* CommentsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4222AF1791F2D9001B6609 /* CommentsWindowController.xib */; };
+		6E4222B5179206BB001B6609 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4222B4179206BB001B6609 /* CommentCell.m */; };
 		6EEF3C7F178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6EEF3C7E178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +45,9 @@
 		6E08CFDF17893F4F00D14BCA /* EntryEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntryEditorWindowController.h; sourceTree = "<group>"; };
 		6E08CFE017893F4F00D14BCA /* EntryEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntryEditorWindowController.m; sourceTree = "<group>"; };
 		6E08CFE117893F5000D14BCA /* EntryEditorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EntryEditorWindowController.xib; sourceTree = "<group>"; };
+		6E101C1617932AA0003DC6F6 /* CommentEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentEditorWindowController.h; sourceTree = "<group>"; };
+		6E101C1717932AA0003DC6F6 /* CommentEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentEditorWindowController.m; sourceTree = "<group>"; };
+		6E101C1817932AA0003DC6F6 /* CommentEditorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentEditorWindowController.xib; sourceTree = "<group>"; };
 		6E2526151746975900141A3F /* ColemanServerAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColemanServerAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E2526181746975900141A3F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6E25261B1746975900141A3F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -56,6 +64,11 @@
 		6E25263C1746AE1700141A3F /* APIStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIStore.h; sourceTree = "<group>"; };
 		6E25263D1746AE1700141A3F /* APIStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIStore.m; sourceTree = "<group>"; };
 		6E2526401746B4DC00141A3F /* NSObject+CompletionBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CompletionBlock.h"; sourceTree = "<group>"; };
+		6E4222AD1791F2D9001B6609 /* CommentsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentsWindowController.h; sourceTree = "<group>"; };
+		6E4222AE1791F2D9001B6609 /* CommentsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentsWindowController.m; sourceTree = "<group>"; };
+		6E4222AF1791F2D9001B6609 /* CommentsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentsWindowController.xib; sourceTree = "<group>"; };
+		6E4222B3179206BB001B6609 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentCell.h; sourceTree = "<group>"; };
+		6E4222B4179206BB001B6609 /* CommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentCell.m; sourceTree = "<group>"; };
 		6EEF3C7E178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "ColemanServerAdmin Logo.icns"; sourceTree = "<group>"; };
 		6EF4F12F175587F500052864 /* ColemanServerAdmin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ColemanServerAdmin.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +97,7 @@
 		6E045B86174EA0410022A5CE /* Table View Cells */ = {
 			isa = PBXGroup;
 			children = (
+				6E4222B21792045A001B6609 /* Comment Cell */,
 				6E045B87174EA0500022A5CE /* Blog Entry */,
 			);
 			name = "Table View Cells";
@@ -251,6 +265,9 @@
 		6E303071178CFC6F00BB791F /* Comments */ = {
 			isa = PBXGroup;
 			children = (
+				6E4222AD1791F2D9001B6609 /* CommentsWindowController.h */,
+				6E4222AE1791F2D9001B6609 /* CommentsWindowController.m */,
+				6E4222AF1791F2D9001B6609 /* CommentsWindowController.xib */,
 			);
 			name = Comments;
 			sourceTree = "<group>";
@@ -258,8 +275,20 @@
 		6E303072178CFC7900BB791F /* Comment Editor */ = {
 			isa = PBXGroup;
 			children = (
+				6E101C1617932AA0003DC6F6 /* CommentEditorWindowController.h */,
+				6E101C1717932AA0003DC6F6 /* CommentEditorWindowController.m */,
+				6E101C1817932AA0003DC6F6 /* CommentEditorWindowController.xib */,
 			);
 			name = "Comment Editor";
+			sourceTree = "<group>";
+		};
+		6E4222B21792045A001B6609 /* Comment Cell */ = {
+			isa = PBXGroup;
+			children = (
+				6E4222B3179206BB001B6609 /* CommentCell.h */,
+				6E4222B4179206BB001B6609 /* CommentCell.m */,
+			);
+			name = "Comment Cell";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -319,6 +348,8 @@
 				6E08CFDE1788F2AC00D14BCA /* EntriesWindowController.xib in Resources */,
 				6E08CFE317893F5000D14BCA /* EntryEditorWindowController.xib in Resources */,
 				6EEF3C7F178A7B0900FD4B63 /* ColemanServerAdmin Logo.icns in Resources */,
+				6E4222B11791F2D9001B6609 /* CommentsWindowController.xib in Resources */,
+				6E101C1A17932AA0003DC6F6 /* CommentEditorWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +369,9 @@
 				6E08CFD71788E19600D14BCA /* MainMenuController.m in Sources */,
 				6E08CFDD1788F2AC00D14BCA /* EntriesWindowController.m in Sources */,
 				6E08CFE217893F5000D14BCA /* EntryEditorWindowController.m in Sources */,
+				6E4222B01791F2D9001B6609 /* CommentsWindowController.m in Sources */,
+				6E4222B5179206BB001B6609 /* CommentCell.m in Sources */,
+				6E101C1917932AA0003DC6F6 /* CommentEditorWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

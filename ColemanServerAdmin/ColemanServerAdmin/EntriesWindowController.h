@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "APIStore.h"
 #import "EntryEditorWindowController.h"
-@class BlogEntryCell;
+@class BlogEntryCell, EntriesWindowController, CommentsWindowController;
 
 @interface EntriesWindowController : NSWindowController <NSTableViewDelegate, NSTableViewDataSource>
 {
@@ -22,9 +22,13 @@
 
 @property (readonly) EntryEditorWindowController *editorWC;
 
+@property (readonly) CommentsWindowController *commentsWC;
+
 @property NSDateFormatter *dateFormatter;
 
 -(IBAction)newDocument:(id)sender;
+
+-(IBAction)showComments:(id)sender;
 
 #pragma mark
 

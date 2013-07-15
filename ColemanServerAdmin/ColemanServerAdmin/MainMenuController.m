@@ -10,6 +10,8 @@
 #import "APIStore.h"
 #import "EntriesWindowController.h"
 #import "AppDelegate.h"
+#import "CommentsWindowController.h"
+#import "CommentEditorWindowController.h"
 
 @implementation MainMenuController
 
@@ -61,6 +63,8 @@
     // close entries window
     [_entriesWC close];
     [_entriesWC.editorWC close];
+    [_entriesWC.commentsWC close];
+    [_entriesWC.commentsWC.editorWC close];
     
     // reset API Store
     [[APIStore sharedStore] reset];

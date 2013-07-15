@@ -10,6 +10,8 @@
 #import "AppDelegate.h"
 #import "NSURLResponse+HTTPCode.h"
 
+NSString *const CommentChangedNotification = @"CommentChanged";
+
 NSString *const BlogEntryImageFetchedNotification = @"BlogEntryImageFetched";
 
 NSString *const BlogEntryFetchedNotification = @"BlogEntryFetched";
@@ -17,6 +19,8 @@ NSString *const BlogEntryFetchedNotification = @"BlogEntryFetched";
 NSString *const BlogEntryEditedNotification = @"BlogEntryEdited";
 
 NSString *const NumberOfEntriesKeyPath = @"self.numberOfEntries";
+
+NSString *const NumberOfCommentsCacheKeyPath = @"self.numberOfCommentsCache";
 
 static NSString *BlogEntryEntityName = @"BlogEntry";
 
@@ -91,6 +95,9 @@ static NSError *notAuthorizedError;
         
         user = [NSEntityDescription insertNewObjectForEntityForName:@"User"
                                              inManagedObjectContext:_context];
+        
+        [user setValue:username
+                forKey:@"username"];
     }
     
     else {
@@ -101,42 +108,22 @@ static NSError *notAuthorizedError;
     return user;
 }
 
--(NSManagedObject *)commentAtIndex:(NSUInteger)commentIndex
-                          forEntry:(NSUInteger)entryIndex
+-(NSManagedObject *)forceGetCommentAtIndex:(NSUInteger)commentIndex
+                                  forEntry:(NSUInteger)entryIndex
 {
     // get blog entry
     NSManagedObject *blogEntry = [self blogEntryForIndex:entryIndex];
     
-    // fetch comment...
-    NSFetchRequest *fetchRequest = [_model fetchRequestFromTemplateWithName:@"FetchAllCommentsForBlogEntry"
-                                                      substitutionVariables:@{@"INDEX": [NSNumber numberWithInteger:entryIndex]}];
+    NSManagedObject *comment = [self cachedComment:commentIndex
+                                      forBlogEntry:blogEntry];
     
-    NSError *fetchError;
-    
-    NSArray *results = [_context executeFetchRequest:fetchRequest
-                                               error:&fetchError];
-    
-    if (fetchError) {
-        
-        [NSException raise:@"Core Data Fetch Request Error"
-                    format:@"%@", fetchError.localizedDescription];
-        
-    }
-    
-    for (NSManagedObject *comment in results) {
-        
-        NSNumber *index = [comment valueForKey:@"index"];
-        
-        if (index.integerValue == commentIndex) {
-            
-            return comment;
-        }
-        
+    if (comment) {
+        return comment;
     }
     
     // if none was found, then create new one
-    NSManagedObject *comment = [NSEntityDescription insertNewObjectForEntityForName:@"Comment"
-                                                             inManagedObjectContext:_context];
+    comment = [NSEntityDescription insertNewObjectForEntityForName:@"Comment"
+                                            inManagedObjectContext:_context];
     
     // set blogEntry relationship
     [comment setValue:blogEntry
@@ -211,6 +198,29 @@ static NSError *notAuthorizedError;
     self.token = nil;
     
     NSLog(@"Resetted API Store");
+}
+
+#pragma mark - Search Cache
+
+-(NSManagedObject *)cachedComment:(NSUInteger)commentIndex
+                     forBlogEntry:(NSManagedObject *)blogEntry
+{
+    NSAssert(blogEntry, @"Nil argument");
+    
+    // fetch comment...
+    NSOrderedSet *comments = [blogEntry valueForKey:@"comments"];
+    
+    for (NSManagedObject *comment in comments) {
+        
+        NSNumber *index = [comment valueForKey:@"index"];
+        
+        if (index.integerValue == commentIndex) {
+            
+            return comment;
+        }
+    }
+    
+    return nil;
 }
 
 #pragma mark - Login
@@ -748,11 +758,11 @@ static NSError *notAuthorizedError;
         
         // get values from JSON object
         NSString *content = [jsonObject valueForKey:@"content"];
-        NSString *date = [jsonObject valueForKey:@"date"];
+        NSString *dateString = [jsonObject valueForKey:@"date"];
         NSString *username = [jsonObject valueForKey:@"user"];
         
         // check for errors
-        if (!content || !date || !username) {
+        if (!content || !dateString || !username) {
             
             if (completionBlock) {
                 completionBlock(otherError);
@@ -764,11 +774,14 @@ static NSError *notAuthorizedError;
         // successfully fetched comment from server...
         
         // get comment
-        NSManagedObject *comment = [self commentAtIndex:commentIndex
-                                               forEntry:entryIndex];
+        NSManagedObject *comment = [self forceGetCommentAtIndex:commentIndex
+                                                       forEntry:entryIndex];
         
         // get user
         NSManagedObject *user = [self userForUsername:username];
+        
+        // get date
+        NSDate *date = [NSDate dateWithString:dateString];
         
         // set values
         [comment setValue:date
@@ -1447,8 +1460,8 @@ static NSError *notAuthorizedError;
         // create new comment object
         NSNumber *numberOfComments = [_numberOfCommentsCache objectForKey:indexString];
         
-        NSManagedObject *comment = [self commentAtIndex:numberOfComments.integerValue
-                                               forEntry:entryIndex];
+        NSManagedObject *comment = [self forceGetCommentAtIndex:numberOfComments.integerValue
+                                                       forEntry:entryIndex];
         
         [comment setValue:content
                    forKey:@"content"];
@@ -1462,11 +1475,16 @@ static NSError *notAuthorizedError;
         
         // update number of comments
         NSNumber *newNumberOfComments = [NSNumber numberWithInteger:numberOfComments.integerValue + 1];
+        
+        [self willChangeValueForKey:@"numberOfCommentsCache"];
+        
         [_numberOfCommentsCache setValue:newNumberOfComments
                                   forKey:indexString];
         
         NSLog(@"Successfully created new comment for blog entry %@", indexString);
         
+        [self didChangeValueForKey:@"numberOfCommentsCache"];
+                
         if (completionBlock) {
             completionBlock(nil);
         }
@@ -1481,7 +1499,95 @@ static NSError *notAuthorizedError;
            changes:(NSString *)content
         completion:(completionBlock)completionBlock
 {
+    if (!self.token) {
+        if (completionBlock) {
+            completionBlock(notAuthorizedError);
+        }
+        
+        return;
+    }
     
+    // put togeather URL
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"blog"];
+    NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
+    urlString = [urlString stringByAppendingPathComponent:indexString];
+    urlString = [urlString stringByAppendingPathComponent:@"comment"];
+    NSString *commentIndexString = [NSString stringWithFormat:@"%ld", commentIndex];
+    urlString = [urlString stringByAppendingPathComponent:commentIndexString];
+    
+    // make JSON data to send
+    NSDictionary *changes = @{@"content": content};
+    
+    NSData *jsonChangesData = [NSJSONSerialization dataWithJSONObject:changes
+                                                              options:0
+                                                                error:nil];
+    
+    // put togeather request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    request.HTTPMethod = @"PUT";
+    request.allHTTPHeaderFields = @{@"Authorization": self.token};
+    request.HTTPBody = jsonChangesData;
+    
+    NSLog(@"Uploading changes for comment %@ of blog entry %@...", commentIndexString, indexString);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+       
+        if (error) {
+            
+            // 401 error - Not Authorized
+            if (error.code == NSURLErrorUserCancelledAuthentication) {
+                
+                if (completionBlock) {
+                    completionBlock(notAuthorizedError);
+                }
+                
+                return;
+            }
+            
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        // create other error
+        NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to edit comment", @"Unable to edit comment")};
+        
+        NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                  code:4000
+                                              userInfo:otherErrorUserInfo];
+        
+        if (response.httpCode.integerValue != 200) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        // successfully edited comment
+        
+        // update cache...
+        NSManagedObject *comment = [self forceGetCommentAtIndex:commentIndex
+                                                       forEntry:entryIndex];
+        
+        [comment setValue:content
+                   forKey:@"content"];
+        
+        NSLog(@"Successfully changed comment %@ for blog entry %@", commentIndexString, indexString);
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:CommentChangedNotification
+                                                            object:comment
+                                                          userInfo:@{@"content": content}];
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
+    }];
     
 }
 
@@ -1489,8 +1595,101 @@ static NSError *notAuthorizedError;
             forEntry:(NSUInteger)entryIndex
           completion:(completionBlock)completionBlock
 {
+    if (!self.token) {
+        if (completionBlock) {
+            completionBlock(notAuthorizedError);
+        }
+        
+        return;
+    }
     
+    // put togeather URL
+    NSString *urlString = self.baseURL;
+    urlString = [urlString stringByAppendingPathComponent:@"blog"];
+    NSString *indexString = [NSString stringWithFormat:@"%ld", entryIndex];
+    urlString = [urlString stringByAppendingPathComponent:indexString];
+    urlString = [urlString stringByAppendingPathComponent:@"comment"];
+    NSString *commentIndexString = [NSString stringWithFormat:@"%ld", commentIndex];
+    urlString = [urlString stringByAppendingPathComponent:commentIndexString];
     
+    // put togeather request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    request.HTTPMethod = @"DELETE";
+    request.allHTTPHeaderFields = @{@"Authorization": self.token};
+    
+    NSLog(@"Requesting to delete comment %@ for blog entry %@...", commentIndexString, indexString);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:_connectionQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        if (error) {
+            
+            // 401 error - Not Authorized
+            if (error.code == NSURLErrorUserCancelledAuthentication) {
+                
+                if (completionBlock) {
+                    completionBlock(notAuthorizedError);
+                }
+                
+                return;
+            }
+            
+            if (completionBlock) {
+                completionBlock(error);
+            }
+            
+            return;
+        }
+        
+        // create other error
+        NSDictionary *otherErrorUserInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Unable to delete comment", @"Unable to delete comment")};
+        
+        NSError *otherError = [NSError errorWithDomain:[AppDelegate errorDomain]
+                                                  code:4000
+                                              userInfo:otherErrorUserInfo];
+        
+        if (response.httpCode.integerValue != 200) {
+            
+            if (completionBlock) {
+                completionBlock(otherError);
+            }
+            
+            return;
+        }
+        
+        // successfully deleted comment
+        
+        // update cache...
+        
+        // get comment
+        NSManagedObject *comment = [self forceGetCommentAtIndex:commentIndex
+                                                          forEntry:entryIndex];
+        
+        // delete
+        [_context deleteObject:comment];
+        
+        // update number of comments
+        NSNumber *oldNumberofComments = [_numberOfCommentsCache objectForKey:indexString];
+        
+        NSUInteger newValue = oldNumberofComments.integerValue + 1;
+        
+        NSNumber *newNumberOfComments = [NSNumber numberWithInteger:newValue];
+        
+        [self willChangeValueForKey:@"numberOfCommentsCache"];
+        
+        [_numberOfCommentsCache setValue:newNumberOfComments
+                                  forKey:indexString];
+        
+        NSLog(@"Successfully deleted comment %@ for blog entry %@", commentIndexString, indexString);
+        
+        [self didChangeValueForKey:@"numberOfCommentsCache"];
+        
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+        
+        return;
+        
+    }];
     
 }
 

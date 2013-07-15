@@ -33,7 +33,7 @@ static NSDateFormatter *dateFormatter;
 {
     NSString *commentString = [NSString stringWithFormat:NSLocalizedString(@"%@ Comments", @"<number of comments> Comments"), numberOfComments];
     
-    self.commentsButton.title = commentString;
+    self.commentsTextField.stringValue = commentString;
 }
 
 -(void)setBlogEntry:(NSManagedObject *)blogEntry

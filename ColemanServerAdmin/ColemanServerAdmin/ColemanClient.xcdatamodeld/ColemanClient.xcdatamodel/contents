@@ -27,7 +27,6 @@
         <relationship name="comments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="user" inverseEntity="Comment" syncable="YES"/>
         <relationship name="tokens" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Token" inverseName="user" inverseEntity="Token" syncable="YES"/>
     </entity>
-    <fetchRequest name="FetchAllCommentsForBlogEntry" entity="Comment" predicateString="index == $INDEX"/>
     <fetchRequest name="FetchUserForUsername" entity="User" predicateString="username ==[c] $USERNAME"/>
     <elements>
         <element name="BlogEntry" positionX="-144" positionY="51" width="128" height="120"/>

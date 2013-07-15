@@ -11,6 +11,7 @@
 #import "User.h"
 #import "BlogEntry.h"
 #import "Token.h"
+#import "EntryComment.h"
 
 @implementation DataStore
 
@@ -321,7 +322,7 @@
 
 -(BOOL)save
 {
-    NSLog(@"Saving DataStore");
+    NSLog(@"Saving DataStore...");
     
     NSError *error;
     
@@ -449,11 +450,9 @@
     EntryComment *comment = [NSEntityDescription insertNewObjectForEntityForName:@"Comment"
                                                           inManagedObjectContext:_context];
     
-    // add to user
-    [user addCommentsObject:comment];
-    
-    // add to blog entry
-    [entry addCommentsObject:comment];
+    // set values
+    comment.user = user;
+    comment.blogEntry = entry;
     
     return comment;
 }

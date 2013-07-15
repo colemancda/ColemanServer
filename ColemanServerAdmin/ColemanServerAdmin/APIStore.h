@@ -27,6 +27,10 @@ extern NSString *const BlogEntryEditedNotification;
 
 extern NSString *const NumberOfEntriesKeyPath;
 
+extern NSString *const NumberOfCommentsCacheKeyPath;
+
+extern NSString *const CommentChangedNotification;
+
 // this is for communicating with the API and holding Cache
 @interface APIStore : NSObject
 {
@@ -58,6 +62,11 @@ extern NSString *const NumberOfEntriesKeyPath;
 @property (readonly) NSDictionary *blogEntriesCache;
 
 @property (readonly) NSDictionary *numberOfCommentsCache;
+
+#pragma mark - Cache Search
+
+-(NSManagedObject *)cachedComment:(NSUInteger)commentIndex
+                     forBlogEntry:(NSManagedObject *)blogEntry;
 
 #pragma mark - Login
 

@@ -11,6 +11,7 @@
 #import "MainMenuController.h"
 #import "BlogEntryCell.h"
 #import "EntryEditorWindowController.h"
+#import "CommentsWindowController.h"
 
 static NSString *CellIdentifier = @"CellIdentifier";
 
@@ -195,9 +196,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
     // lazy load number of comments
     else {
         
-        cell.commentsButton.title = NSLocalizedString(@"Loading...", @"Loading...");
-        [cell.commentsButton setEnabled:NO];
-        
         [[APIStore sharedStore] fetchNumberOfCommentsForEntry:entryKey.integerValue withCompletion:^(NSError *error) {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -212,8 +210,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
                     NSNumber *numberOfComments = [[APIStore sharedStore].numberOfCommentsCache objectForKey:entryKey];
                     
                     [cell setNumberOfComments:numberOfComments];
-                    
-                    [cell.commentsButton setEnabled:YES];
                 }
                 
             }];
@@ -225,6 +221,24 @@ static NSString *CellIdentifier = @"CellIdentifier";
 }
 
 #pragma mark - Commands
+
+-(void)showComments:(id)sender
+{
+    if (self.tableView.selectedRow != -1) {
+        
+        NSString *entryKey = _blogEntryKeys[self.tableView.selectedRow];
+        
+        NSManagedObject *blogEntry = [[APIStore sharedStore].blogEntriesCache objectForKey:entryKey];
+        
+        if (!_commentsWC) {
+            _commentsWC = [[CommentsWindowController alloc] init];
+            
+            [_commentsWC showWindow:nil];
+        }
+        
+        [_commentsWC loadCommentsForBlogEntry:blogEntry];
+    }
+}
 
 -(void)newDocument:(id)sender
 {
@@ -289,7 +303,8 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-    if (menuItem.action == @selector(delete:)) {
+    if (menuItem.action == @selector(delete:) ||
+        menuItem.action == @selector(showComments:)) {
         
         // check if any row is selected
         if (self.tableView.selectedRow == -1) {
