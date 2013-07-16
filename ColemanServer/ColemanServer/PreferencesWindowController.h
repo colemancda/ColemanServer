@@ -7,10 +7,18 @@
 //
 
 #import <Cocoa/Cocoa.h>
-@class DataStore;
+@class DataStore, CertifcateStore;
 
 @interface PreferencesWindowController : NSWindowController
 
 @property (readonly) DataStore *dataStore;
+
+@property (readonly) CertifcateStore *certificateStore;
+
+@property (strong) IBOutlet NSButton *tlsButton;
+
+- (IBAction)configureTLS:(NSButton *)sender;
+
+
 
 @end

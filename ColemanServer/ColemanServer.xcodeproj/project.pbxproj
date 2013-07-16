@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6E0A46C9177B2B7500074FC2 /* NSString+isNonNegativeInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */; };
 		6E101C1D1793AA14003DC6F6 /* BlogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E101C1C1793AA14003DC6F6 /* BlogEntry.m */; };
+		6E1035A2179595E500238F6F /* CertifcateStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E1035A1179595E500238F6F /* CertifcateStore.m */; };
 		6E3FF8FB1777AA1700DDA324 /* MyHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */; };
 		6E481AF61787781800A2F754 /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E481AF41787781800A2F754 /* PreferencesWindowController.m */; };
 		6E481AF71787781800A2F754 /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E481AF51787781800A2F754 /* PreferencesWindowController.xib */; };
@@ -71,6 +72,8 @@
 		6E0A46C8177B2B7500074FC2 /* NSString+isNonNegativeInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+isNonNegativeInteger.m"; sourceTree = "<group>"; };
 		6E101C1B1793AA14003DC6F6 /* BlogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogEntry.h; sourceTree = "<group>"; };
 		6E101C1C1793AA14003DC6F6 /* BlogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogEntry.m; sourceTree = "<group>"; };
+		6E1035A0179595E500238F6F /* CertifcateStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertifcateStore.h; sourceTree = "<group>"; };
+		6E1035A1179595E500238F6F /* CertifcateStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertifcateStore.m; sourceTree = "<group>"; };
 		6E3FF8F91777AA1700DDA324 /* MyHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHTTPConnection.h; sourceTree = "<group>"; };
 		6E3FF8FA1777AA1700DDA324 /* MyHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyHTTPConnection.m; sourceTree = "<group>"; };
 		6E481AF31787781800A2F754 /* PreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesWindowController.h; sourceTree = "<group>"; };
@@ -195,6 +198,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E1035A3179595E900238F6F /* Certificate */ = {
+			isa = PBXGroup;
+			children = (
+				6E1035A0179595E500238F6F /* CertifcateStore.h */,
+				6E1035A1179595E500238F6F /* CertifcateStore.m */,
+			);
+			name = Certificate;
+			sourceTree = "<group>";
+		};
 		6E3FF8F81777A9F100DDA324 /* HTTP Connection */ = {
 			isa = PBXGroup;
 			children = (
@@ -361,6 +373,7 @@
 				6ECAADFA177B50CA007A8876 /* DataStore */,
 				6EE811C71736ABA000433687 /* Logs */,
 				6EE811C81736ABA900433687 /* HTTP Server */,
+				6E1035A3179595E900238F6F /* Certificate */,
 			);
 			name = Stores;
 			sourceTree = "<group>";
@@ -711,6 +724,7 @@
 				6EBE321A17867AEA0095F5E7 /* MenuController.m in Sources */,
 				6E481AF61787781800A2F754 /* PreferencesWindowController.m in Sources */,
 				6E101C1D1793AA14003DC6F6 /* BlogEntry.m in Sources */,
+				6E1035A2179595E500238F6F /* CertifcateStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

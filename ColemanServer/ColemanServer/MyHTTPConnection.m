@@ -20,6 +20,7 @@
 #import "Token.h"
 #import "LogStore.h"
 #import "EntryComment.h"
+#import "CertifcateStore.h"
 
 static NSString *MimeTypeJSON = @"application/json";
 
@@ -989,17 +990,18 @@ static NSString *serverHeader;
 
 -(BOOL)isSecureServer
 {
-    return YES;
+    return [[CertifcateStore sharedStore] fileExists];
 }
 
 -(NSArray *)sslIdentityAndCertificates
 {
+    if (!self.isSecureServer) {
+        return nil;
+    }
+    
     if (!_certificates) {
         
-        NSURL *url = [[NSBundle mainBundle] URLForResource:@"certificate"
-                                             withExtension:@"crt"];
-        
-        NSData *certificateData = [NSData dataWithContentsOfURL:url];
+        NSData *certificateData = [NSData dataWithContentsOfFile:[CertifcateStore sharedStore].filePath];
         
         SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)(certificateData));
         
@@ -1013,6 +1015,7 @@ static NSString *serverHeader;
         CFRelease(identity);
         
     }
+    
     return _certificates;
 }
 
