@@ -994,8 +994,26 @@ static NSString *serverHeader;
 
 -(NSArray *)sslIdentityAndCertificates
 {
-    return nil;
-    
+    if (!_certificates) {
+        
+        NSURL *url = [[NSBundle mainBundle] URLForResource:@"certificate"
+                                             withExtension:@"crt"];
+        
+        NSData *certificateData = [NSData dataWithContentsOfURL:url];
+        
+        SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)(certificateData));
+        
+        SecIdentityRef identity;
+        
+        SecIdentityCreateWithCertificate(NULL, certificate, &identity);
+        
+        _certificates = @[(__bridge id)identity];
+        
+        CFRelease(certificate);
+        CFRelease(identity);
+        
+    }
+    return _certificates;
 }
 
 @end

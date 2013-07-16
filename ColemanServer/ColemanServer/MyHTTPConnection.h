@@ -10,6 +10,9 @@
 @class HTTPDataResponse;
 
 @interface MyHTTPConnection : HTTPConnection
+{
+    NSArray *_certificates;
+}
 
 +(NSString *)serverHeader;
 

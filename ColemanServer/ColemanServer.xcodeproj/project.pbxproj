@@ -59,6 +59,7 @@
 		6ED9E88717557B1100A3A814 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87917557B1100A3A814 /* DDTTYLogger.m */; };
 		6ED9E88817557B1100A3A814 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87C17557B1100A3A814 /* ContextFilterLogFormatter.m */; };
 		6ED9E88917557B1100A3A814 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9E87E17557B1100A3A814 /* DispatchQueueLogFormatter.m */; };
+		6EDB5B931794F80F003AA36C /* certificate.crt in Resources */ = {isa = PBXBuildFile; fileRef = 6EDB5B921794F80F003AA36C /* certificate.crt */; };
 		6EE811BB1736069700433687 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9D5F1D1733707000FD292E /* CoreData.framework */; };
 		6EE811CD17370F2600433687 /* NSString+Counter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EE811CC17370F2600433687 /* NSString+Counter.m */; };
 		6EEF3C7D178A766F00FD4B63 /* Server Logo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6EEF3C7C178A766F00FD4B63 /* Server Logo.icns */; };
@@ -173,6 +174,7 @@
 		6ED9E87D17557B1100A3A814 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
 		6ED9E87E17557B1100A3A814 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
 		6ED9E87F17557B1100A3A814 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		6EDB5B921794F80F003AA36C /* certificate.crt */ = {isa = PBXFileReference; lastKnownFileType = file; path = certificate.crt; sourceTree = "<group>"; };
 		6EE811CB17370F2600433687 /* NSString+Counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Counter.h"; sourceTree = "<group>"; };
 		6EE811CC17370F2600433687 /* NSString+Counter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Counter.m"; sourceTree = "<group>"; };
 		6EEF3C7C178A766F00FD4B63 /* Server Logo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "Server Logo.icns"; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 				6E9D5F271733707000FD292E /* ColemanServer-Prefix.pch */,
 				6E9D5F281733707000FD292E /* Credits.rtf */,
 				6EEF3C7C178A766F00FD4B63 /* Server Logo.icns */,
+				6EDB5B921794F80F003AA36C /* certificate.crt */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -651,6 +654,7 @@
 				6E924E8F173FF93300B1F131 /* SaveCell.xib in Resources */,
 				6E481AF71787781800A2F754 /* PreferencesWindowController.xib in Resources */,
 				6EEF3C7D178A766F00FD4B63 /* Server Logo.icns in Resources */,
+				6EDB5B931794F80F003AA36C /* certificate.crt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
